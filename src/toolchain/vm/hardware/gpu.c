@@ -55,7 +55,7 @@ void vmhw_gpu_init(uint16_t* io,uint8_t* dma)
 	unsigned char* image;
 	unsigned width, height;
 
-	error = lodepng_decode32_file(&image, &width, &height, "/toolchain/vm/data/gpufont8x8.png");
+	error = lodepng_decode32_file(&image, &width, &height, "src/toolchain/vm/data/gpufont8x8.png");
 	if (error) printf("gpu couldn't load font !!! error %u: %s\n", error, lodepng_error_text(error));
 	else
 	{
