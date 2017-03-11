@@ -1,0 +1,178 @@
+extends layout.pug
+
+block append js
+	script(src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/codemirror.js")
+	script(src="https://cdnjs.cloudflare.com/ajax/libs/virtual-keyboard/1.26.17/js/jquery.keyboard.min.js")
+	script(src="/js/toolchain/compiler.js") // Load order is important; sandbox.js relies on compiler.js
+	script(src="/js/sandbox.js")
+	script(src="/js/toolchain/vm.js") // When Emscripten loads it will fire the creation of Vimmy.Integration in sandbox.js, doing VM init
+	if getProject
+		script.
+			$(document).ready(function() {
+				$.get("/projects/" + "#{project.project_id}" + "/code", function( data ) {
+					console.log(data)
+					window.vimmyDroppedCode = data
+				});
+				
+				$.getJSON("/projects/" + "#{project.project_id}" + "/data", function( data ) {
+					console.log(data)
+					window.vimmyDroppedData = data
+				});
+			})
+			
+	if postUrl
+		script.
+			$(document).ready(function() {
+				window.vimmyPostUrl = "#{postUrl}"
+			})
+block append css
+	link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/codemirror.css')
+	link(rel='stylesheet', href='/css/sandbox.css')
+	link(rel="stylesheet"  href='https://cdnjs.cloudflare.com/ajax/libs/virtual-keyboard/1.26.17/css/keyboard.min.css')
+
+
+block append content
+	.row.row-full
+		.col-sm-12
+			textarea#code-entry(style="")
+	.row.row-full#data-row(style="display: none; padding-top: 8px; padding-bottom: 0;")
+		.col-sm-12(style="background: rgba(0,0,0,0.15);")
+			#vm-data-input(style="min-height: 128px; max-height: 128px; padding: 4px; overflow-y: scroll; overflow-x: hidden; margin: 1px;")
+		.col-sm-12(style="padding:0; margin: 0")
+			if !runMode
+				button.btn.btn-sandbox#btn-add-sprite Add Sprite
+				button.btn.btn-sandbox#btn-add-number Add Number
+				button.btn.btn-sandbox#btn-add-string Add String
+				button.btn.btn-sandbox#btn-add-bytearray Add Byte Array
+	.row.row-full(style="")
+		.col-sm-7(style="padding: 0; text-align: left")
+			if !runMode
+				.input-group(style="min-width: 100%; vertical-align: middle")
+					if !postUrl 
+						input.btn-sandbox#input-name(placeholder="Project title",style="box-sizing: border-box; max-width: 128px; border-radius: 4px; background-color: rgba(255,255,255,1); color: black", type="text")
+						select.btn-sandbox#select-category(style="box-sizing: border-box; max-width: 160px; border-radius: 4px; background-color: rgba(255,255,255,1); color: black")
+							option(value="General") General
+							option(value="Educational") Educational
+							option(value="Games") Games
+					if loggedIn
+						button.btn.btn-sandbox.bg-create#btn-save() Save
+						///button.btn.btn-sandbox.bg-discover#btn-publish() Publish
+					else
+						/// http://stackoverflow.com/a/22867505/1924602
+						button.btn.btn-sandbox.bg-create#btn-save(disabled style="pointer-events: all !important;" data-toggle="tooltip" title="Saving projects requires an account") Save
+						///button.btn.btn-sandbox.bg-discover#btn-publish(disabled style="pointer-events: all !important; " data-toggle="tooltip" title="Publishing projects requires an account") Publish
+		.col-sm-5(style="padding: 0; text-align: right")
+			button.btn.btn-sandbox(onclick="$('#data-row').toggle(\"slow\")") Data
+			button.btn.btn-sandbox#btn-assemble Assemble
+			button.btn.btn-sandbox#btn-assemble-run Assemble & Run
+	.row.row-full
+		.col-sm-12
+			.msg-box#compiler-messages(style="min-height: 160px; max-height: 160px;")
+			//-	.msg.msg-info
+			//-		| :: Compiler Messages will appear here ::
+	.row.row-full(style="padding-top: 8px; padding-bottom: 8px")
+		/// http://stackoverflow.com/a/23924580
+		///.col-sm-4
+		.col-sm-5(style="text-align: left")
+			canvas#vm-screen(style="width: 100%",width=256,height=256)
+		///.col-sm-4
+		.col-sm-7
+			button.btn.btn-sandbox#btn-vm-reset
+				span.glyphicon.glyphicon-repeat
+			button.btn.btn-sandbox#btn-vm-play
+				span.glyphicon#vm-button-play-icon.glyphicon-play
+			button.btn.btn-sandbox#btn-vm-stepone
+				span.glyphicon.glyphicon-step-forward
+			.vm-keyboard-container(style="width: 100%; min-height: 160px; max-height: 160px; overflow: hidden;")
+				textarea#vm-keyboard(placeholder="Keyboard" style="opacity: 0")
+	.row.row-full(style="min-height: 16px; padding-top: 0; margin-bottom: 0;")
+		.col-sm-2
+		.col-sm-1
+			.register-box
+				.row.span.register-id A
+				.row.span.value 255
+				.row.span.value -127
+				.row.span.value 0xFF
+		.col-sm-1
+			.register-box
+				.row.span.register-id B
+				.row.span.value 255
+				.row.span.value -127
+				.row.span.value 0xFF
+		.col-sm-1
+			.register-box
+				.row.span.register-id C
+				.row.span.value 255
+				.row.span.value -127
+				.row.span.value 0xFF
+		.col-sm-1
+			.register-box
+				.row.span.register-id D
+				.row.span.value 255
+				.row.span.value -127
+				.row.span.value 0xFF
+		.col-sm-1
+			.register-box
+				.row.span.register-id PC
+				.row.span.value 255
+				.row.span.value -127
+				.row.span.value 0xFF
+		.col-sm-1
+			.register-box
+				.row.span.register-id SP
+				.row.span.value 255
+				.row.span.value -127
+				.row.span.value 0xFF
+		.col-sm-1
+			.register-box
+				.row.span.register-id BP
+				.row.span.value 255
+				.row.span.value -127
+				.row.span.value 0xFF
+		.col-sm-1
+			.register-box
+				.row.span.register-id SF
+				.row.span.value 255
+				.row.span.value -127
+				.row.span.value 0xFF
+		.col-sm-2
+	.row.row-full(style="padding-top: 8px; padding-bottom: 8px; overflow: hidden;")
+		/// http://stackoverflow.com/a/23924580
+		.col-sm-3.bg-transparent(style="min-height: 256px; max-height: 256px; overflow-y: scroll; padding: 0;")
+			.table-container(style="width: 100%; height: 256px;")
+				table.vm-dasm.bg-transparent
+					thead
+						tr
+							th(style='padding-top: 8px; padding-bottom: 8px', valign='middle') Address
+							th(style='padding-top: 8px; padding-bottom: 8px', valign='middle') Instruction
+					tbody#vm-dasm-primary
+					
+		.col-sm-9(style="min-height: 256px; max-height: 256px; padding: 0;")
+			.bg-transparent(style="padding-top: 4px; width: 100%; height: 256px;")
+				table.vm-mem-view(data-height='25vh', data-min='1', data-max='8', cellpadding='2', cellspacing='2')
+					thead
+						tr
+							th(valign='middle')
+								input.vm-mem-view-addr#vm-mem-view-addr-primary(type='text')
+							th(valign='middle') +00
+							th(valign='middle') +01
+							th(valign='middle') +02
+							th(valign='middle') +03
+							th(valign='middle') +04
+							th(valign='middle') +05
+							th(valign='middle') +06
+							th(valign='middle') +07
+							th(valign='middle') +08
+					tbody#vm-mem-view-primary
+	.row.row-full(style="padding-top: 8px; padding-bottom: 8px; overflow: hidden;")
+		/// http://stackoverflow.com/a/23924580
+		.col-sm-12(style="padding:0; margin: 0;")
+			.stack-box#stack-box-primary(style="margin: 0; min-height: 160px; max-height: 160px;")
+				.stack-var Stack
+				.stack-var &emsp; 0xFFEE &emsp; 0x5000 &emsp; 1213 &emsp;-1123&emsp;unknown_var
+				.stack-var &emsp; 0xFFEE &emsp; 0x5000 &emsp; 121d3 &emsp;-11d23&emsp;unknown_var
+				.stack-var 0x5000
+				.stack-var 0x5000
+				.stack-var 0x5000
+				.stack-var 0x5000
+				.stack-var 0x5000				

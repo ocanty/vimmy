@@ -1,0 +1,247 @@
+
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400');
+@import url('https://fonts.googleapis.com/css?family=Lato:300,400');
+
+html,body
+{
+	
+	overflow-x: hidden;
+	margin: 0;
+	background-image: url('/img/bg-noise.png');
+	background-color:black;
+	background-repeat: repeat;
+}
+
+h1
+{
+	position: relative;
+	font-family: 'Lato', sans-serif;
+	font-weight: 300;
+	font-size: 48px;
+	margin-top: 24px;
+	margin-bottom: 24px;
+	text-align: center;
+	color: white;
+	z-index: 50;
+}
+
+h2
+{
+	position: relative;
+	font-family: 'Lato', sans-serif;
+	font-weight: 300;
+	font-size: 28px;
+	margin-top: 24px;
+	margin-bottom: 24px;
+	text-align: center;
+	color: white;
+	z-index: 50;
+}
+
+h3
+{
+	position: relative;
+	font-family: 'Lato', sans-serif;
+	font-weight: 300;
+	font-size: 16px;
+	margin-top: 16px;
+	margin-bottom: 16px;
+	text-align: center;
+	color: white;
+	z-index: 50;
+}
+
+
+
+h4
+{
+	position: relative;
+	font-family: 'Lato', sans-serif;
+	font-weight: 300;
+	font-size: 15px;
+	margin-top: 16px;
+	margin-bottom: 16px;
+	text-align: center;
+	color: white;
+	z-index: 50;
+}
+
+p
+{
+	position: relative;
+	font-family: 'Lato', sans-serif;
+	font-weight: 300;
+	font-size: 14px;
+	margin: 0;
+	text-align: center;
+	color: white;
+	z-index: 50;
+	
+}
+
+.navbar-brand-vimmy:hover
+{
+	color: rgba(157, 251, 120,1);
+    cursor: hand;
+    animation-name: pulse;
+    animation-duration: 1s;
+    animation-iteration-count: 999;
+}
+
+.navbar-vimmy
+{
+	background-image: url('/img/header-noise.png');
+	background-repeat: repeat;
+	border-bottom: 2px solid rgb(11,14,18);
+	
+	/* full-width */
+	margin: 0 -100vw;
+	padding: 0 100vw;
+	
+	/* force height change */
+	min-height: 64px;
+	/* 64 (<-original) -50 = 14 / 2 */
+	padding-top: 7px;
+	
+}
+/* 
+.navbar-vimmy .navbar-nav>li:hover
+{
+	background-color: rgb(11,14,18);
+} */
+
+.navbar-vimmy .navbar-nav>li>a
+{
+	color: rgba(255,255,255,0.85);
+}
+
+.navbar-vimmy .navbar-nav>li>a:hover
+{
+	color: white;
+}
+
+.btn-vimmy
+{
+	position: relative;
+    display: inline-block;
+    border-radius: 24px;
+    background-color: rgba(47, 161, 80,1);
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 500;
+    color: white;
+    border: none;
+    cursor: pointer;
+    animation-iteration-count: 0;
+	z-index: 100;
+	margin-left: 5px;
+	box-shadow: 0 1px 5px rgba(0,0,0,0.25);
+}
+
+.btn-vimmy:hover
+{
+	color: rgba(157, 251, 120,1);
+    cursor: hand;
+    animation-name: pulse;
+    animation-duration: 1s;
+    animation-iteration-count: 999;
+}
+
+.vignette-vimmy
+{
+	position: absolute;
+    height: 100%;
+	width: 100%;
+	height: 100%;
+	left: 0;
+	
+	/* http://nimbupani.com/vignettes-with-css3-box-shadows.html */
+	-moz-box-shadow: inset 0 0 15vw rgba(0,0,0,1);  
+	-webkit-box-shadow: inset 0 0 15vw rgba(0,0,0,1);   
+	box-shadow: inset 0 0 15vw rgba(0,0,0,1);
+	position: absolute;
+	left: 0;
+	margin-top: -1px;
+	z-index: 1;
+	content: "";
+	/* make it clickable through */
+	pointer-events: none;
+}
+
+.container-vimmy
+{
+	/*background-color: rgba(0,0,0,0.15);*/
+	color: white;
+}
+
+.row
+{
+	/* http://stackoverflow.com/questions/15728336/the-row-is-larger-than-the-container-in-bootstrap */
+	/* disables row stretching on large screens */
+	margin-left: 0px;
+	margin-right: 0px;
+}
+
+.row-full
+{
+	margin: 0 -100vw; padding: 0 100vw;
+}
+
+.col-sm-12
+{
+	padding: 0; margin: 0;
+}
+
+.footer-vimmy
+{
+	position: relative;
+	font-family: 'Lato', sans-serif;
+	font-weight: 300;
+	padding-top: 0.55vh;
+	padding-bottom: 0.55vh;
+	text-align: center;
+	color: white;
+	z-index: 50;
+	margin: 0;
+}
+
+.panel-body
+{
+	vertical-align: middle;
+}
+
+.panel-body-vignette
+{
+	box-shadow: inset 0 0 12px rgba(0,0,0,0.5); 
+}
+
+.panel-vimmy
+{
+	background-color: rgba(0,0,0,0.15);
+}
+
+.panel-vimmy a
+{
+	color: rgba(82, 113, 124,1.0);
+}
+
+.panel-vimmy a:hover
+{
+	color: rgba(39, 174, 96,1.0);
+}
+
+.panel-vimmy hr
+{
+	margin: 0; 
+	/* http://stackoverflow.com/questions/6382023/changing-the-color-of-a-hr-element */
+	display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    padding: 0; 
+}
+
+.list-group-item
+{
+	background-color: rgba(0,0,0,0.05);
+	border: none;
+}

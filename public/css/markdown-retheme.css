@@ -1,0 +1,41 @@
+
+pre
+{
+	margin-top: 8px;
+}
+
+
+.container
+{
+	text-align: center;
+}
+.container img
+{
+	border: 1px solid white;
+	max-width: 75%;
+	margin: 16px;
+}
+
+p
+{
+
+	padding-left: 10%;
+	padding-right: 10%;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	text-align: center;
+}
+
+pre
+{
+	margin-left: 10%;
+	margin-right: 10%;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	text-align: left;
+}
+
+code
+{
+	margin-right: 2px;
+}

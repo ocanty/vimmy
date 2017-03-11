@@ -1,0 +1,19 @@
+start:
+    ; clear vals
+
+    mov a,0
+    mov b,0
+    mov d,0
+    ; push 5 onto the stack
+    push 5
+    push 2
+    ; store the 2nd value on the stack in a
+    mov a, [sp+2]
+    ; pop the stack and store in b
+    pop b
+    ; pop the stack and store in d
+    pop d
+
+    ; at this point d should be the same as a
+
+    jmp start

@@ -1,0 +1,87 @@
+extends layout.pug
+
+block append js
+	script(src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/codemirror.js")
+	script(src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js")
+	script(src="/js/project.js")
+	script.
+		$(document).ready(function() {
+			$.get("/projects/" + "#{project.project_id}" + "/code", function( data ) {
+				console.log(data)
+				window.vimmyDroppedCode = data
+			});
+			
+			$.getJSON("/projects/" + "#{project.project_id}" + "/data", function( data ) {
+				console.log(data)
+				window.vimmyDroppedData = data
+			});
+		})
+		
+		function postRefresh(url,callback)
+		{
+			$.ajax({
+				type: "POST",
+				url: url,
+				success: function(data)
+					{
+						location.reload()
+						
+						if(typeof callback != "undefined")
+						{
+							callback()
+						}
+					}
+			});
+		}
+
+block append css
+	link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/codemirror.css')
+	link(rel='stylesheet', href='/css/sandbox.css')
+	link(rel='stylesheet', href='/css/project.css')
+
+
+block append content
+	.row.row-full
+		.col-sm-12
+			textarea#code-entry(style="")
+	.row.row-full#data-row(style="display: none; padding-top: 8px; padding-bottom: 0;")
+		.col-sm-12(style="background: rgba(0,0,0,0.15);")
+			#vm-data-input(style="min-height: 128px; max-height: 128px; padding: 4px; overflow-y: scroll; overflow-x: hidden; margin: 1px;")
+	.row.row-full(style="margin-top: 4px")
+		.col-sm-12.project-box
+			.col-sm-7(style="positon: relative; top: 4px; padding: 0; margin: 0; text-align: left")
+				h2(style="vertical-align: middle; margin: 0; text-align: left") #{project.name}
+					span(style="vertical-align: middle; margin-left: 4px; font-size: 14px;") &bull;
+					span.text-striking(style="vertical-align: middle; margin: 2px; font-size: 18px;") #{project.votes.length} pts
+					span(style="vertical-align: middle; font-size: 14px; color: rgba(222,222,222,1);") &bull; <a href=#{"/users/" + project.creator.user_id}>#{project.creator.display_name}</a> &bull; #{ moment(project.created_at).format("DD/MM/YYYY") } &bull; #{project.views} views
+			.col-sm-5(style="vertical-align: middle; padding: 0; margin: 0; text-align: right")
+				if loggedIn && hasNotVoted
+						button.btn.btn-sandbox#btn-plusone +1
+				if isOwner
+					button.btn.btn-sandbox.bg-create-minor(onclick="window.location='/projects/" + project.project_id + "/edit'") Edit
+					button.btn.btn-sandbox.bg-create-minor(onclick="postRefresh('/projects/" + project.project_id + "/delete', function(){ window.location = '/create/my-projects' } )") Delete
+					if project.isPublished
+						button.btn.btn-sandbox.bg-discover-minor(onclick="postRefresh('/projects/" + project.project_id + "/unpublish')") Unpublish
+					else
+						button.btn.btn-sandbox.bg-discover-minor(onclick="postRefresh('/projects/" + project.project_id + "/publish')") Publish
+				button.btn.btn-sandbox(onclick="$('#data-row').toggle(\"slow\")") Data
+				button.btn.btn-sandbox#btn-assemble-run(onclick="window.location='/projects/" + project.project_id + "/run'") Run
+	if project.isPublished
+		hr
+		.row.row-full(style="margin-top: 4px;")
+			if loggedIn
+				.col-sm-12
+					textarea#comment-entry(placeholder="Your comment...",style="width: 100%")
+				.col-sm-10(style="padding: 0; margin: 0; text-align: left")
+					button.btn.btn-sandbox#post-comment Post Comment
+				.col-sm-2(style="")
+					.col-sm-2(style="padding: 0; margin: 0; text-align: right")
+						select.btn-sandbox#sort-type(style="box-sizing: border-box; max-width: 160px; border-radius: 4px; background-color: rgba(255,255,255,1); color: black")
+							option(value="score") Most Score
+							option(value="recent") Oldest
+			else
+				.col-sm-12(style="padding: 0; margin: 0; margin-bottom: 16px; text-align: right")
+					select.btn-sandbox#sort-type(style="box-sizing: border-box; max-width: 160px; border-radius: 4px; background-color: rgba(255,255,255,1); color: black")
+						option(value="score") Most Score
+						option(value="recent") Oldest
+			#comment-row

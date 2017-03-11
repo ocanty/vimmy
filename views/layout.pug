@@ -1,0 +1,158 @@
+doctype html
+html
+	head
+		title= title
+		meta(name="viewport",content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
+		block css
+			link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+			/// bootstrap modifications
+			link(rel='stylesheet', href='/css/bootstrap-vimmy.css')
+			link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css')
+			link(rel='stylesheet', href='/css/bootstrap-dropdownhover.min.css')
+			link(rel='stylesheet', href='/css/color.css')
+	body
+		.container-fluid(style="max-width: 960px; padding: 0")
+			nav.navbar.navbar-default.navbar-vimmy
+				.container-fluid
+					// Brand and toggle get grouped for better mobile display
+					.navbar-header
+						a.navbar-brand.navbar-brand-vimmy(href='http://localhost:3000')
+							img(alt="Vimmy",src="/img/vimmy-logo.png",style="max-height: 48px; margin-top:-12px")
+						button.navbar-toggle.collapsed(data-toggle="collapse",data-target="#navbar-collapsable-element")
+							span.icon-bar
+							span.icon-bar
+							span.icon-bar
+					.collapse.navbar-collapse#navbar-collapsable-element
+						ul.nav.navbar-nav.navbar-right
+							if loggedIn
+								li.dropdown
+									a.dropdown-toggle(href='#', data-toggle='dropdown', data-hover="dropdown", role='button', aria-haspopup='true', aria-expanded='false')
+										| Learn
+										span.caret
+									ul.dropdown-menu
+										li
+											a(href='/learn/overview') Lesson Overview
+											///if lessonInfo != undefined 
+												///li.divider(role='separator')
+										///if lessonInfo != undefined
+											///each lesson in lessonInfo 
+												///if lesson != undefined
+													///li
+														///a(href=lesson.link)=lesson.title
+			
+								li.dropdown
+									a.dropdown-toggle(href='#', data-toggle='dropdown', data-hover="dropdown", role='button', aria-haspopup='true', aria-expanded='false')
+										| Create
+										span.caret
+									ul.dropdown-menu
+										li
+											a(href='/create/sandbox') Sandbox
+										li
+											a(href='/create/my-projects') My Projects
+								li.dropdown
+									a.dropdown-toggle(href='#', data-toggle='dropdown', data-hover="dropdown", role='button', aria-haspopup='true', aria-expanded='false')
+										| Discover
+										span.caret
+									ul.dropdown-menu
+										li
+											a(href='/discover') Browse Projects
+										///li
+											///a(href='#') Top Projects
+										///li
+											///a(href='#') My Published Projects
+									
+							if loggedIn
+								li
+									li.navbar-form(style"margin: 0;")
+										button.btn.btn-vimmy(onclick="window.location.href='/'") Dashboard
+										button.btn.btn-vimmy(onclick="window.location.href='/logout'") Log Out
+							else
+								li
+									li.navbar-form
+										button.btn.btn-vimmy(onclick="window.onbeforeunload = null; lock.show()",style="background-color: rgba(0,0,0,0)") Sign In
+										button.btn.btn-vimmy(onclick="window.onbeforeunload = null; lock.show()") Sign Up
+								
+							
+
+		.vignette-vimmy
+		.container-fluid.container-vimmy(style="max-width: 960px; padding: 0; overflow: visible")
+			block content
+			
+			.row(style="margin: 0; margin-top: 4px; margin-bottom: 16px; border-radius: 4px; background-color: rgba(0,0,0,0.15);")
+				.col-sm-12.footer
+					p.footer-vimmy(style="font-size: 12px; padding-top: 8px; padding-bottom: 8px;")
+						///a(href="/tos",style="color: white") Terms of Use  
+						| &bull; Copyright © 2016 - ocanty &bull;
+						///a(href="/privacy",style="color: white")  Privacy Policy
+				
+		block js
+			script(src="https://cdn.auth0.com/js/lock/10.9.1/lock.min.js")
+
+			script.
+				// Construct an instance of Auth0Lock with your clientId and aut0 domain name
+				var lock = new Auth0Lock('CtfGO7UyK5w21EqzZsh1MOoObq4H8hzY', 'vimmy.eu.auth0.com',
+				{ 
+					auth: {
+						redirectUrl: 'http://localhost:3000/callback',
+						responseType: 'code',
+						params: {
+							scope: 'openid name email picture'
+						},
+					},
+					
+					theme: {
+						logo: "/img/vimmy-logo.png",
+						primaryColor: '#2fa150'
+					},
+					
+					languageDictionary: {
+						title: "Welcome"
+					}
+				});
+				
+			if popLock
+				script.
+					lock.show();
+				
+			script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js', type='text/javascript')
+			script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', type='text/javascript')
+			script(src='/js/bootstrap-dropdownhover.min.js', type='text/javascript')
+			/// Required for correct vignette sizing
+			script.
+				// enable tooltips
+				$(document).ready(function(){
+					$('[data-toggle="tooltip"]').tooltip(); 
+				});
+				
+				function onElementHeightChange(elm, callback){
+					var lastHeight = elm.clientHeight, newHeight;
+					(function run(){
+						newHeight = elm.clientHeight;
+						if( lastHeight != newHeight )
+							callback();
+						lastHeight = newHeight;
+
+						if( elm.onElementHeightChangeTimer )
+							clearTimeout(elm.onElementHeightChangeTimer);
+
+						elm.onElementHeightChangeTimer = setTimeout(run, 200);
+					})();
+				}
+
+				var fix_vignette = function()
+				{
+					var body = document.body,
+					html = document.documentElement;
+					var height = Math.max( body.scrollHeight, body.offsetHeight, 
+									   html.clientHeight, html.scrollHeight, html.offsetHeight );
+					$(".vignette-vimmy").css("height", height-64) // take away header height
+				}
+				
+				onElementHeightChange(document.body, function(){
+					fix_vignette()
+				});
+				
+				
+				$(window).resize(fix_vignette)
+				$(document).ready(fix_vignette)
+				$().bind("DOMSubtreeModified",fix_vignette)

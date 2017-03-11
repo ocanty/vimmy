@@ -1,0 +1,50 @@
+
+; do_gpu_message(type,arg0,arg1,arg2,arg3,arg4,arg5)
+do_gpu_message:
+	push bp
+    mov bp, sp
+    
+    ; load args
+    mov c, 0xF
+    mov d, [bp+6]
+    out d,c
+    
+    mov c, 0xE
+    mov d, [bp+8]
+    out d,c
+    
+    mov c, 0xD
+    mov d, [bp+10]
+    out d,c
+    
+    mov c, 0xC
+    mov d, [bp+12]
+    out d,c
+    
+    mov c, 0xB
+    mov d, [bp+14]
+    out d,c
+    
+    mov c, 0xA
+    mov d, [bp+16]
+    out d,c
+    
+    ; message type
+    mov c,0x9
+    mov d,[bp+18]
+    out d,c
+    
+    pop bp
+	ret
+    
+start:
+  push 0x1100
+  push 24
+  push 24
+  push 56
+  push 56
+  push 0
+  push 0xFEEF
+  call do_gpu_message
+  add sp, 14
+jmp start 

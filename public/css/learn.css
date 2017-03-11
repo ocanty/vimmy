@@ -1,0 +1,99 @@
+
+.lessonbox
+{
+	position: relative;
+	z-index: 100;
+	padding: 16px;
+
+	padding-bottom: 8px;
+	border-radius: 4px;
+	margin-top: 16px;
+	margin-bottom: 16px;
+}
+
+.lessonbox p
+{
+	text-align: left;
+	padding-bottom: 8px;
+}
+
+.dropper:hover
+{
+	cursor: pointer;
+	    animation-name: pulse;
+    animation-duration: 1s;
+    animation-iteration-count: 999;
+}
+
+.sublesson:hover
+{
+	cursor: pointer;
+	    animation-name: pulse;
+    animation-duration: 1s;
+    animation-iteration-count: 999;
+}
+
+
+.lessonbox .sublesson
+{
+	text-align: left;
+	padding-left: 32px;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	margin-left: -16px;
+	margin-right: -16px;
+	background-color: rgba(200,200,200,1);
+	border-top: 2px solid rgba(0,0,0,0.15);
+	border-bottom: 2px solid rgba(0,0,0,0.15);
+}
+
+.lessonbox .container
+{
+	display: none;
+	padding: 0;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	width: 100%;
+}
+
+.desc
+{
+	font-family: 'Lato', sans-serif;
+	font-weight: 400;
+	font-size: 12px;
+	text-shadow: 1px 1px 5px rgba(0,0,0,1);
+}
+
+.btn-lesson
+{
+	width: 100%;
+	height: 32px;
+	font-size: 12px;
+	background-color: rgba(0,0,0,0.15);
+	border: 1px solid white;
+}
+
+.status
+{
+	display: block;
+	font-family: 'Lato', sans-serif;
+	font-weight: 500;
+	font-size: 12px;
+	text-align: right;
+	text-shadow: 1px 1px 2px rgba(0,0,0,1); 
+}
+
+.not-started
+{
+	color: rgba(231, 76, 60,1.0);
+}
+
+.in-progress
+{
+	color: rgba(230, 126, 34,1.0);
+}
+
+.completed
+{
+	color: rgba(46, 204, 113,1.0);
+}

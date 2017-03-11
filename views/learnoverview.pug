@@ -1,0 +1,31 @@
+extends layout.pug
+
+block append js
+	script.
+		$(".sublesson").click(function()
+		{
+			console.log($(this).next(".container").toggle("slow"))
+		})
+
+block append css
+	link(rel='stylesheet', href='/css/learn.css')
+
+block append content
+	.row
+		h1 Lesson Overview
+	.row
+		.col-sm-1
+		.col-sm-10
+			each group in lessonsTree
+				.lessonbox.bg-learn
+					p
+						| #{group.name}
+					each lesson in group.lessons
+						p.sublesson.bg-learn-minor
+							| #{lesson.title}
+							.container.bg-learn-minor
+								.col-sm-10
+									.desc <i>#{lesson.desc}</i>
+								.col-sm-2(style="margin: 0 auto")
+									button.btn.btn-vimmy.btn-lesson(onclick="window.location = \"" + lesson.link + "\"") Open
+		.col-sm-1

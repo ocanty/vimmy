@@ -1,0 +1,40 @@
+
+.bg-transparent
+{
+	background-color: rgba(0,0,0,0.15) !important;
+}
+
+.text-striking
+{
+	color:rgba(39, 174, 96,1.0) !important;
+}
+
+.bg-learn
+{
+	background-color: rgba(39, 174, 96,1) !important;
+}
+
+.bg-learn-minor
+{
+	background-color: rgba(29, 164, 86,1) !important;
+}
+
+.bg-create
+{
+	background-color: rgba(42, 142, 209,1.0) !important;
+}
+
+.bg-create-minor
+{
+	background-color: rgba(52, 152, 219,0.75) !important;
+}
+
+.bg-discover-minor
+{
+	background-color: rgba(132, 58, 163,1.0) !important;
+}
+
+.bg-discover
+{
+	background-color: rgba(142, 68, 173,1.0) !important;
+}

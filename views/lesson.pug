@@ -1,0 +1,12 @@
+extends layout.pug
+
+block append css
+	link(rel='stylesheet', href='/css/learn.css')
+	link(rel='stylesheet', href='/css/markdown-retheme.css')
+
+block append content
+	.container.bg-transparent(style="width: 100%; padding-bottom: 16px")!=markdown
+		.row(style="text-align: right; margin-top: 16px")
+			.col-sm-10
+			.col-sm-2
+				button.btn.btn-vimmy.btn-lesson(onclick="window.location=window.location+'/next'") Next Lesson

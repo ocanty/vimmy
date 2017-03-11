@@ -1,0 +1,101 @@
+
+.feature-box
+{
+	background-color: rgba(155, 89, 182,0.75);
+	text-align: center;
+}
+
+.feature-box p
+{
+	position: relative;
+	font-family: 'Lato', sans-serif;
+	font-weight: 300;
+	font-size: 14px;
+	margin-top: 24px;
+	padding-bottom: 24px;
+	text-align: center;
+	color: white;
+	z-index: 50;
+	
+}
+
+.feature-image
+{
+	text-align: center;
+	margin: 0 auto;
+	font-size: 64px;
+	background-color: rgba(0,0,0,0.25);
+	padding: 32px;
+	border-radius: 96px;
+	color: rgba(200,200,200,1);
+}
+
+.tagimage
+{
+	display: block;
+    text-align: center;
+    margin: 0;
+	margin-top: 0;
+    border: rgba(180,180,180,0.25);
+	position: relative;
+	height: auto;
+	min-width: 100%;
+	padding: 0;	
+}
+
+.row-feature-box
+{
+	background-color: rgba(155, 89, 182,0.75);
+}
+
+@media (max-width: 768px)
+{
+	.row-feature-box
+	{
+		background-color: rgba(155, 89, 182,1);
+	}
+}
+
+
+.question-row
+{
+	border-bottom: 1px groove rgba(0,0,0,0.25); padding-top: 24px; 
+	padding-bottom: 48px;
+	background-color: rgba(0,0,0,0.15);
+}
+
+.question-row h2
+{
+	font-size: 32px;
+	margin-bottom: 8px
+}
+
+.question-row p
+{
+	font-size: 16px; 
+	padding-left: 8px
+}
+
+.question-row .img
+{
+	background-position: center center;
+	background-size: cover;
+	margin-top: 32px; 
+	position: relative;
+	top: 8px;
+	border: 2px solid white; 
+	border-radius: 100%; 
+	height: 128px; 
+	width: 100%;
+	box-shadow: 0 0 8px 8px rgba(0,0,0,0.15);
+}
+
+.img
+{
+	background-position: top center;
+	background-size: cover;
+	border-radius: 4px;
+	margin-top: 16px;
+	margin-bottom: 16px;
+}
+

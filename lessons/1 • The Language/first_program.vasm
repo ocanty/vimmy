@@ -1,0 +1,9 @@
+start:
+	; move 1 into a
+	mov a, 1
+	; move 2 into b
+	mov b, 2
+	; add b to a storing the result in a (the destination operand)
+	add a, b
+	
+	jmp start
