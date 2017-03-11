@@ -70,7 +70,7 @@ namespace Vimmy
 				"JG":  new OpSpec("JG", 0x20, new OperandSpec(1, OperandTypeSH("r", "m", "c"))),
 				"JGE": new OpSpec("JGE", 0x21, new OperandSpec(1, OperandTypeSH("r", "m", "c"))),
 				"JL":  new OpSpec("JL", 0x22, new OperandSpec(1, OperandTypeSH("r", "m", "c"))),
-				"JLE": new OpSpec("JLE", 0x23, new OperandSpec(1, OperandTypeSH("r", "m", "c")))
+				"JLE": new OpSpec("JLE", 0x23, new OperandSpec(1, OperandTypeSH("r", "m", "c"))),
 				"CMP": new OpSpec("CMP", 0x24, new OperandSpec(2, OperandTypeSH("rr", "rm", "mr","rc")))
 				
 				

@@ -45,9 +45,9 @@ var strategy = new Auth0Strategy({
 passport.use(strategy);
 
 app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: true,
-  saveUninitialized: true
+	secret: process.env.SESSION_SECRET,
+	resave: true,
+	saveUninitialized: true
 }));
 app.use(passport.initialize());
 app.use(passport.session());

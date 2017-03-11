@@ -18,6 +18,9 @@
     <ClCompile Include="build.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="lodepng.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -30,30 +33,24 @@
     <ClCompile Include="operations.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="hardware\gpu.c">
+    <ClCompile Include="vm.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="hardware\keyboard.c">
+    <ClCompile Include="hardware\gpu.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="hardware\interrupter.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="lodepng\lodepng.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="lodepng.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="vm.ce">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="vm.c">
+    <ClCompile Include="hardware\keyboard.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="build.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lodepng.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="memory.h">
@@ -77,16 +74,10 @@
     <ClInclude Include="hardware\gpu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="hardware\keyboard.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="hardware\interrupter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lodepng\lodepng.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lodepng.h">
+    <ClInclude Include="hardware\keyboard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

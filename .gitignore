@@ -1,3 +1,6 @@
+
+build/*
+
 # n++ backup files
 *.bak
 
@@ -6,6 +9,9 @@
 
 # emscripten object files
 *.bc
+src/toolchain/vm/vm.js
+src/toolchain/vm/vm.data
+src/toolchain/vm/vm.js.mem
 
 # other
 *.disabled

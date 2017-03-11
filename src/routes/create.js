@@ -18,7 +18,6 @@ router.get("*/vm.data", function(req,res,next)
 })
 
 
-
 router.get('/', ensureLoggedIn, function(req, res, next)
 {
 	res.render("sandbox", { 

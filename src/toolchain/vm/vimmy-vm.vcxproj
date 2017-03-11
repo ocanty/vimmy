@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{E3F0AC53-ED0B-4450-A020-16F7E87534FE}</ProjectGuid>
+    <ProjectGuid>{77B1F892-0153-4052-AE34-68A9C085A3C1}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -102,13 +102,11 @@
     <ClCompile Include="hardware\interrupter.c" />
     <ClCompile Include="hardware\keyboard.c" />
     <ClCompile Include="lodepng.c" />
-    <ClCompile Include="lodepng\lodepng.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="memory.c" />
     <ClCompile Include="operands.c" />
     <ClCompile Include="operations.c" />
     <ClCompile Include="vm.c" />
-    <ClCompile Include="vm.ce" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="build.h" />
@@ -116,7 +114,6 @@
     <ClInclude Include="hardware\interrupter.h" />
     <ClInclude Include="hardware\keyboard.h" />
     <ClInclude Include="lodepng.h" />
-    <ClInclude Include="lodepng\lodepng.h" />
     <ClInclude Include="memory.h" />
     <ClInclude Include="operands.h" />
     <ClInclude Include="operations.h" />

@@ -10,10 +10,23 @@ var exec = require('child_process').exec;
 var typescript = require('gulp-typescript');
 var typedoc = require("gulp-typedoc");
 
+
+gulp.task('build-express', function()
+{
+    console.log("Piping express into /build")
+    gulp.src(['src/bin/**/*']).pipe(gulp.dest('build/bin'));
+	gulp.src(['src/lessons/**/*']).pipe(gulp.dest('build/lessons'));
+	gulp.src(['src/models/**/*']).pipe(gulp.dest('build/models'));
+	gulp.src(['src/public/**/*']).pipe(gulp.dest('build/public'));
+	gulp.src(['src/routes/**/*']).pipe(gulp.dest('build/routes'));
+	gulp.src(['src/views/**/*']).pipe(gulp.dest('build/views'));
+	gulp.src('src/app.js').pipe(gulp.dest('build/'))
+});
+
 gulp.task('build-toolchain-compiler-documentation', function()
 {
     console.log("Generating documentation for toolchain compiler...")
-    return gulp.src('toolchain/compiler/**/*.ts')
+    return gulp.src('src/toolchain/compiler/**/*.ts')
     .pipe(
         typedoc
         (
@@ -43,7 +56,7 @@ gulp.task('build-toolchain-compiler', function()
 {
     console.log("Compiling toolchain compiler -> public/js/toolchain/compiler.js")
 
-    gulp.src('toolchain/compiler/**/*.ts')
+    gulp.src('src/toolchain/compiler/**/*.ts')
     .pipe(
         typescript
         (
@@ -56,14 +69,14 @@ gulp.task('build-toolchain-compiler', function()
             }
         )
     )
-    .pipe(gulp.dest('public/js/toolchain/'));
+    .pipe(gulp.dest('build/public/js/toolchain/'));
 })
 
 // Copies the operation and register definitions to C equivalents from the compiler
 gulp.task('build-toolchain-vmspec', function()
 {
     console.log("Generating opcode and register specification for the C VM...")
-    fs.readFile('./toolchain/compiler/Vimmy/Spec/Spec.ts',function(err,data)
+    fs.readFile('./src/toolchain/compiler/Vimmy/Spec/Spec.ts',function(err,data)
     {
         if(err){ return console.log("Can't open Spec.ts to generate specification info!") }
         
@@ -128,7 +141,7 @@ gulp.task('build-toolchain-vmspec', function()
                 //    "#pragma once \n\n// WARNING: This is an automatically generated file by gulp that contains the vimmy specification from Spec.ts (the official Vimmy assembler) \n\n" + cppFriendlyRegSpec
                 //)
                 
-                fs.writeFileSync("./toolchain/vm/OpSpec.h",
+                fs.writeFileSync("./src/toolchain/vm/OpSpec.h",
                     "#pragma once \n\n// WARNING: This is an automatically generated file by gulp that contains the vimmy specification from Spec.ts (the official Vimmy assembler) \n\n" + cppFriendlyOpSpec
                 )
             }
@@ -147,7 +160,7 @@ gulp.task('build-toolchain-vm', function()
     }
 	
 	// build c
-    glob("toolchain/vm/**/*.c", function (er, files) 
+    glob("src/toolchain/vm/**/*.c", function (er, files) 
     {
         
         var run_out_once = true
@@ -155,8 +168,8 @@ gulp.task('build-toolchain-vm', function()
         for(var f in files)
         {
 			// compile objects
-            console.log("emcc -O3 " + files[f] + " -o toolchain/vm/" + f + ".bc")
-            exec("emcc -O3 " + files[f] + " -o toolchain/vm/" + f + ".bc", function (err, stdout, stderr) 
+            console.log("emcc -O3 " + files[f] + " -o src/toolchain/vm/" + f + ".bc")
+            exec("emcc -O3 " + files[f] + " -o src/toolchain/vm/" + f + ".bc", function (err, stdout, stderr) 
                 { 
                     console.log(stdout); 
                     console.log(stderr); 
@@ -169,18 +182,18 @@ gulp.task('build-toolchain-vm', function()
 
 							
 							// link
-                            glob("./toolchain/vm/*.bc", function (er, efiles)
+                            glob("./src/toolchain/vm/*.bc", function (er, efiles)
                             {
 								
-                                console.log("emcc -O3 " + efiles.join(" ") + "-o toolchain/vm/vm.js -s ASSERTIONS=2  -s RESERVED_FUNCTION_POINTERS=2 --preload-file ./toolchain/vm/data")
-                                exec("emcc -O3 " + efiles.join(" ") + " -o toolchain/vm/vm.js -s ASSERTIONS=2 -s RESERVED_FUNCTION_POINTERS=2 --preload-file ./toolchain/vm/data", function (err, stdout, stderr) 
+                                console.log("emcc -O3 " + efiles.join(" ") + "-o src/toolchain/vm/vm.js -s ASSERTIONS=2  -s RESERVED_FUNCTION_POINTERS=2 --preload-file ./src/toolchain/vm/data")
+                                exec("emcc -O3 " + efiles.join(" ") + " -o src/toolchain/vm/vm.js -s ASSERTIONS=2 -s RESERVED_FUNCTION_POINTERS=2 --preload-file ./src/toolchain/vm/data", function (err, stdout, stderr) 
                                 { 
                                     if(!err)
                                     {
 										// pipe output and memory preinit to relevant directories
-                                        gulp.src("toolchain/vm/vm.js").pipe(gulp.dest("public/js/toolchain/"))
-										gulp.src("toolchain/vm/vm.data").pipe(gulp.dest("public/"))
-                                        gulp.src("toolchain/vm/vm.js.mem").pipe(gulp.dest("public/"))
+                                        gulp.src("src/toolchain/vm/vm.js").pipe(gulp.dest("build/public/js/toolchain/"))
+										gulp.src("src/toolchain/vm/vm.data").pipe(gulp.dest("build/public/"))
+                                        gulp.src("src/toolchain/vm/vm.js.mem").pipe(gulp.dest("build/public/"))
 										
                                     }
                                     
@@ -198,13 +211,23 @@ gulp.task('build-toolchain-vm', function()
 })
 
 
-gulp.task('build-all', function()
+gulp.task('build', function()
 {
-    runSequence('build-toolchain-compiler','build-toolchain-vmspec','build-toolchain-vm','watch')
+    runSequence('build-express','build-toolchain-compiler','build-toolchain-vmspec','build-toolchain-vm','watch')
+})
+
+gulp.task('run', function()
+{
+    exec("cd build && node ./bin/www", function (err, stdout, stderr)
+	{
+		if(err) console.log(err)
+		console.log(stdout)
+		console.log(stderr)
+	})
 })
 
 gulp.task('watch', function()
 {
-    gulp.watch(['toolchain/compiler/**/*.ts'], ['build-toolchain-compiler','build-toolchain-vmspec']);
-    gulp.watch(['toolchain/vm/**/*.h','toolchain/vm/**/*.c'], ['build-toolchain-vm']);
+    gulp.watch(['src/toolchain/compiler/**/*.ts'], ['build-toolchain-compiler','build-toolchain-vmspec']);
+    gulp.watch(['src/toolchain/vm/**/*.h','src/toolchain/vm/**/*.c'], ['build-toolchain-vm']);
 })
