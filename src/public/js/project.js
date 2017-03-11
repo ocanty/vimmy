@@ -31,6 +31,7 @@ $(document).ready(function()
 	this.Editor = CodeMirror.fromTextArea(document.getElementById("code-entry"),{
 		lineNumbers: true,
 		theme: "base16-dark",
+		mode: "gas",
 		readOnly: true
 	});
 	

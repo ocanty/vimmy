@@ -2,6 +2,7 @@ extends layout.pug
 
 block append js
 	script(src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/codemirror.js")
+	script(src="/js/cm_highlight.js")
 	script(src="https://cdnjs.cloudflare.com/ajax/libs/virtual-keyboard/1.26.17/js/jquery.keyboard.min.js")
 	script(src="/js/toolchain/compiler.js") // Load order is important; sandbox.js relies on compiler.js
 	script(src="/js/sandbox.js")

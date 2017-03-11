@@ -14,12 +14,11 @@ Vimmy.Integration = function()
 	// Check if code was dropped by the server
 	var _self = this
 	
-	
-		
 	// Setup editor
 	this.Editor = CodeMirror.fromTextArea(document.getElementById("code-entry"),{
 		lineNumbers: true,
-		theme: "base16-dark"
+		theme: "base16-dark",
+		mode: "gas"
 	});
 	
 	// Set up event listeners to tell the user to save if they have changed code in the editor

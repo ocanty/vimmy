@@ -228,6 +228,13 @@ gulp.task('run', function()
 
 gulp.task('watch', function()
 {
+	
+	gulp.watch(['src/lessons/**/*'],['build-express'])
+	gulp.watch(['src/models/**/*'],['build-express']) 
+	gulp.watch(['src/public/**/*'],['build-express']) 
+	gulp.watch(['src/routes/**/*'],['build-express']) 
+	gulp.watch(['src/views/**/*'],['build-express'])  
+
     gulp.watch(['src/toolchain/compiler/**/*.ts'], ['build-toolchain-compiler','build-toolchain-vmspec']);
     gulp.watch(['src/toolchain/vm/**/*.h','src/toolchain/vm/**/*.c'], ['build-toolchain-vm']);
 })

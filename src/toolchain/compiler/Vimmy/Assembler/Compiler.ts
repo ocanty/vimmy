@@ -239,7 +239,7 @@ namespace Vimmy
 							this.tokenPtr++
 						}
 					
-						if(this.tokens.getType(this.tokenPtr) == "SEMICOLON")
+						if(this.tokens.getType(this.tokenPtr) == "COLON")
 						{
 							console.log("got comment")
 							is_in_comment = true
@@ -254,7 +254,7 @@ namespace Vimmy
 
 								if (id.charAt(id.length - 1) == ":") // check if its actually a section label, ending with :
 								{
-									// Remove semicolon
+									// Remove COLON
 									var no_semi = id.substring(0, id.length - 1)
 
 									// Push to labels

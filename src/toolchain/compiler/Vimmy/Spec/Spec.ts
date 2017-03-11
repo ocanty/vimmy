@@ -38,7 +38,7 @@ namespace Vimmy
             return this.regDictionary
         }
 
-        function getOpDictionary() : any
+        export function getOpDictionary() : any
         {
             this.opDictionary = this.opDictionary ||
             {
@@ -153,7 +153,7 @@ namespace Vimmy
                 //this.tokenSpec.addKeyword("endp ", "END_PROCEDURE")
 				
 				// COMMENTS
-				this.tokenSpec.addKeyword(";", "SEMICOLON")
+				this.tokenSpec.addKeyword(";", "COLON")
 
                 // Operators & punctuation
                 this.tokenSpec.addKeyword(",", "COMMA")
