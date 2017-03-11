@@ -44,9 +44,12 @@ block append content
 							.panel-widecol(style="vertical-align: middle; width: 100%;")
 								p(style="background-color: rgba(0,0,0,0.25);") Recent Lessons
 									- for (var i = lesson_info_largest_n; i > 0; --i) {
+									- var the_title = "Unknown Lesson"
+									- var the_link = "/"
+									- if(lesson_info[i]){ the_link = lesson_info[i].link; the_title =  lesson_info[i].title }
 										<u>
-											a(href=lesson_info[i].link style="color: white")
-												p(style="padding: 8px; text-align: left; background-color: rgba(0,0,0,0.10)")=lesson_info[i].title
+											a(href=the_link style="color: white")
+												p(style="padding: 8px; text-align: left; background-color: rgba(0,0,0,0.10)")=the_title
 										</u>
 									- }
 										

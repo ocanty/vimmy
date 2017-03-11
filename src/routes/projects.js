@@ -224,7 +224,8 @@ router.get('/:project_id/run', function(req, res, next)
 				user: (isLoggedIn == true ? req.user.db : { }),
 				project: project,
 				getProject: true,
-				runMode: true
+				runMode: true,
+				isOwner: (req.user.db.user_id == project.creator.user_id ? true : false)
 			});
 		}
 	})

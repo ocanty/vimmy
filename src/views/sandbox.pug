@@ -1,15 +1,19 @@
 extends layout.pug
 
 block append js
-	script(src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/codemirror.js")
-	script(src="/js/cm_highlight.js")
-	script(src="https://cdnjs.cloudflare.com/ajax/libs/virtual-keyboard/1.26.17/js/jquery.keyboard.min.js")
-	script(src="/js/toolchain/compiler.js") // Load order is important; sandbox.js relies on compiler.js
-	script(src="/js/sandbox.js")
-	script(src="/js/toolchain/vm.js") // When Emscripten loads it will fire the creation of Vimmy.Integration in sandbox.js, doing VM init
+	
+	if runMode
+		script.
+			window.vimmyRunMode = true
+	else
+		script.
+			window.vimmyRunMode = false
+	
 	if getProject
 		script.
+		
 			$(document).ready(function() {
+			
 				$.get("/projects/" + "#{project.project_id}" + "/code", function( data ) {
 					console.log(data)
 					window.vimmyDroppedCode = data
@@ -26,6 +30,15 @@ block append js
 			$(document).ready(function() {
 				window.vimmyPostUrl = "#{postUrl}"
 			})
+
+
+	script(src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/codemirror.js")
+	script(src="/js/cm_highlight.js")
+	script(src="https://cdnjs.cloudflare.com/ajax/libs/virtual-keyboard/1.26.17/js/jquery.keyboard.min.js")
+	script(src="/js/toolchain/compiler.js") // Load order is important; sandbox.js relies on compiler.js
+	script(src="/js/sandbox.js")
+	script(src="/js/toolchain/vm.js") // When Emscripten loads it will fire the creation of Vimmy.Integration in sandbox.js, doing VM init
+	
 block append css
 	link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/codemirror.css')
 	link(rel='stylesheet', href='/css/sandbox.css')
@@ -63,9 +76,17 @@ block append content
 						button.btn.btn-sandbox.bg-create#btn-save(disabled style="pointer-events: all !important;" data-toggle="tooltip" title="Saving projects requires an account") Save
 						///button.btn.btn-sandbox.bg-discover#btn-publish(disabled style="pointer-events: all !important; " data-toggle="tooltip" title="Publishing projects requires an account") Publish
 		.col-sm-5(style="padding: 0; text-align: right")
+	
 			button.btn.btn-sandbox(onclick="$('#data-row').toggle(\"slow\")") Data
-			button.btn.btn-sandbox#btn-assemble Assemble
-			button.btn.btn-sandbox#btn-assemble-run Assemble & Run
+	
+			if runMode
+				if isOwner
+					button.btn.btn-sandbox.bg-create-minor(onclick="window.location='/projects/" + project.project_id + "/edit'") Edit
+			
+				button.btn.btn-sandbox#btn-assemble-run Run
+			else
+				button.btn.btn-sandbox#btn-assemble Assemble
+				button.btn.btn-sandbox#btn-assemble-run Assemble & Run
 	.row.row-full
 		.col-sm-12
 			.msg-box#compiler-messages(style="min-height: 160px; max-height: 160px;")

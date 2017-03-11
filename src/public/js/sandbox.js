@@ -18,7 +18,8 @@ Vimmy.Integration = function()
 	this.Editor = CodeMirror.fromTextArea(document.getElementById("code-entry"),{
 		lineNumbers: true,
 		theme: "base16-dark",
-		mode: "gas"
+		mode: "gas",
+		readOnly: window.vimmyRunMode
 	});
 	
 	// Set up event listeners to tell the user to save if they have changed code in the editor
