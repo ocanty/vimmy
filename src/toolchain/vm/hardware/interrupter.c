@@ -43,8 +43,8 @@ void vmhw_interrupter_queue_interrupt(uint8_t handler)
 {
 	// TODO: error check size
 
-	printf("Queuing interrupt: %u, interrupt queue is now %u elements long\n", handler,0xFF-g_vmInterrupterDvc->m_InterruptQueuePtr);
+	
 	g_vmInterrupterDvc->m_InterruptQueuePtr--;
 	g_vmInterrupterDvc->m_InterruptQueue[g_vmInterrupterDvc->m_InterruptQueuePtr] = handler;
-
+	printf("Queuing interrupt: 0x%02x, interrupt queue is now %u element(s) long\n", handler, 0xFF - g_vmInterrupterDvc->m_InterruptQueuePtr);
 }

@@ -493,22 +493,44 @@ namespace Vimmy
 
                             var ret = null
 
-                            //console.log(checkStr)
+                            console.log(checkStr)
                             switch (checkStr)
                             {
                                 case "REGISTERPLUSNUMBER":
-                                    if (parseInt(firstID, 10) > 0xFFF) { this.haltError("    Register memory offset greater than 0xFFF (4095) at line " + (this.tokens.getLine(this.tokenPtr))) }
+                                    if (parseInt(number, 10) > 0xFFF) { this.haltError("    Register memory offset greater than 0xFFF (4095) at line " + (this.tokens.getLine(this.tokenPtr))) }
                                     ret = new OperandMemory(OperandMemoryType.RegisterDisplacement)
                                     ret.setRegister(Spec.getRegister(firstID))
                                     ret.setDisplacement(parseInt(number, 10))
                                     return ret
 
                                 case "REGISTERMINUSNUMBER":
-                                    if (parseInt(firstID, 10) > 0xFFF) { this.haltError("    Register memory offset greater than 0xFFF (4095) at line " + (this.tokens.getLine(this.tokenPtr))) }
+                                    if (parseInt(number, 10) > 0xFFF) { this.haltError("    Register memory offset greater than 0xFFF (4095) at line " + (this.tokens.getLine(this.tokenPtr))) }
                                     ret = new OperandMemory(OperandMemoryType.RegisterDisplacement)
                                     ret.setRegister(Spec.getRegister(firstID))
                                     ret.setDisplacement(-parseInt(number, 10))
                                     return ret
+								
+								case "LABELPLUSNUMBER":
+									ret = new OperandMemory(OperandMemoryType.Constant)
+                                    ret.setDisplacement(this.getLabel(firstID) + parseInt(number, 10))
+									return ret
+
+
+                                case "LABELMINUSNUMBER":
+									ret = new OperandMemory(OperandMemoryType.Constant)
+                                    ret.setDisplacement(this.getLabel(firstID) - parseInt(number, 10))
+									return ret
+								
+								case "NUMBERPLUSNUMBER":
+									ret = new OperandMemory(OperandMemoryType.Constant)
+                                    ret.setDisplacement(parseInt(firstID,10) + parseInt(number, 10))
+									return ret
+
+
+                                case "NUMBERMINUSNUMBER":
+									ret = new OperandMemory(OperandMemoryType.Constant)
+                                    ret.setDisplacement(parseInt(firstID,10) - parseInt(number, 10))
+									return ret
                             }
                         }
                         else
