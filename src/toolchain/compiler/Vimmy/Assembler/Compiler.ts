@@ -188,13 +188,14 @@ namespace Vimmy
                 }
             }
 
-
+			private compileTime: Date
             /**
              * Compiles vASM and returns a CompileResult structure
              * @param tokens A token-stream structure
              */
             compile(tokens : TokenStream, isLabelCompile? : boolean, additionalLabels?: { [labelName: string]: number; } ) : CompileResult
             {
+			
                 try
                 {
                     this.tokens = tokens
@@ -203,6 +204,7 @@ namespace Vimmy
 					this.isLabelCompile = isLabelCompile
 					if(this.isLabelCompile)
 					{
+						this.compileTime = new Date();
 						this.romSize = 0
 						this.labels = additionalLabels || { }
 					}
@@ -259,7 +261,7 @@ namespace Vimmy
 
 									// Push to labels
 									this.addLabel(no_semi, this.romPtr)
-									this.pushInfo("NEW SECTION: " + no_semi + " in binary near line " + (this.tokens.getLine(this.tokenPtr)))
+									this.pushInfo("Entered section " + no_semi + " near line " + (this.tokens.getLine(this.tokenPtr)))
 									skip_token = true // Dont compile this token as we already processed it
 								}
 							}
@@ -269,7 +271,7 @@ namespace Vimmy
 								let encodedInstruction = this.compileInstruction()
 								//console.log(encodedInstruction)
 								//Vimmy.Utilities.printHex(encodedInstruction)
-								this.pushInfo(Vimmy.Utilities.asHex(encodedInstruction))
+								// this.pushInfo(Vimmy.Utilities.asHex(encodedInstruction))
 
 								for (var k in encodedInstruction)
 								{
@@ -308,6 +310,17 @@ namespace Vimmy
 				}
 				else
 				{
+					if(!this.error)
+					{
+						this.pushInfo("Compilation successful...\n(" + ((new Date().getTime()-this.compileTime.getTime())/1000) + "s)")
+						
+					}
+					else
+					{
+						// cant use haltError as it throws exception
+						this.pushMessage(new CompileMessage(CompileMessageType.Error, "Compilation failed!"));
+					}
+					
 					return new CompileResult(
 						this.error,
 						this.compileMessages,
@@ -340,13 +353,13 @@ namespace Vimmy
                 // If its valid
                 if (opSpec)
                 {
-                    this.pushInfo("Compiling instruction " + initial_id + " near line " + (this.tokens.getLine(this.tokenPtr)))
+                    // this.pushInfo("Compiling instruction " + initial_id + " near line " + (this.tokens.getLine(this.tokenPtr)))
 
 
                     // Get the operand specification and number of operands required
                     let numOperands = opSpec.getOperandSpec().getNumOperands()
 
-                    this.pushInfo("    Expected number of operands: " + numOperands.toString())
+                    //this.pushInfo("    Expected number of operands: " + numOperands.toString())
 
                     // Dump each operand into an array
                     let operands : Array<Operand> = [ ]
@@ -376,7 +389,7 @@ namespace Vimmy
                     try
                     {
                         let instruction = new Instruction(opSpec, operands)
-                        this.pushInfo("    Instruction was valid, encoding into binary!")
+                        //this.pushInfo("    Instruction was valid, encoding into binary!")
                         return encodeInstruction(instruction);
 
                     }

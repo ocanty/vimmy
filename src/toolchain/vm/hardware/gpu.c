@@ -10,7 +10,7 @@
 vmhw_gpu* g_vmGpuDvc;
 vmhw_gpu_operation_t g_vmGpuOperations[0x1000];
 
-#define VMHW_GPU_DEFAULT_TRANSPARENCY_MASK 0xF8
+#define VMHW_GPU_DEFAULT_TRANSPARENCY_MASK 0xF81F
 
 #define SCREEN_WIDTH 256
 
@@ -22,10 +22,10 @@ void vmhw_gpu_init(uint16_t* io,uint8_t* dma)
 	g_vmGpuDvc->vm_dma = dma;
 
 	g_vmGpuDvc->m_Screen = (uint16_t*)malloc(SCREEN_WIDTH*SCREEN_WIDTH*sizeof(uint16_t));
-	memset((g_vmGpuDvc->m_Screen), VMHW_GPU_DEFAULT_TRANSPARENCY_MASK, SCREEN_WIDTH*SCREEN_WIDTH * sizeof(uint16_t));
+	memset((g_vmGpuDvc->m_Screen), 0x00, SCREEN_WIDTH*SCREEN_WIDTH * sizeof(uint16_t));
 
 	g_vmGpuDvc->m_Framebuffer = (uint16_t*)malloc(SCREEN_WIDTH*SCREEN_WIDTH * sizeof(uint16_t));
-	memset((g_vmGpuDvc->m_Framebuffer), VMHW_GPU_DEFAULT_TRANSPARENCY_MASK, SCREEN_WIDTH*SCREEN_WIDTH * sizeof(uint16_t));
+	memset((g_vmGpuDvc->m_Framebuffer), 0x00, SCREEN_WIDTH*SCREEN_WIDTH * sizeof(uint16_t));
 
 	g_vmGpuDvc->m_Font = (uint16_t*)malloc(128 * 128 * sizeof(uint16_t));
 	memset((g_vmGpuDvc->m_Font), 0x0008, 128 * 128 * sizeof(uint16_t));
@@ -115,7 +115,7 @@ void vmhw_gpu_think(uint16_t* io,uint8_t* dma)
 		// process the message
 		g_vmGpuOperations[(*msg) & 0x0FFF](g_vmGpuDvc, args);
 
-		printf("Dispatched gpu msg %u\n", *msg);
+		// printf("Dispatched gpu msg %u\n", *msg);
 		// tell the cpu to fuck off
 		// clear all gpu ports
 		memset((io+VMHW_GPU_IOPORT_BEGIN), 0x0000, sizeof(uint16_t) * 7);
@@ -190,8 +190,8 @@ void vmhw_gpu_set_text_terminal(vmhw_gpu* gpu, uint16_t* args)
 
 	gpu->m_TransparencyMaskEnabled = TRUE;
 	gpu->m_TransparencyMask = VMHW_GPU_DEFAULT_TRANSPARENCY_MASK;
-	uint8_t console_x = 1;
-	uint8_t console_y = 1;
+	uint8_t console_x = args[0];
+	uint8_t console_y = args[1];
 	for (uint8_t* i = (gpu->vm_dma + args[4]);
 		i < (gpu->vm_dma + args[4])+strlen(gpu->vm_dma + args[4]);
 		i++)
