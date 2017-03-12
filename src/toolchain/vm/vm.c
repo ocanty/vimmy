@@ -112,7 +112,7 @@ void EXPORT vm_reset(vm_state* vm)
 	}
 
 	// Clear I/O ports
-	for (int i = 0; i < 0xF; i++)
+	for (int i = 0; i < 0xFF; i++)
 	{
 		vm->m_IOPorts[i] = 0;
 	}
