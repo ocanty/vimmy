@@ -8,13 +8,13 @@
 
 #include "build.h"
 
-typedef char bool;
-#define TRUE 1
-#define FALSE 0
 
 // vm_instruction_data
 typedef struct vm_instruction_data
 {
+	BOOL m_ContainsRegisters;
+	BOOL m_ContainsImmediate;
+	BOOL m_ContainsDisplacement;
 	uint8_t m_RegDst;			// The encoded register id of the destination reg
 	uint8_t m_RegSrc;			// The encoded register id of the source reg
 	uint16_t m_Displacement;	// Displacement value

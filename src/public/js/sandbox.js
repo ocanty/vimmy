@@ -44,15 +44,21 @@ Vimmy.Integration = function()
 	window.onbeforeunload = _self.confirmOnPageExit;
 	// Set default code value
 	
-	this.Editor.getDoc().setValue('' +
-		'start: mov a,1\n' +
-		'mov a,[a+1]\n' +
-		'mov a,3\n' +
-		'mov a,4\n' +
-		'mov a,5\n' +
-		'mov a,6\n' +
-		'jmp start' +
-  ' '.toLowerCase());
+	if(!window.vimmyRunMode)
+	{
+		this.Editor.getDoc().setValue(
+			'start: mov a,1\n' +
+			'mov a,[a+1]\n' +
+			'mov a,3\n' +
+			'mov a,4\n' +
+			'mov a,5\n' +
+			'mov a,6\n' +
+			'jmp start'.toLowerCase());
+	}
+	else	
+	{
+		this.Editor.getDoc().setValue("Loading project...")
+	}
 	
 	// Set up event listeners to tell the user to save if they have changed code in the editor
 	this.Editor.on("change",function(cm,change)
@@ -164,15 +170,17 @@ Vimmy.Integration = function()
 		}
 	})
 	
-	_self.addDataVar("number","number_test",7)
+/* 	_self.addDataVar("number","number_test",7)
 	_self.addDataVar("string","string_asd","hey")
 	_self.addDataVar("bytearray","bytearray_bytearray","AABB")
 	_self.addDataVar("sprite","sprite_test2","DDEE")
+	_self.addDataVar("constant","constant_ayy","2312") */
 	
-	$("#btn-add-sprite").click(function(){ _self.addDataVar("sprite","sprite_"+Math.round(Math.random()*50).toString(),"Click change to insert sprite") })
-	$("#btn-add-number").click(function(){ _self.addDataVar("number","number_"+Math.round(Math.random()*50).toString(),"0") })
-	$("#btn-add-string").click(function(){ _self.addDataVar("string","string_"+Math.round(Math.random()*50).toString(),"Hello world!") })
-	$("#btn-add-bytearray").click(function(){ _self.addDataVar("bytearray","bytearray_"+Math.round(Math.random()*50).toString(),"AABBCCDDEEFF0011223344") })
+	$("#btn-add-sprite").click(		function(){ _self.addDataVar("sprite","sprite_"+Math.round(Math.random()*50).toString(),"Click change to insert sprite") })
+	$("#btn-add-number").click(  	function(){ _self.addDataVar("number","number_"+Math.round(Math.random()*50).toString(),"0") })
+	$("#btn-add-constant").click(	function(){ _self.addDataVar("constant","constant_"+Math.round(Math.random()*50).toString(),"0") })
+	$("#btn-add-string").click(		function(){ _self.addDataVar("string","string_"+Math.round(Math.random()*50).toString(),"Hello world!") })
+	$("#btn-add-bytearray").click(	function(){ _self.addDataVar("bytearray","bytearray_"+Math.round(Math.random()*50).toString(),"AABBCCDDEEFF0011223344") })
 	
 	// When a user hits assemble
 	$("#btn-assemble-run").click(function(){ _self.onClickAssemble(_self,true) })
@@ -600,12 +608,12 @@ Vimmy.Integration.prototype.addDataVar = function(type,_name,_val)
 {
 	// var change
 	var _self = this
-	
+	// data-toggle="tooltip" title="ASD")
 	var name = _name
 	var val = _val
 	
 	$("#vm-data-input").append('<div class="row"> \
-	<div class="col-sm-2 col-variable"><input placeholder="Data Name" type="text" data-uid="' +this.dataUid+ '" data-type="' + type + '" value="' + name + '" style="width: 100%" class="input-variable variable-name"/></div> \
+	<div class="col-sm-2 col-variable" data-toggle="tooltip" title="' + type + '"><input placeholder="Data Name" type="text" data-uid="' +this.dataUid+ '" data-type="' + type + '" value="' + name + '" style="width: 100%" class="input-variable variable-name"/></div> \
 	<div class="col-sm-8 col-variable"><input placeholder="Data" type="text" data-uid="' +this.dataUid+ '" data-type="' + type + '" value="' + val + '" style="width: 100%" class="input-variable variable-type"/></div> \
 	<div class="col-sm-2 col-variable"> \
 	<button class="btn btn-sandbox btn-variable" onclick="$(this).parent().parent().remove();">Remove</button>' 
@@ -728,10 +736,17 @@ Vimmy.Integration.prototype.onClickAssemble = function(_this,run)
 				if(!val){ data_error = true; this.pushError("Data :: invalid number " + obj.name)}
 				
 				labels[obj.name] = 0x100 + data_ptr
-				datablock[data_ptr] = (val>>8)&0xFF
-				datablock[data_ptr+1] = val&0xFF
-				data_ptr = data_ptr + 2
+				datablock[data_ptr+1] = (val>>8)&0xFF
+				datablock[data_ptr+2] = val&0xFF
+				data_ptr = data_ptr + 3
 				
+			break
+			
+			case "constant":
+				var val = parseInt(obj.value)
+				if(!val){ data_error = true; this.pushError("Data :: invalid constant " + obj.name)}
+				
+				labels[obj.name] = val
 			break
 			
 			// convert to ascii
@@ -785,12 +800,7 @@ Vimmy.Integration.prototype.onClickAssemble = function(_this,run)
 	
 	console.log(labels)
 	
-	// we need to subtract the module base from all the labels as the compiler will add it later
-	for(var n in labels)
-	{
-		labels[n] = labels[n]-0x1000
-		
-	}		
+	
 	if(data_error) // data bad
 	{
 		this.pushError("Data error");

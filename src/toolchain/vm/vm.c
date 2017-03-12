@@ -190,19 +190,19 @@ static void vm_cycle_actual(vm_state* vm)
 		uint8_t op_src = operand_type & 0x0F;
 
 		// True if either operand type may contain a register
-		bool contains_registers =
+		BOOL contains_registers =
 			((op_dst == REGISTER) || (op_dst == MEMORY_REGISTER) || (op_dst == MEMORY_REGISTER_DISPLACEMENT))
 			||
 			((op_src == REGISTER) || (op_src == MEMORY_REGISTER) || (op_src == MEMORY_REGISTER_DISPLACEMENT));
 
 		// True if either operand type may contain a displacement value
-		bool contains_displacement =
+		BOOL contains_displacement =
 			((op_dst) == MEMORY_REGISTER_DISPLACEMENT || (op_dst) == MEMORY_CONSTANT)
 			||
 			((op_src) == MEMORY_REGISTER_DISPLACEMENT || (op_src) == MEMORY_CONSTANT);
 
 		// Returns true if either operand type may contain an immediate value
-		bool contains_immediate = ((op_dst) == CONSTANT) || ((op_src) == CONSTANT);
+		BOOL contains_immediate = ((op_dst) == CONSTANT) || ((op_src) == CONSTANT);
 
 		// Data position determination
 		uint16_t pos_registers;
@@ -240,6 +240,10 @@ static void vm_cycle_actual(vm_state* vm)
 		vm->m_InstructionData.m_Displacement = vm_get_u16(vm, pos_displacement);
 		vm->m_InstructionData.m_Immediate = vm_get_u16(vm, pos_immediate);
 		vm->m_InstructionData.m_NextInstruction = pos_nextelement;
+
+		vm->m_InstructionData.m_ContainsDisplacement = contains_displacement;
+		vm->m_InstructionData.m_ContainsImmediate = contains_immediate;
+		vm->m_InstructionData.m_ContainsRegisters = contains_registers;
 
 		if (op_dst <= 6 && op_src <= 6) // make sure we dont get an invalid function
 		{

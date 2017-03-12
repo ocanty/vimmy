@@ -54,10 +54,11 @@ block append content
 			#vm-data-input(style="min-height: 128px; max-height: 128px; padding: 4px; overflow-y: scroll; overflow-x: hidden; margin: 1px;")
 		.col-sm-12(style="padding:0; margin: 0")
 			if !runMode
-				button.btn.btn-sandbox#btn-add-sprite Add Sprite
-				button.btn.btn-sandbox#btn-add-number Add Number
-				button.btn.btn-sandbox#btn-add-string Add String
-				button.btn.btn-sandbox#btn-add-bytearray Add Byte Array
+				button.btn.btn-sandbox#btn-add-sprite(data-toggle="tooltip" title="Add an image/sprite") Add Sprite
+				button.btn.btn-sandbox#btn-add-number(data-toggle="tooltip" title="Add a number") Add Number
+				button.btn.btn-sandbox#btn-add-string(data-toggle="tooltip" title="Add a string") Add String
+				button.btn.btn-sandbox#btn-add-bytearray(data-toggle="tooltip" title="Add an array of bytes") Add Byte Array
+				button.btn.btn-sandbox#btn-add-constant(data-toggle="tooltip" title="Add a compile-time constant, all of references of this label will be replaced with this number at compile time") Add Constant
 	.row.row-full(style="")
 		.col-sm-7(style="padding: 0; text-align: left")
 			if !runMode

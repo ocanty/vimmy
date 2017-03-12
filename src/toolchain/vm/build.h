@@ -5,6 +5,12 @@
 #define ENABLE_EMSCRIPTEN
 #endif
 
+#include <stdint.h>
+#define TRUE 1
+#define FALSE 0
+typedef uint8_t BOOL;
+typedef uint8_t bool;
+
 #ifdef ENABLE_EMSCRIPTEN
 #include <emscripten.h>
 #endif

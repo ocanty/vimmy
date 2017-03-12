@@ -178,8 +178,8 @@ namespace Vimmy
 			
                 if (this.labels.hasOwnProperty(labelName))
                 {
-                    // set addr + load base
-                    return this.moduleBase + this.labels[labelName]
+                    // ret addr
+                    return this.labels[labelName]
                 }
                 else
                 {
@@ -259,8 +259,8 @@ namespace Vimmy
 									// Remove COLON
 									var no_semi = id.substring(0, id.length - 1)
 
-									// Push to labels
-									this.addLabel(no_semi, this.romPtr)
+									// Push to labels, + module base
+									this.addLabel(no_semi, this.moduleBase +this.romPtr)
 									this.pushInfo("Entered section " + no_semi + " near line " + (this.tokens.getLine(this.tokenPtr)))
 									skip_token = true // Dont compile this token as we already processed it
 								}
@@ -493,7 +493,7 @@ namespace Vimmy
 
                             var ret = null
 
-                            console.log(checkStr)
+                            //console.log(checkStr)
                             switch (checkStr)
                             {
                                 case "REGISTERPLUSNUMBER":

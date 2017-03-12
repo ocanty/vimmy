@@ -1,6 +1,7 @@
 
 #include "operations.h"
 #include "hardware\interrupter.h"
+#include "operands.h"
 
 #define STR(s) #s
 
@@ -32,6 +33,32 @@ VM_IMPLEMENT_OPERATION(MOV)
 {
 	vm_set_dst(vm, vm_get_src(vm));
 }
+
+
+VM_IMPLEMENT_OPERATION(GETCHAR)
+{
+	// get the raw memory address
+	uint16_t memval = 0;
+
+	if (vm->m_InstructionData.m_ContainsRegisters) { memval += (uint16_t)vm->m_Reg[vm->m_InstructionData.m_RegSrc]; }
+	if (vm->m_InstructionData.m_ContainsDisplacement) { memval += (int16_t)vm->m_InstructionData.m_Displacement; }
+
+	//printf("%u\n", memval);
+	vm_set_dst(vm,
+		vm_get_u8(vm,memval));
+}
+
+VM_IMPLEMENT_OPERATION(SETCHAR)
+{
+	// get the raw memory address
+	uint16_t memval = 0;
+
+	if (vm->m_InstructionData.m_ContainsRegisters) { memval += (uint16_t)vm->m_Reg[vm->m_InstructionData.m_RegSrc]; }
+	if (vm->m_InstructionData.m_ContainsDisplacement) { memval += (int16_t)vm->m_InstructionData.m_Displacement;  }
+	vm_set_u8(vm, memval, (uint8_t)vm_get_src(vm));
+
+}
+
 
 VM_IMPLEMENT_OPERATION(PUSH)
 {
