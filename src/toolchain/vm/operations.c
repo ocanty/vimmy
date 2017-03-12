@@ -133,6 +133,7 @@ VM_IMPLEMENT_OPERATION(RET)
 VM_IMPLEMENT_OPERATION(IRET)
 {
 
+	printf("iret: %u\n", vm_get_u16(vm, vm_get_SP(vm)));
 	vm_set_PC(vm, vm_get_u16(vm, vm_get_SP(vm)));
 	vm_set_SP(vm, vm_get_SP(vm) + 0x2);
 }

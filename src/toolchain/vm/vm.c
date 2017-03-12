@@ -136,50 +136,13 @@ void EXPORT vm_reset(vm_state* vm)
 
 static void vm_cycle_actual(vm_state* vm)
 {
+
+
 	if (vm_should_cycle(vm) == TRUE)
 	{
-		// Simulate registered hardware by executing their "think" cycle, hardware gets access to I/O ports & memory via "DMA"
-		for(uint8_t i = 0; i < 0xFF; i++)
-		{
-			if(vm->m_HardwareThinkFuncs[i] != NULL)
-			{
-				vm->m_HardwareThinkFuncs[i](vm->m_IOPorts, vm->m_Mem);
-			}
-		}
-
-		// Interrupts over I/O bus
-		// PORT -> VALUE
-		// 0x0  -> 0xABCD
-		//
-		// A =	0 - no interrupt
-		//		1 - interrupt set by interrupter, waiting for cpu acknowledge
-		//		2 - interrupt waiting for cpu to process
-		//		3 - interrupt processed by cpu, waiting for interrupter to reset to 0
-		// B =  0 - unused/reserved
-		// C,D = 0x00-0xff - interupt handler
-
-		// if an interrupt has been set by the interrupter
-		if ((vm->m_IOPorts[VMHW_INTERRUPTER_IOPORT_BEGIN] & 0xF000) >> 12 == 0x1)
-		{
-			printf("Recieved interrupt, handler @ %u\n", vm->m_IOPorts[VMHW_INTERRUPTER_IOPORT_BEGIN] & 0x00FF);
-
-			// acknowledge it, set A = 2
-			vm->m_IOPorts[VMHW_INTERRUPTER_IOPORT_BEGIN] = 0x2000 + (vm->m_IOPorts[VMHW_INTERRUPTER_IOPORT_BEGIN] & 0x0FFF);
-			// preserve state, let the user do it
-
-			// get the value of the address at the interrupt table and jump to it
-			uint16_t handler = vm_get_u16(vm, vm->m_IOPorts[VMHW_INTERRUPTER_IOPORT_BEGIN] & 0x00FF);
-			if (handler != 0)
-			{
-				// push the return address onto the stack for the IRET instruction
-				// push ret address
-				vm_set_SP(vm, vm_get_SP(vm) - 0x2);
-				vm_set_u16(vm, vm_get_SP(vm), vm->m_InstructionData.m_NextInstruction);
-				vm_set_PC(vm, handler);
-			}
-			
-			// see VM_IMPLEMENT_OPERATION(IRET) for state restoration done by user
-		}
+		// save pc before instruction
+		static uint16_t saved_pc = 0;
+		saved_pc = vm_get_PC(vm);
 
 		// Operation decoding
 		uint8_t opcode = vm_get_u8(vm, vm_get_PC(vm));
@@ -213,6 +176,7 @@ static void vm_cycle_actual(vm_state* vm)
 		// Set each pos to default no-offset value
 		pos_registers = pos_displacement = pos_immediate = pos_nextelement = vm_get_PC(vm) + 2;
 
+
 		if (contains_registers == TRUE)
 		{
 			// register is 1 byte
@@ -240,7 +204,7 @@ static void vm_cycle_actual(vm_state* vm)
 		vm->m_InstructionData.m_Displacement = vm_get_u16(vm, pos_displacement);
 		vm->m_InstructionData.m_Immediate = vm_get_u16(vm, pos_immediate);
 		vm->m_InstructionData.m_NextInstruction = pos_nextelement;
-
+		//printf("0x%02x\n", vm->m_InstructionData.m_NextInstruction);
 		vm->m_InstructionData.m_ContainsDisplacement = contains_displacement;
 		vm->m_InstructionData.m_ContainsImmediate = contains_immediate;
 		vm->m_InstructionData.m_ContainsRegisters = contains_registers;
@@ -253,10 +217,6 @@ static void vm_cycle_actual(vm_state* vm)
 			vm_set_src = vm_OperandHandlersSet[op_src][1];
 		}
 
-		// save pc before instruction
-		static uint16_t saved_pc = 0;
-		saved_pc = vm_get_PC(vm);
-		
 		if (vm_OpHandlers[opcode].m_Func != NULL)
 		{
 			vm_OpHandlers[opcode].m_Func(vm);
@@ -271,6 +231,54 @@ static void vm_cycle_actual(vm_state* vm)
 		{
 			// Go onto the next instruction
 			vm_set_PC(vm, vm->m_InstructionData.m_NextInstruction);
+		}
+
+		// FINISHED INSTRUCTION PROCESSING
+
+		// PROCESS INTERRUPTS + HARDWARE
+
+		// Simulate registered hardware by executing their "think" cycle, hardware gets access to I/O ports & memory via a DMA ptr
+		for (uint8_t i = 0; i < 0xFF; i++)
+		{
+			if (vm->m_HardwareThinkFuncs[i] != NULL)
+			{
+				vm->m_HardwareThinkFuncs[i](vm->m_IOPorts, vm->m_Mem);
+			}
+		}
+
+		// Interrupts over I/O bus
+		// PORT -> VALUE
+		// 0x0  -> 0xABCD
+		//
+		// A =	0 - no interrupt
+		//		1 - interrupt set by interrupter, waiting for cpu acknowledge
+		//		2 - interrupt waiting for cpu to process
+		//		3 - interrupt processed by cpu, waiting for interrupter to reset to 0
+		// B =  0 - unused/reserved
+		// C,D = 0x00-0xff - interupt handler
+
+		// if an interrupt has been set by the interrupter
+		if ((vm->m_IOPorts[VMHW_INTERRUPTER_IOPORT_BEGIN] & 0xF000) >> 12 == 0x1)
+		{
+			printf("PC @ 0x%02x nextinstr 0x%02x ... Recieved interrupt, handler @ %u\n", vm_get_PC(vm), vm->m_InstructionData.m_NextInstruction, vm->m_IOPorts[VMHW_INTERRUPTER_IOPORT_BEGIN] & 0x00FF);
+
+			// acknowledge it, set A = 2
+			vm->m_IOPorts[VMHW_INTERRUPTER_IOPORT_BEGIN] = 0x2000 + (vm->m_IOPorts[VMHW_INTERRUPTER_IOPORT_BEGIN] & 0x0FFF);
+			// preserve state, let the user do it
+
+			// get the value of the address at the interrupt table and jump to it
+			uint16_t handler = vm_get_u16(vm, vm->m_IOPorts[VMHW_INTERRUPTER_IOPORT_BEGIN] & 0x00FF);
+			if (handler != 0)
+			{
+
+				// push the return address onto the stack for the IRET instruction
+				// push ret address
+				vm_set_SP(vm, vm_get_SP(vm) - 0x2);
+				vm_set_u16(vm, vm_get_SP(vm), vm_get_PC(vm));
+				vm_set_PC(vm, handler);
+			}
+
+			// see VM_IMPLEMENT_OPERATION(IRET) for state restoration done by user
 		}
 	}
 
