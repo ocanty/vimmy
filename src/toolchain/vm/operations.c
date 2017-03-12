@@ -18,6 +18,11 @@ vm_ophandler_t vm_OpHandlers[0xFF + 1] =
 	[255] = { 0 }
 };
 
+VM_IMPLEMENT_OPERATION(DBGHALT)
+{
+	vm->m_Status = Paused;
+}
+
 VM_IMPLEMENT_OPERATION(NOP)
 {
 
@@ -96,6 +101,16 @@ VM_IMPLEMENT_OPERATION(RET)
 	vm_set_PC(vm, vm_get_u16(vm, vm_get_SP(vm)));
 	vm_set_SP(vm, vm_get_SP(vm) + 0x2);
 }
+
+VM_IMPLEMENT_OPERATION(IRET)
+{
+	// push ret address
+
+
+	vm_set_PC(vm, vm_get_u16(vm, vm_get_SP(vm)));
+	vm_set_SP(vm, vm_get_SP(vm) + 0x2);
+}
+
 
 
 VM_IMPLEMENT_OPERATION(ADD)

@@ -171,6 +171,10 @@ static void vm_cycle_actual(vm_state* vm)
 			uint16_t handler = vm_get_u16(vm, vm->m_IOPorts[VMHW_INTERRUPTER_IOPORT_BEGIN] & 0x00FF);
 			if (handler != 0)
 			{
+				// push the return address onto the stack for the IRET instruction
+				// push ret address
+				vm_set_SP(vm, vm_get_SP(vm) - 0x2);
+				vm_set_u16(vm, vm_get_SP(vm), vm->m_InstructionData.m_NextInstruction);
 				vm_set_PC(vm, handler);
 			}
 			

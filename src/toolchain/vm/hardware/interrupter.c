@@ -27,7 +27,7 @@ void vmhw_interrupter_think(uint16_t * io, uint8_t * dma)
 
 		if (g_vmInterrupterDvc->m_InterruptQueuePtr != 0xFF)
 		{
-			printf("Interrupter pushing interrupt %u\n", g_vmInterrupterDvc->m_InterruptQueue[g_vmInterrupterDvc->m_InterruptQueuePtr]);
+			printf("Interrupter dispatching interrupt %u\n", g_vmInterrupterDvc->m_InterruptQueue[g_vmInterrupterDvc->m_InterruptQueuePtr]);
 			io[VMHW_INTERRUPTER_IOPORT_BEGIN] = 0x1000 + g_vmInterrupterDvc->m_InterruptQueue[g_vmInterrupterDvc->m_InterruptQueuePtr];
 			g_vmInterrupterDvc->m_InterruptQueuePtr++;
 		}
@@ -42,6 +42,8 @@ void vmhw_interrupter_think(uint16_t * io, uint8_t * dma)
 void vmhw_interrupter_queue_interrupt(uint8_t handler)
 {
 	// TODO: error check size
+
+	printf("Queuing interrupt: %u, interrupt queue is now %u elements long\n", handler,0xFF-g_vmInterrupterDvc->m_InterruptQueuePtr);
 	g_vmInterrupterDvc->m_InterruptQueuePtr--;
 	g_vmInterrupterDvc->m_InterruptQueue[g_vmInterrupterDvc->m_InterruptQueuePtr] = handler;
 
