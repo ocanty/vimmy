@@ -211,8 +211,22 @@ void vmhw_gpu_set_text_terminal(vmhw_gpu* gpu, uint16_t* args)
 			console_x = 0;
 		}
 		
+		// clear pixel
+		for (uint8_t _y = 0; _y < 8; _y++)
+		{
+			for (uint8_t _x = 0; _x < 8; _x++)
+			{
+				uint8_t file_x = ((c * 8) % 128) + _x;
+				uint8_t file_y = (((c * 8) - ((c * 8) % 128)) / 16) + _y;
+				//printf("%u %u", file_x,file_y)
+				vmhw_gpu_put_pixel(gpu,
+					(console_x * 8) + _x,
+					(console_y * 8) + _y,
+					0x00);
+			}
+		}
 		
-
+		// draw pixel
 		for (uint8_t _y = 0; _y < 8; _y++)
 		{
 			for (uint8_t _x = 0; _x < 8; _x++)

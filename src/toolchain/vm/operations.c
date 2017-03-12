@@ -53,7 +53,7 @@ VM_IMPLEMENT_OPERATION(SETCHAR)
 	// get the raw memory address
 	uint16_t memval = 0;
 
-	if (vm->m_InstructionData.m_ContainsRegisters) { memval += (uint16_t)vm->m_Reg[vm->m_InstructionData.m_RegSrc]; }
+	if (vm->m_InstructionData.m_ContainsRegisters) { memval += (uint16_t)vm->m_Reg[vm->m_InstructionData.m_RegDst]; }
 	if (vm->m_InstructionData.m_ContainsDisplacement) { memval += (int16_t)vm->m_InstructionData.m_Displacement;  }
 	vm_set_u8(vm, memval, (uint8_t)vm_get_src(vm));
 
@@ -129,10 +129,9 @@ VM_IMPLEMENT_OPERATION(RET)
 	vm_set_SP(vm, vm_get_SP(vm) + 0x2);
 }
 
+
 VM_IMPLEMENT_OPERATION(IRET)
 {
-	// push ret address
-
 
 	vm_set_PC(vm, vm_get_u16(vm, vm_get_SP(vm)));
 	vm_set_SP(vm, vm_get_SP(vm) + 0x2);
