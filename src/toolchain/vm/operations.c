@@ -134,8 +134,16 @@ VM_IMPLEMENT_OPERATION(IRET)
 {
 
 	printf("iret: %u\n", vm_get_u16(vm, vm_get_SP(vm)));
+
+
+	// pop flags
+	vm_set_SF(vm, vm_get_u16(vm, vm_get_SP(vm)));
+	vm_set_SP(vm, vm_get_SP(vm) + 0x2);
+
+	// pop ret address
 	vm_set_PC(vm, vm_get_u16(vm, vm_get_SP(vm)));
 	vm_set_SP(vm, vm_get_SP(vm) + 0x2);
+
 }
 
 // http://teaching.idallen.com/dat2343/10f/notes/040_overflow.txt

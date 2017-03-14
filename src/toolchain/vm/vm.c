@@ -272,6 +272,11 @@ static void vm_cycle_actual(vm_state* vm)
 				// push ret address
 				vm_set_SP(vm, vm_get_SP(vm) - 0x2);
 				vm_set_u16(vm, vm_get_SP(vm), vm_get_PC(vm));
+
+				// push flags
+				vm_set_SP(vm, vm_get_SP(vm) - 0x2);
+				vm_set_u16(vm, vm_get_SP(vm), vm_get_SF(vm));
+
 				vm_set_PC(vm, handler);
 			}
 
