@@ -1,5 +1,7 @@
 #pragma once
 
+#include "build.h"
+
 #include "vm.h"
 #include "RegSpec.h"
 
@@ -21,10 +23,11 @@ VM_REG_GS_H(BP);
 VM_REG_GS_H(SF);
 VM_REG_GS_H(CF);
 
-#define BIT_SET(a,b)   ((a) |= (1<<(b)))
-#define BIT_CLEAR(a,b) ((a) &= ~(1<<(b)))
-#define BIT_FLIP(a,b)  ((a) ^= (1<<(b)))
-#define BIT_CHECK(a,b) ((a) & (1<<(b)))
+#define CF_BIT 0 // Carry flag
+#define ZF_BIT 1 // Zero flag
+#define SF_BIT 2 // Sign flag
+#define OF_BIT 3 // Overflow flag
+
 
 void EXPORT vm_load_memory(vm_state* vm, uint16_t addr, uint8_t* buffer, uint16_t len);
 uint8_t vm_get_u8(vm_state* vm, uint16_t addr);

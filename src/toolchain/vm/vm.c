@@ -31,14 +31,11 @@ vm_state* EXPORT vm_init()
 	vm->m_Mem = (uint8_t*)malloc(0xFFFF + 1);
 	memset(vm->m_Mem, 0x00, 0xFFFF + 1);
 
-	//vm->m_Screen = (uint8_t*)malloc(512*512*sizeof(uint16_t));
-	//memset(vm->m_Screen, 0xFFFF, 512 * 512 * sizeof(uint16_t));
-
 	// Reset
 	vm_reset(vm);
-	//vm->m_Panic("oi");
-	// Register hardware
 
+
+	// Register hardware
 	vmhw_interrupter_init(vm->m_IOPorts, vm->m_Mem);
 	vm_register_hardware(vm, VMHW_INTERRUPTER_HWID, &vmhw_interrupter_think);
 

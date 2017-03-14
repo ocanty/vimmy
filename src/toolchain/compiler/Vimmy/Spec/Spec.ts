@@ -52,10 +52,12 @@ namespace Vimmy
                 "LEA": new OpSpec("XCHG", 0x06, new OperandSpec(2, OperandTypeSH("rm", "rc", "rr"))),
                 "ADD": new OpSpec("ADD", 0x07, new OperandSpec(2, OperandTypeSH("rm", "rr", "rc", "mr", "mc"))),
                 "SUB": new OpSpec("SUB", 0x08, new OperandSpec(2, OperandTypeSH("rm", "rr", "rc", "mr", "mc"))),
+				
                 "MUL": new OpSpec("MUL", 0x09, new OperandSpec(2, OperandTypeSH("rm", "rr", "rc", "mr", "mc"))),
-                "DIV": new OpSpec("DIV", 0x10, new OperandSpec(2, OperandTypeSH("rm", "rr", "rc", "mr", "mc"))),
+                "DIV": new OpSpec("DIV", 0x10, new OperandSpec(1, OperandTypeSH("rm", "rr", "rc", "mr", "mc"))),
+				
                 "IMUL": new OpSpec("IMUL", 0x11, new OperandSpec(2, OperandTypeSH("rm", "rr", "rc", "mr", "mc"))),
-                "IDIV": new OpSpec("IDIV", 0x12, new OperandSpec(2, OperandTypeSH("rm", "rr", "rc", "mr", "mc"))),
+                "IDIV": new OpSpec("IDIV", 0x12, new OperandSpec(1, OperandTypeSH("rm", "rr", "rc", "mr", "mc"))),
 				
 				"IN":  new OpSpec("IN", 0x13, new OperandSpec(2, OperandTypeSH("rr","rc"))),
 				"OUT":  new OpSpec("OUT", 0x14, new OperandSpec(2, OperandTypeSH("rr","cr"))),
@@ -75,8 +77,9 @@ namespace Vimmy
 				"IRET":  new OpSpec("IRET", 0x25, new OperandSpec(0, OperandTypeSH())),
 				"DBGHALT":  new OpSpec("DBGHALT", 0x26, new OperandSpec(0, OperandTypeSH())),
 				"SETCHAR":  new OpSpec("SETCHAR", 0x27, new OperandSpec(2, OperandTypeSH("mr", "mc"))),
-				"GETCHAR":  new OpSpec("GETCHAR", 0x28, new OperandSpec(2, OperandTypeSH("rm")))
-				
+				"GETCHAR":  new OpSpec("GETCHAR", 0x28, new OperandSpec(2, OperandTypeSH("rm"))),
+				"TIMER":   new OpSpec("MOD", 0x29, new OperandSpec(1, OperandTypeSH("r"))),
+				"TIMER":   new OpSpec("TIMER", 0x30, new OperandSpec(1, OperandTypeSH("r"))),
 				
 				
 				
