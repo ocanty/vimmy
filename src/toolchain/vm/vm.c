@@ -131,12 +131,15 @@ void EXPORT vm_reset(vm_state* vm)
 	vm_set_status(vm, Paused);
 }
 
+struct timeval time;
+
 static void vm_cycle_actual(vm_state* vm)
 {
-
-
 	if (vm_should_cycle(vm) == TRUE)
 	{
+
+		vm->m_Timer++;
+	
 		// save pc before instruction
 		static uint16_t saved_pc = 0;
 		saved_pc = vm_get_PC(vm);

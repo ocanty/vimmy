@@ -78,10 +78,15 @@ namespace Vimmy
 				"DBGHALT":  new OpSpec("DBGHALT", 0x26, new OperandSpec(0, OperandTypeSH())),
 				"SETCHAR":  new OpSpec("SETCHAR", 0x27, new OperandSpec(2, OperandTypeSH("mr", "mc"))),
 				"GETCHAR":  new OpSpec("GETCHAR", 0x28, new OperandSpec(2, OperandTypeSH("rm"))),
-				"TIMER":   new OpSpec("MOD", 0x29, new OperandSpec(1, OperandTypeSH("r"))),
+				
+				"MOD":   new OpSpec("MOD", 0x29, new OperandSpec(2, OperandTypeSH("rm","mr","rr","mc","rc"))),
 				"TIMER":   new OpSpec("TIMER", 0x30, new OperandSpec(1, OperandTypeSH("r"))),
 				
-				
+				"AND":   new OpSpec("AND", 0x31, new OperandSpec(2, OperandTypeSH("rm","mr","rr","mc","rc"))),
+				"XOR":   new OpSpec("XOR", 0x32, new OperandSpec(2, OperandTypeSH("rm","mr","rr","mc","rc"))),
+				"OR":   new OpSpec("OR", 0x33, new OperandSpec(2, OperandTypeSH("rm","mr","rr","mc","rc"))),
+				"NOT":   new OpSpec("NOT", 0x34, new OperandSpec(2, OperandTypeSH("rm","mr","rr","mc","rc"))),
+				"TEST":   new OpSpec("TEST", 0x35, new OperandSpec(2, OperandTypeSH("rm","mr","rr","mc","rc")))
 				
 				
 				

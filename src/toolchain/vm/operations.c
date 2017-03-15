@@ -122,7 +122,7 @@ VM_IMPLEMENT_OPERATION(CALL)
 
 VM_IMPLEMENT_OPERATION(RET)
 {
-	// push ret address
+	// pop ret address
 
 
 	vm_set_PC(vm, vm_get_u16(vm, vm_get_SP(vm)));
@@ -360,10 +360,111 @@ VM_IMPLEMENT_OPERATION(JLE)
 
 VM_IMPLEMENT_OPERATION(MOD)
 {
-
+	vm_set_dst(vm, vm_get_dst(vm) % vm_get_src(vm));
 }
 
 VM_IMPLEMENT_OPERATION(TIMER)
 {
+	vm_set_dst(vm, vm->m_Timer);
+}
 
+VM_IMPLEMENT_OPERATION(AND)
+{
+	uint16_t flags = vm_get_SF(vm);
+	uint16_t val = vm_get_dst(vm) & vm_get_src(vm);
+
+	BITCLEAR(&flags, OF_BIT);
+	BITCLEAR(&flags, CF_BIT);
+
+	// test zero flag
+	if (val == 0) { BITSET(&flags, ZF_BIT); }
+	else { BITCLEAR(&flags, ZF_BIT); }
+
+	// test sign flag
+	if (ISSIGNED(val))
+	{
+		BITSET(&flags, SF_BIT);
+	}
+	else { BITCLEAR(&flags, SF_BIT); }
+
+	vm_set_SF(vm, flags);
+	vm_set_dst(vm, val);
+}
+
+VM_IMPLEMENT_OPERATION(XOR)
+{
+	uint16_t flags = vm_get_SF(vm);
+	uint16_t val = vm_get_dst(vm) ^ vm_get_src(vm);
+
+	BITCLEAR(&flags, OF_BIT);
+	BITCLEAR(&flags, CF_BIT);
+
+	// test zero flag
+	if (val == 0) { BITSET(&flags, ZF_BIT); }
+	else { BITCLEAR(&flags, ZF_BIT); }
+
+	// test sign flag
+	if (ISSIGNED(val))
+	{
+		BITSET(&flags, SF_BIT);
+	}
+	else { BITCLEAR(&flags, SF_BIT); }
+
+	vm_set_SF(vm, flags);
+	vm_set_dst(vm, val);
+}
+
+VM_IMPLEMENT_OPERATION(OR)
+{
+	uint16_t flags = vm_get_SF(vm);
+	uint16_t val = vm_get_dst(vm) | vm_get_src(vm);
+
+	BITCLEAR(&flags, OF_BIT);
+	BITCLEAR(&flags, CF_BIT);
+
+	// test zero flag
+	if (val == 0) { BITSET(&flags, ZF_BIT); }
+	else { BITCLEAR(&flags, ZF_BIT); }
+
+	// test sign flag
+	if (ISSIGNED(val))
+	{
+		BITSET(&flags, SF_BIT);
+	}
+	else { BITCLEAR(&flags, SF_BIT); }
+
+	vm_set_SF(vm, flags);
+	vm_set_dst(vm, val);
+}
+
+VM_IMPLEMENT_OPERATION(NOT)
+{
+	uint16_t flags = vm_get_SF(vm);
+	uint16_t val = ~vm_get_dst(vm);
+
+	vm_set_SF(vm, flags);
+	vm_set_dst(vm, val);
+}
+
+VM_IMPLEMENT_OPERATION(TEST)
+{
+	uint16_t flags = vm_get_SF(vm);
+	uint16_t val = vm_get_dst(vm) & vm_get_src(vm);
+
+	BITCLEAR(&flags, OF_BIT);
+	BITCLEAR(&flags, CF_BIT);
+
+	// test zero flag
+	if (val == 0) { BITSET(&flags, ZF_BIT); }
+	else { BITCLEAR(&flags, ZF_BIT); }
+
+	// test sign flag
+	if (ISSIGNED(val))
+	{
+		BITSET(&flags, SF_BIT);
+	}
+	else { BITCLEAR(&flags, SF_BIT); }
+
+	vm_set_SF(vm, flags);
+	//vm_set_dst(vm, val);
 }

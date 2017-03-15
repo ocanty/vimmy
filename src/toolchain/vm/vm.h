@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <assert.h>
+#include <sys/time.h>
 
 #include "build.h"
 
@@ -45,6 +46,8 @@ typedef struct vm_state
 
 	vm_hardwarefunc_t m_HardwareThinkFuncs[0xFF];
 	uint16_t m_IOPorts[0xF];
+
+	uint16_t m_Timer; // Number of cycles since start
 
 	/*
 		These function pointers are pointed to functions which get/set the operand data based off types
