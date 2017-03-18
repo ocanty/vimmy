@@ -32,12 +32,14 @@ typedef enum
 } vm_status;
 
 typedef void(*vm_panic_handler_t)(char*);
+typedef void(*vm_post_cycle_hook_t)(void);
 typedef void(*vm_hardwarefunc_t)(uint16_t* io, uint8_t* dma);
 
 // vm_state
 typedef struct vm_state
 {
 	vm_panic_handler_t m_Panic;
+	vm_post_cycle_hook_t m_PostCycle; // called at the end of every cycle
 
 	vm_status m_Status;
 
@@ -83,7 +85,7 @@ typedef struct vm_ophandler_t
 
 // external error handler
 void EXPORT vm_register_panic_handler(vm_state * vm, void(*panic_func)(char*));
-
+void EXPORT vm_register_post_cycle_hook(vm_state * vm, void(*func)(void));
 
 
 static vm_state* EXPORT vm_init();

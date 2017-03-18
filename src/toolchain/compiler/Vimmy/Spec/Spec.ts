@@ -54,7 +54,7 @@ namespace Vimmy
                 "SUB": new OpSpec("SUB", 0x08, new OperandSpec(2, OperandTypeSH("rm", "rr", "rc", "mr", "mc"))),
 				
                 "MUL": new OpSpec("MUL", 0x09, new OperandSpec(2, OperandTypeSH("rm", "rr", "rc", "mr", "mc"))),
-                "DIV": new OpSpec("DIV", 0x10, new OperandSpec(1, OperandTypeSH("rm", "rr", "rc", "mr", "mc"))),
+                "DIV": new OpSpec("DIV", 0x10, new OperandSpec(1, OperandTypeSH("r", "m", "c"))),
 				
                 "IMUL": new OpSpec("IMUL", 0x11, new OperandSpec(2, OperandTypeSH("rm", "rr", "rc", "mr", "mc"))),
                 "IDIV": new OpSpec("IDIV", 0x12, new OperandSpec(1, OperandTypeSH("rm", "rr", "rc", "mr", "mc"))),
@@ -86,7 +86,8 @@ namespace Vimmy
 				"XOR":   new OpSpec("XOR", 0x32, new OperandSpec(2, OperandTypeSH("rm","mr","rr","mc","rc"))),
 				"OR":   new OpSpec("OR", 0x33, new OperandSpec(2, OperandTypeSH("rm","mr","rr","mc","rc"))),
 				"NOT":   new OpSpec("NOT", 0x34, new OperandSpec(2, OperandTypeSH("rm","mr","rr","mc","rc"))),
-				"TEST":   new OpSpec("TEST", 0x35, new OperandSpec(2, OperandTypeSH("rm","mr","rr","mc","rc")))
+				"TEST":   new OpSpec("TEST", 0x35, new OperandSpec(2, OperandTypeSH("rm","mr","rr","mc","rc"))),
+				"LOOP":  new OpSpec("LOOP", 0x36, new OperandSpec(1, OperandTypeSH("r", "m", "c")))
 				
 				
 				

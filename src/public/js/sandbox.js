@@ -455,7 +455,7 @@ Vimmy.Integration = function()
 		initialized   : function(e, keyboard, el) {},
 		beforeVisible : function(e, keyboard, el) {},
 		visible       : function(e, keyboard, el) {},
-		beforeInsert  : function(e, keyboard, el, textToAdd) { console.log(textToAdd,textToAdd.charCodeAt(0)); _self.vmhw_keyboard_keypress(textToAdd.charCodeAt(0)); return textToAdd; },
+		beforeInsert  : function(e, keyboard, el, textToAdd) { if(_self.vm_get_status(_self.vm_ptr) > 0){  console.log(textToAdd,textToAdd.charCodeAt(0)); _self.vmhw_keyboard_keypress(textToAdd.charCodeAt(0));  } return textToAdd; },
 		change        : function(e, keyboard, el) {},
 		beforeClose   : function(e, keyboard, el, accepted) {},
 		accepted      : function(e, keyboard, el) {},
@@ -599,7 +599,9 @@ Vimmy.Integration = function()
 	
 	// Debugging
 	this.debugCycle()
-	this.gpuCycle()
+	
+	// see psot cycle hook below, for vsync-like simulation
+	//this.gpuCycle()
 	
 }
 
@@ -888,23 +890,23 @@ Vimmy.Integration.prototype.doDisassembly = function()
 	
 }
 
-window.requestAnimFrame = (function(){
-  return  window.requestAnimationFrame       || 
-          window.webkitRequestAnimationFrame || 
-          window.mozRequestAnimationFrame    || 
-          window.oRequestAnimationFrame      || 
-          window.msRequestAnimationFrame     || 
-          function( callback ){
-            window.setTimeout(callback, 1000 / 60);
-          };
-})();
+// window.requestAnimFrame = (function(){
+  // return  window.requestAnimationFrame       || 
+          // window.webkitRequestAnimationFrame || 
+          // window.mozRequestAnimationFrame    || 
+          // window.oRequestAnimationFrame      || 
+          // window.msRequestAnimationFrame     || 
+          // function( callback ){
+            // window.setTimeout(callback, 1000 / 60);
+          // };
+// })();
 
 var fadeframes = [ ]
 
 Vimmy.Integration.prototype.gpuCycle = function()
 {
 	var _self = this
-	requestAnimFrame(function(){ _self.gpuCycle() })
+	//requestAnimFrame(function(){ _self.gpuCycle() })
 	
 	this.gpuCycleBuffer = this.gpuCycleBuffer || new Uint8ClampedArray(256*256*4)
 	// RGB565 -> RGB888
@@ -1038,7 +1040,6 @@ Vimmy.Integration.prototype.debugCycle = function()
 // Called when the Emscripten enviroment is ready
 Vimmy.onEmscriptenRuntimeInitialized = function()
 {
-
 	Vimmy._integration = new Vimmy.Integration();
 	
 	// Error handling
@@ -1054,12 +1055,34 @@ Vimmy.onEmscriptenRuntimeInitialized = function()
 	   Module.ccall("abort","null");
     });
 	
-	if(panic_handler)
+	var counter = 0
+	// estimated cycles are 100*60 cycles a second,
+	// verify in vm.c for future reference
+	// we do this because asking the VM user to do vsync themselves with inconsistent requestAnimFrame FPS is a pain in the ass
+	// so we just use the post cycle hook to draw the screen 60 times a second, using the cycle times we are already aware about
+	// note if cycle times in vm.c ever change, you must update this or you will have the display running at a different target FPS
+	var post_cycle_hook = Runtime.addFunction(function(s) {
+		counter = counter + 1
+		// counter % 60000 = 1fps
+		// counter % 1000 = 60fps
+		if((counter%100)==0) // update screen at 1fps
+		{
+			Vimmy._integration.gpuCycle();
+		}
+    });
+	
+	if(panic_handler && post_cycle_hook)
 	{
 		Module.ccall('vm_register_panic_handler', // name of C function
 			'null', // return type
 			['number','number'], // argument types
 			[Vimmy._integration.vm_ptr, panic_handler]
+		); // arguments
+		
+		Module.ccall('vm_register_post_cycle_hook', // name of C function
+			'null', // return type
+			['number','number'], // argument types
+			[Vimmy._integration.vm_ptr, post_cycle_hook]
 		); // arguments
 	}
 }

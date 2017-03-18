@@ -141,14 +141,21 @@ inline void vmhw_gpu_put_pixel(vmhw_gpu* gpu, uint16_t xcoord,uint16_t ycoord,ui
 
 void vmhw_gpu_clear_framebuffer(vmhw_gpu* gpu, uint16_t* args)
 {
-	memset((gpu->m_Framebuffer), 0x0000, SCREEN_WIDTH*SCREEN_WIDTH * sizeof(uint16_t));
+	memset((gpu->m_Framebuffer), args[5], SCREEN_WIDTH*SCREEN_WIDTH * sizeof(uint16_t));
 }
 
+// todo revise, messy buffers ?
 void vmhw_gpu_flip_framebuffer(vmhw_gpu* gpu, uint16_t* args)
 {
-	uint16_t* temp = gpu->m_Screen;
-	gpu->m_Screen = gpu->m_Framebuffer;
-	gpu->m_Framebuffer = temp;
+	
+	uint16_t* this_screen = gpu->m_Screen;
+	uint16_t* this_framebuffer = gpu->m_Framebuffer;
+	static uint16_t* temp_buffer = NULL;
+	if(!temp_buffer){ temp_buffer = (uint16_t*)malloc(SCREEN_WIDTH*SCREEN_WIDTH * sizeof(uint16_t)); }
+
+	memcpy(temp_buffer, this_screen, SCREEN_WIDTH*SCREEN_WIDTH * sizeof(uint16_t));
+	memcpy(this_screen, this_framebuffer, SCREEN_WIDTH*SCREEN_WIDTH * sizeof(uint16_t));
+	memcpy(this_framebuffer, temp_buffer, SCREEN_WIDTH*SCREEN_WIDTH * sizeof(uint16_t));
 }
 
 void vmhw_gpu_enable_transmask(vmhw_gpu* gpu, uint16_t* args)
@@ -210,22 +217,7 @@ void vmhw_gpu_set_text_terminal(vmhw_gpu* gpu, uint16_t* args)
 			console_y = 0;
 			console_x = 0;
 		}
-		
-		// clear pixel
-		for (uint8_t _y = 0; _y < 8; _y++)
-		{
-			for (uint8_t _x = 0; _x < 8; _x++)
-			{
-				uint8_t file_x = ((c * 8) % 128) + _x;
-				uint8_t file_y = (((c * 8) - ((c * 8) % 128)) / 16) + _y;
-				//printf("%u %u", file_x,file_y)
-				vmhw_gpu_put_pixel(gpu,
-					(console_x * 8) + _x,
-					(console_y * 8) + _y,
-					0x00);
-			}
-		}
-		
+
 		// draw pixel
 		for (uint8_t _y = 0; _y < 8; _y++)
 		{

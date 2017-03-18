@@ -236,7 +236,7 @@ router.post('/:project_id/upvote', ensureLoggedIn, function(req, res, next)
 	Project.findOne({project_id:req.params.project_id}).populate("creator").exec(function(error,project)
 	{
 		if(!checkProjectVisAuth(req,res,project)) return
-		if(!checkOwnerOnlyAuth(req,res,project)) return
+	//	if(!checkOwnerOnlyAuth(req,res,project)) return
 		
 		if(error || !project)
 		{

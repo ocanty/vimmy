@@ -468,3 +468,12 @@ VM_IMPLEMENT_OPERATION(TEST)
 	vm_set_SF(vm, flags);
 	//vm_set_dst(vm, val);
 }
+
+VM_IMPLEMENT_OPERATION(LOOP)
+{
+	if (vm_get_C(vm) > 0)
+	{
+		vm_set_C(vm, vm_get_C(vm) - 1);
+		vm_set_PC(vm, vm_get_dst(vm));
+	}
+}

@@ -20,6 +20,12 @@ void vm_default_panic_handler(char* s)
 	abort();
 }
 
+void vm_default_post_cycle_hook(void)
+{
+
+}
+
+
 vm_state* EXPORT vm_init()
 {
 	printf("VM init\n");
@@ -30,12 +36,7 @@ vm_state* EXPORT vm_init()
 
 	vm->m_Mem = (uint8_t*)malloc(0xFFFF + 1);
 	memset(vm->m_Mem, 0x00, 0xFFFF + 1);
-
-	// Reset
-	vm_reset(vm);
-
-
-	// Register hardware
+	// (Re-)register hardware
 	vmhw_interrupter_init(vm->m_IOPorts, vm->m_Mem);
 	vm_register_hardware(vm, VMHW_INTERRUPTER_HWID, &vmhw_interrupter_think);
 
@@ -44,6 +45,9 @@ vm_state* EXPORT vm_init()
 
 	vmhw_gpu_init(vm->m_IOPorts, vm->m_Mem);
 	vm_register_hardware(vm, VMHW_GPU_HWID, &vmhw_gpu_think);
+	// Reset
+	vm_reset(vm);
+
 	return vm;  
 }
 
@@ -55,6 +59,12 @@ void vm_register_hardware(vm_state* vm, uint8_t hwid, vm_hardwarefunc_t thinkfun
 void vm_register_panic_handler(vm_state * vm, void(*panic_func)(char*))
 {
 	vm->m_Panic = (vm_panic_handler_t)panic_func;
+	//abort();
+}
+
+void vm_register_post_cycle_hook(vm_state * vm, void(*panic_func)(void))
+{
+	vm->m_PostCycle = (vm_post_cycle_hook_t)panic_func;
 	//abort();
 }
 
@@ -97,6 +107,7 @@ static bool vm_should_cycle(vm_state* vm)
 void EXPORT vm_reset(vm_state* vm)
 {
 	printf("Resetting vm...\n");
+
 	// Clear memory
 	memset(vm->m_Mem, 0x00, 0xFFFF + 1);
 	// Clear screen
@@ -285,6 +296,8 @@ static void vm_cycle_actual(vm_state* vm)
 
 			// see VM_IMPLEMENT_OPERATION(IRET) for state restoration done by user
 		}
+
+		vm->m_PostCycle();
 	}
 
 
