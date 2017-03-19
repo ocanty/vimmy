@@ -87,8 +87,8 @@ namespace Vimmy
 				"OR":   new OpSpec("OR", 0x33, new OperandSpec(2, OperandTypeSH("rm","mr","rr","mc","rc"))),
 				"NOT":   new OpSpec("NOT", 0x34, new OperandSpec(2, OperandTypeSH("rm","mr","rr","mc","rc"))),
 				"TEST":   new OpSpec("TEST", 0x35, new OperandSpec(2, OperandTypeSH("rm","mr","rr","mc","rc"))),
-				"LOOP":  new OpSpec("LOOP", 0x36, new OperandSpec(1, OperandTypeSH("r", "m", "c")))
-				
+				"LOOP":  new OpSpec("LOOP", 0x36, new OperandSpec(1, OperandTypeSH("r", "m", "c"))),
+				"RAND":  new OpSpec("RAND", 0x37, new OperandSpec(2, OperandTypeSH("rc")))
 				
 				
             }

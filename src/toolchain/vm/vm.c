@@ -10,6 +10,10 @@
 #include <unistd.h>
 #endif
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
 #include "hardware\gpu.h"
 #include "hardware\interrupter.h"
 #include "hardware\keyboard.h"
@@ -45,6 +49,10 @@ vm_state* EXPORT vm_init()
 
 	vmhw_gpu_init(vm->m_IOPorts, vm->m_Mem);
 	vm_register_hardware(vm, VMHW_GPU_HWID, &vmhw_gpu_think);
+
+
+	srand(time(NULL));
+
 	// Reset
 	vm_reset(vm);
 
@@ -141,8 +149,6 @@ void EXPORT vm_reset(vm_state* vm)
 	// Pause the vm
 	vm_set_status(vm, Paused);
 }
-
-struct timeval time;
 
 static void vm_cycle_actual(vm_state* vm)
 {

@@ -5,7 +5,6 @@
 #include <string.h>
 #include <stdio.h>
 #include <assert.h>
-#include <sys/time.h>
 
 #include "build.h"
 

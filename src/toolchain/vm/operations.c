@@ -477,3 +477,10 @@ VM_IMPLEMENT_OPERATION(LOOP)
 		vm_set_PC(vm, vm_get_dst(vm));
 	}
 }
+
+
+VM_IMPLEMENT_OPERATION(RAND)
+{
+	uint16_t randind = vm_get_src(vm);
+	vm_set_dst(vm, (rand() % randind));
+}

@@ -134,29 +134,38 @@ Vimmy.Integration = function()
 						var compat_ptr = 0
 						var vm_compat_data = new Uint16Array(img.width*img.height)
 						
-						var count = 0
-						for(var i = 0; i < data.length; i++)
+						
+						for(var i=0; i<data.length; i+=4)
 						{
-							if(count == 4)
-							{
-								// rgb888 to rgb565
-								var b = data[i-3]
-								var g = data[i-2]
-								var r = data[i-1]
-								vm_compat_data[compat_ptr] = ((((r>>3)<<11) | ((g>>2)<<5) | (b>>3)))
-								
-								compat_ptr++
-								count = 0
-							}
-							count++
+							var red = data[i];
+							var green = data[i+1];
+							var blue = data[i+2];
+							var alpha = data[i+3];
+							
+							// rgb888 to rgb565
+							vm_compat_data[compat_ptr] = ((((red>>3)<<11) | ((green>>2)<<5) | (blue>>3)))
+							compat_ptr++;
 						}
 						
 						var testcopy = new Uint8Array(vm_compat_data.buffer)
 						var outstr = ""
+						
+						// we need to collect two bytes at a time and reverse them for the endianess
+						var prev = 0
+						var odd = 0
 						for(var i = 0; i < testcopy.length; i++)
 						{
-						
-							_self.vm_scr_ptr[i] = testcopy[i]
+							//if(!odd)
+							//{
+							//	prev = _self.numberToHexStr(testcopy[i])
+							//	odd = 1
+							//}
+							//else
+							//{
+							//	outstr = outstr + _self.numberToHexStr(testcopy[i]) + prev
+							//	odd = 0
+							//}
+							
 							outstr += _self.numberToHexStr(testcopy[i])
 						}
 						
@@ -164,7 +173,7 @@ Vimmy.Integration = function()
 
 					
 						var variable_inputs = elementjq.parent().parent().find(".col-variable > input")
-						$(variable_inputs[0]).val("sprite" + img.width + "x" + img.height + "_" + Math.round(Math.random()*50).toString())
+						// $(variable_inputs[0]).val("sprite" + img.width + "x" + img.height + "_" + Math.round(Math.random()*50).toString())
 						$(variable_inputs[1]).val(outstr)
 						
 					}
@@ -182,11 +191,15 @@ Vimmy.Integration = function()
 	_self.addDataVar("sprite","sprite_test2","DDEE")
 	_self.addDataVar("constant","constant_ayy","2312") */
 	
-	$("#btn-add-sprite").click(		function(){ _self.addDataVar("sprite","sprite_"+Math.round(Math.random()*50).toString(),"Click change to insert sprite") })
-	$("#btn-add-number").click(  	function(){ _self.addDataVar("number","number_"+Math.round(Math.random()*50).toString(),"0") })
-	$("#btn-add-constant").click(	function(){ _self.addDataVar("constant","constant_"+Math.round(Math.random()*50).toString(),"0") })
-	$("#btn-add-string").click(		function(){ _self.addDataVar("string","string_"+Math.round(Math.random()*50).toString(),"Hello world!") })
-	$("#btn-add-bytearray").click(	function(){ _self.addDataVar("bytearray","bytearray_"+Math.round(Math.random()*50).toString(),"AABBCCDDEEFF0011223344") })
+	// beautiful implementation
+	// http://stackoverflow.com/a/8084248/1924602
+	var randStr = function() { return (Math.random() + 1).toString(36).substring(2,7); }
+	
+	$("#btn-add-sprite").click(		function(){ _self.addDataVar("sprite","sprite_"+randStr(),"Click change to insert sprite") })
+	$("#btn-add-number").click(  	function(){ _self.addDataVar("number","number_"+randStr(),"0") })
+	$("#btn-add-constant").click(	function(){ _self.addDataVar("constant","constant_"+randStr(),"0") })
+	$("#btn-add-string").click(		function(){ _self.addDataVar("string","string_"+randStr(),"Hello world!") })
+	$("#btn-add-bytearray").click(	function(){ _self.addDataVar("bytearray","bytearray_"+randStr(),"AABBCCDDEEFF0011223344") })
 	
 	// When a user hits assemble
 	$("#btn-assemble-run").click(function(){ _self.onClickAssemble(_self,true) })
@@ -261,11 +274,11 @@ Vimmy.Integration = function()
 		_self.vm_set_status(_self.vm_ptr,1)
     })
 	
-	// Keyboard
-	$.keyboard.keyaction.uparrow = function(base){ console.log("a") };
-	$.keyboard.keyaction.downarrow = function(base){ console.log("a") };
-	$.keyboard.keyaction.leftarrow = function(base){console.log("a") };
-	$.keyboard.keyaction.rightarrow = function(base){console.log("a") };
+	// Keyboard, arrows utf-8 values (utf-16)
+	$.keyboard.keyaction.uparrow = function(base)		{ if(_self.vm_get_status(_self.vm_ptr) > 0){ _self.vmhw_keyboard_keypress(0x2191); } };
+	$.keyboard.keyaction.downarrow = function(base)	{ if(_self.vm_get_status(_self.vm_ptr) > 0){ _self.vmhw_keyboard_keypress(0x2190); } }; // 	0x2190
+	$.keyboard.keyaction.leftarrow = function(base)	{ if(_self.vm_get_status(_self.vm_ptr) > 0){ _self.vmhw_keyboard_keypress(0x2193); } };
+	$.keyboard.keyaction.rightarrow = function(base)	{ if(_self.vm_get_status(_self.vm_ptr) > 0){ _self.vmhw_keyboard_keypress(0x2192); } };
 	
 	$('#vm-keyboard').keyboard(
 	{
