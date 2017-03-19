@@ -6,8 +6,6 @@
 #define VMHW_GPU_HWID 0x03
 #define VMHW_GPU_IOPORT_BEGIN 0x9
 
-
-
 // A,B,C,D,E,F
 
 // vm_state

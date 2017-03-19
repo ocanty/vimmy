@@ -155,8 +155,14 @@ Vimmy.Integration = function()
 						var outstr = ""
 						for(var i = 0; i < testcopy.length; i++)
 						{
+						
+							_self.vm_scr_ptr[i] = testcopy[i]
 							outstr += _self.numberToHexStr(testcopy[i])
 						}
+						
+
+
+					
 						var variable_inputs = elementjq.parent().parent().find(".col-variable > input")
 						$(variable_inputs[0]).val("sprite" + img.width + "x" + img.height + "_" + Math.round(Math.random()*50).toString())
 						$(variable_inputs[1]).val(outstr)
@@ -516,10 +522,14 @@ Vimmy.Integration = function()
 	this.Canvas = c.getContext("2d");
 	
 	var vimmy_splash = new Image();
-	vimmy_splash.src="/img/vimmy-logo-16bit.png"
+	vimmy_splash.src="/img/vimmy-logo.png"
 	vimmy_splash.onload = function()
 	{
-		_self.Canvas.drawImage(vimmy_splash,0,0,128,128)
+		_self.Canvas.fillRect(0,0,256,256)
+		// _self.Canvas.drawImage(vimmy_splash,16,16,128,64)
+		
+		// _self.Canvas.fillStyle = "white"
+		// _self.Canvas.fillText("waiting for ROM",128,128);
 	}
 	
 	//////////////////////////////////////////////////
@@ -730,6 +740,11 @@ Vimmy.Integration.prototype.onClickAssemble = function(_this,run)
 	{
 		var obj = table[k]
 		console.log(obj)
+		if(obj.name.match(/\d/) != null)
+		{
+			data_error = true; this.pushError("Data :: numbers in datanames are not allowed: " + obj.name)
+		}
+		
 		switch(obj.type)
 		{
 			// convert number to two 8bit and place in data
@@ -772,8 +787,8 @@ Vimmy.Integration.prototype.onClickAssemble = function(_this,run)
 				labels[obj.name] = 0x100 + data_ptr
 				for(var i =0; i < str.length; i += 2)
 				{
-					var hex = str.substring(i,i+2)
-					if(!parseInt(hex,16)){ data_error = true; this.pushError("Data :: invalid sprite " + obj.name)}
+					var hex = "0x"+str.substring(i,i+2)
+					if(parseInt(hex,16) == NaN){ data_error = true; this.pushError("Data :: invalid sprite " + obj.name)}
 					datablock[data_ptr] = parseInt(hex,16)
 					data_ptr = data_ptr + 1
 				}
@@ -785,8 +800,8 @@ Vimmy.Integration.prototype.onClickAssemble = function(_this,run)
 				labels[obj.name] = 0x100 + data_ptr
 				for(var i =0; i < str.length; i += 2)
 				{
-					var hex = str.substring(i,i+2)
-					if(!parseInt(hex,16)){ data_error = true; this.pushError("Data :: invalid bytearray " + obj.name)}
+					var hex = "0x"+str.substring(i,i+2)
+					if(parseInt(hex,16) == NaN){ data_error = true; this.pushError("Data :: invalid bytearray " + obj.name)}
 					datablock[data_ptr] = parseInt(hex,16)
 					data_ptr = data_ptr + 1
 				}
@@ -912,14 +927,15 @@ Vimmy.Integration.prototype.gpuCycle = function()
 	// RGB565 -> RGB888
 	var x = 0
 	var color = 0
-	var i = 1
+	var i = 0
  	while(i < (256*256)*2)
 	{
-		color = (Module.HEAPU8[this.vm_scr_ptr+i] << 8) | Module.HEAPU8[this.vm_scr_ptr+i-1];
+		color = (Module.HEAPU8[this.vm_scr_ptr+i] << 8) | (Module.HEAPU8[this.vm_scr_ptr+i+1]);
+		
 		i+=2;
-		this.gpuCycleBuffer[x] 	 = 	((((color >> 11) & 0x1F) * 527) + 23) >> 6;
-		this.gpuCycleBuffer[x+1] = ((((color >> 5) & 0x3F) * 259) + 33) >> 6;
-		this.gpuCycleBuffer[x+2] = (((color & 0x1F) * 527) + 23) >> 6;
+		this.gpuCycleBuffer[x] 	 = 	((((color >> 11) & 0x1F) * 527) + 23) >> 6;  // r
+		this.gpuCycleBuffer[x+1] = ((((color >> 5) & 0x3F) * 259) + 33) >> 6;   // g
+		this.gpuCycleBuffer[x+2] = (((color & 0x1F) * 527) + 23) >> 6;          // b	
 		this.gpuCycleBuffer[x+3] = 255
 		x+=4
 		

@@ -109,9 +109,11 @@ void vmhw_gpu_think(uint16_t* io,uint8_t* dma)
 {
 	uint16_t* msg  = (io + VMHW_GPU_IOPORT_BEGIN);
 	uint16_t* args = (io + VMHW_GPU_IOPORT_BEGIN + 1);
+
 	// 0xABCD
 	if (((*msg) & 0xF000) == 0x1000) // A=1 -> if we have been told to process a message
 	{
+		printf("gpu args: 0x%04X 0x%04X 0x%04X 0x%04X 0x%04X 0x%04X\n", args[0], args[1], args[2], args[3], args[4], args[5]);
 		// process the message
 		g_vmGpuOperations[(*msg) & 0x0FFF](g_vmGpuDvc, args);
 
@@ -132,7 +134,7 @@ inline void vmhw_gpu_put_pixel(vmhw_gpu* gpu, uint16_t xcoord,uint16_t ycoord,ui
 	//assert(ycoord < 128);
 	if (gpu->m_TransparencyMaskEnabled == TRUE && color == gpu->m_TransparencyMask) return;
 
-	gpu->m_Framebuffer[SCREEN_WIDTH * (ycoord) + (xcoord)] = color;
+	gpu->m_Framebuffer[(SCREEN_WIDTH * (ycoord))+(xcoord)] = color;
 }
 
 
@@ -141,7 +143,15 @@ inline void vmhw_gpu_put_pixel(vmhw_gpu* gpu, uint16_t xcoord,uint16_t ycoord,ui
 
 void vmhw_gpu_clear_framebuffer(vmhw_gpu* gpu, uint16_t* args)
 {
-	memset((gpu->m_Framebuffer), args[5], SCREEN_WIDTH*SCREEN_WIDTH * sizeof(uint16_t));
+
+	printf("%u\n", args[5]);
+	for (uint16_t x = 0; x < SCREEN_WIDTH; x++)
+	{
+		for (uint16_t y = 0; y < SCREEN_WIDTH; y++)
+		{
+			vmhw_gpu_put_pixel(gpu, x, y, args[5]);
+		}
+	}
 }
 
 // todo revise, messy buffers ?
@@ -293,6 +303,29 @@ void vmhw_gpu_draw_line(vmhw_gpu* gpu, uint16_t* args)
 	}
 }
 
+// https://rosettacode.org/wiki/Bitmap/Bresenham%27s_line_algorithm#C
+//	Draw sprite					    X-coord		Y-coord	    X2-coord	Y2-coord	Texture-DMA -
+void vmhw_gpu_draw_sprite(vmhw_gpu* gpu, uint16_t* args)
+{
+	// gpu->m_Font[128 * (file_y)+(file_x)]
+	// 
+	uint16_t font_offset = 0;
+
+	for (uint16_t y = args[1]; y < args[3]; y++)
+	{
+
+		for (uint16_t x = args[0]; x < args[2]; x++)
+		{
+			uint8_t pixel_colorhi = gpu->vm_dma[args[4] + font_offset];
+			uint8_t pixel_colorlo = gpu->vm_dma[args[4] + font_offset + 1];
+			font_offset += 2;
+			//printf("%u\n", args[4] + font_offset);
+			vmhw_gpu_put_pixel(gpu, x, y, (pixel_colorlo << 8) | (pixel_colorhi));
+		}
+	}
+
+}
+
 /*
 	GPUv1 Messaging Protocol
 
@@ -348,6 +381,7 @@ vmhw_gpu_operation_t g_vmGpuOperations[0x1000] = {
 	[0x100] = &vmhw_gpu_draw_rect,					//	Draw rectangle					X-coord		Y-coord		X2-coord	Y2-coord	-			Color
 	[0x101] = &vmhw_gpu_draw_circle,				//	Draw circle						X-coord		Y-coord		-			-			Radius		Color
 	[0x102] = &vmhw_gpu_draw_line,					//	Draw line						X1-coord	Y1-coord	X2-coord	Y2-coord	Thickness	Color
+	[0x103] = &vmhw_gpu_draw_sprite 				//	Draw sprite					    X-coord		Y-coord	    X2-coord	Y2-coord	Texture-DMA -
 
 };
 

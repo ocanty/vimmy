@@ -46,8 +46,8 @@ typedef struct vm_state
 	uint8_t* m_Mem;
 	uint16_t m_Reg[17]; // 0 index is a skip register
 
-	vm_hardwarefunc_t m_HardwareThinkFuncs[0xFF];
-	uint16_t m_IOPorts[0xF];
+	vm_hardwarefunc_t m_HardwareThinkFuncs[256];
+	uint16_t m_IOPorts[16];
 
 	uint16_t m_Timer; // Number of cycles since start
 

@@ -9,9 +9,9 @@ $(document).ready(function()
 			"<button class='btn btn-sandbox text-striking vote-count'>" + score + "</button>" +
 		  "</div>" + 
 		  "<div style='margin-bottom: 16px;' class='col-sm-7'><a href='/projects/"+id+"'>" +
-			 "<h3 style='padding:0; padding-top: 2px; margin: 0;'> " + name + " &bull; " + category + " &bull; " + moment(date).format('DD/MM/YYYY') + "</h3></a></div>" + 
+			 "<h3 style='font-size: 12px; padding:0; padding-top: 2px; margin: 0;'> " + name + " &bull; " + category + " &bull; " + moment(date).format('DD/MM/YYYY') + "</h3></a></div>" + 
 		 " <div style='text-align: right' class='col-sm-4'> " + 
-			"<button onclick='window.location=\"/projects/"+id+"\"' class='btn btn-sandbox bg-discover-minor'>View</button>" + 
+			"<button style='height: 25px; font-size: 10px;' onclick='window.location=\"/projects/"+id+"\"' class='btn btn-sandbox bg-discover-minor'>View</button>" + 
 		  "</div>" +
 		"</div>"
 		)
