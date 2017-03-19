@@ -248,12 +248,16 @@ VM_IMPLEMENT_OPERATION(IMUL)
 
 VM_IMPLEMENT_OPERATION(DIV)
 {
-	vm_set_dst(vm, vm_get_dst(vm) * vm_get_src(vm));
+	uint16_t a = vm_get_A(vm);
+	vm_set_A(vm, a / vm_get_dst(vm));
+	vm_set_D(vm, a % vm_get_dst(vm));
 }
 
 VM_IMPLEMENT_OPERATION(IDIV)
 {
-	vm_set_dst(vm, (int16_t)vm_get_dst(vm) / (int16_t)vm_get_src(vm));
+	int16_t a = (int16_t)vm_get_A(vm);
+	vm_set_A(vm, a / (int16_t)vm_get_dst(vm));
+	vm_set_D(vm, a % (int16_t)vm_get_dst(vm));
 }
 
 VM_IMPLEMENT_OPERATION(INC)
