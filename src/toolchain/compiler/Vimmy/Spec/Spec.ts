@@ -57,7 +57,7 @@ namespace Vimmy
                 "DIV": new OpSpec("DIV", 0x10, new OperandSpec(1, OperandTypeSH("r", "m", "c"))),
 				
                 "IMUL": new OpSpec("IMUL", 0x11, new OperandSpec(2, OperandTypeSH("rm", "rr", "rc", "mr", "mc"))),
-                "IDIV": new OpSpec("IDIV", 0x12, new OperandSpec(1, OperandTypeSH("rm", "rr", "rc", "mr", "mc"))),
+                "IDIV": new OpSpec("IDIV", 0x12, new OperandSpec(1, OperandTypeSH("r", "m", "c"))),
 				
 				"IN":  new OpSpec("IN", 0x13, new OperandSpec(2, OperandTypeSH("rr","rc"))),
 				"OUT":  new OpSpec("OUT", 0x14, new OperandSpec(2, OperandTypeSH("rr","cr"))),
