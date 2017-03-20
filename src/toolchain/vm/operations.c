@@ -3,6 +3,7 @@
 #include "hardware\interrupter.h"
 #include "operands.h"
 
+#include <string.h>
 #define STR(s) #s
 
 #define VM_IMPLEMENT_OPERATION_INDIRECT(mnemonic) void vm_op_##mnemonic(vm_state* vm)
@@ -12,6 +13,9 @@
 #define VM_DEFINE_OPERATION_INDIRECT(mnemonic,opcode) [opcode] = { .m_Func = &vm_op_##mnemonic,.m_OpName = STR(mnemonic) },
 // Defines an operation that must be implemented
 #define VM_DEFINE_OPERATION(mnemonic,opcode) VM_DEFINE_OPERATION_INDIRECT(mnemonic,opcode)
+
+// excellent flag resource:
+// http://teaching.idallen.com/dat2343/10f/notes/040_overflow.txt
 
 vm_ophandler_t vm_OpHandlers[0xFF + 1] =
 {
@@ -487,4 +491,25 @@ VM_IMPLEMENT_OPERATION(RAND)
 {
 	uint16_t randind = vm_get_src(vm);
 	vm_set_dst(vm, (rand() % randind));
+}
+
+
+VM_IMPLEMENT_OPERATION(STRCAT)
+{
+	vm_set_dst(vm, strcat(vm->m_Mem[vm_get_dst(vm)], vm->m_Mem[vm_get_src(vm)]));
+}
+
+VM_IMPLEMENT_OPERATION(STRLEN)
+{
+	vm_set_dst(vm, strlen(vm->m_Mem[vm_get_src(vm)]));
+}
+
+VM_IMPLEMENT_OPERATION(STRCPY)
+{
+	vm_set_dst(vm, strcpy(vm->m_Mem[vm_get_dst(vm)], vm->m_Mem[vm_get_src(vm)]));
+}
+
+VM_IMPLEMENT_OPERATION(STRCMP)
+{
+	vm_set_dst(vm, strcmp(vm->m_Mem[vm_get_dst(vm)], vm->m_Mem[vm_get_src(vm)]));
 }

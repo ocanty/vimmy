@@ -740,10 +740,10 @@ Vimmy.Integration.prototype.onClickAssemble = function(_this,run)
 	
 	// Build data block
 	// The data block is stored in the ROM at loc 0, (loaded in at loc 0x0100)
-	// it fills up until 0x0FFF where code begins
+	// it fills up until 0xFFFF where code begins
 	var data_ptr = 0 // the end address of the current data stored in datablock
 	var datalabels = { }
-	var datablock = new Uint8Array(0x0FFF-0x0100); // added to rom at 0x0100
+	var datablock = new Uint8Array(0x4000-0x0100); // added to rom at 0x0100
 	var table = this.buildDataTable()
 	var labels = { }
 	var data_error = false
@@ -822,9 +822,9 @@ Vimmy.Integration.prototype.onClickAssemble = function(_this,run)
 		}
 	}
 	
-	if(data_ptr>(0xFFF-0x100))
+	if(data_ptr>(0x4000-0x100))
 	{
-		this.pushError("Data :: Too much data! Exceeding size limit of 0x" + this.numberToHexStr(0xFFF-0x100))
+		this.pushError("Data :: Too much data! Exceeding size limit of 0x" + this.numberToHexStr((0x4000-0x100)))
 		data_error = true
 	}
 	
@@ -862,12 +862,12 @@ Vimmy.Integration.prototype.onClickAssemble = function(_this,run)
 			
 			// setup the rom
 			// add the data
-			var rom_with_data = new Uint8Array(compileResult.ROM.binary.length+0xF00)
+			var rom_with_data = new Uint8Array(compileResult.ROM.binary.length+0x3F00)
 			rom_with_data.set(new Uint8Array(datablock.buffer),0)
-			rom_with_data.set(new Uint8Array(compileResult.ROM.binary.buffer),0xF00)
+			rom_with_data.set(new Uint8Array(compileResult.ROM.binary.buffer),0x3F00)
 			
 			// load our rom at data entry, 
-			this.loadROM(rom_with_data,0x00FF)
+			this.loadROM(rom_with_data,0x0100)
 			this.debugLabels = compileResult.labels
 			
 			// disassemble the rom 
@@ -905,7 +905,7 @@ Vimmy.Integration.prototype.doDisassembly = function()
 	if(dasmstr)
 	{
 		var dasmarr = dasmstr.split("\n")
-		for (var i = 0; i < dasmarr.length; i++) 
+		for (var i = 0; i < dasmarr.length; i++)
 		{
 			if(i%2)
 			{

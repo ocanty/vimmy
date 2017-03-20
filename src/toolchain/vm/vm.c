@@ -135,7 +135,7 @@ void EXPORT vm_reset(vm_state* vm)
 
 	// Set PC to default ROM location
 	vm_set_SP(vm, 0xFFFF); // start the stack
-	vm_set_PC(vm, 0xFFF);
+	vm_set_PC(vm, 0x4000);
 
 #ifdef __EMSCRIPTEN__
 		// void emscripten_set_main_loop(em_callback_func func, int fps, int simulate_infinite_loop);

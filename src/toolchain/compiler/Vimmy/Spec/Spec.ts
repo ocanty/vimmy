@@ -81,14 +81,19 @@ namespace Vimmy
 				
 				"MOD":   new OpSpec("MOD", 0x29, new OperandSpec(2, OperandTypeSH("rm","mr","rr","mc","rc"))),
 				"TIMER":   new OpSpec("TIMER", 0x30, new OperandSpec(1, OperandTypeSH("r"))),
-				
+				 
 				"AND":   new OpSpec("AND", 0x31, new OperandSpec(2, OperandTypeSH("rm","mr","rr","mc","rc"))),
 				"XOR":   new OpSpec("XOR", 0x32, new OperandSpec(2, OperandTypeSH("rm","mr","rr","mc","rc"))),
 				"OR":   new OpSpec("OR", 0x33, new OperandSpec(2, OperandTypeSH("rm","mr","rr","mc","rc"))),
 				"NOT":   new OpSpec("NOT", 0x34, new OperandSpec(2, OperandTypeSH("rm","mr","rr","mc","rc"))),
 				"TEST":   new OpSpec("TEST", 0x35, new OperandSpec(2, OperandTypeSH("rm","mr","rr","mc","rc"))),
 				"LOOP":  new OpSpec("LOOP", 0x36, new OperandSpec(1, OperandTypeSH("r", "m", "c"))),
-				"RAND":  new OpSpec("RAND", 0x37, new OperandSpec(2, OperandTypeSH("rc","rm","rr")))
+				"RAND":  new OpSpec("RAND", 0x37, new OperandSpec(2, OperandTypeSH("rc","rm","rr"))),
+				"STRCAT":  new OpSpec("STRCAT", 0x38, new OperandSpec(2, OperandTypeSH("rc","rm","rr"))),
+				"STRLEN":  new OpSpec("STRLEN", 0x39, new OperandSpec(2, OperandTypeSH("rc","rm","rr"))),
+				"STRCPY":  new OpSpec("STRCPY", 0x40, new OperandSpec(2, OperandTypeSH("rc","rm","rr"))),
+				"STRCMP":  new OpSpec("STRCMP", 0x41, new OperandSpec(2, OperandTypeSH("rc","rm","rr"))),
+				
 				
 				
             }

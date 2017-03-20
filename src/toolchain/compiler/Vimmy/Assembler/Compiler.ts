@@ -215,7 +215,7 @@ namespace Vimmy
                     this.pushInfo("Beginning compilation...")
                     this.rom = new Uint8Array(this.romSize || (0xFFFF-0xFFF))
                     this.romPtr = 4 // Preserve space for jmp <code> at start of rom
-                    this.moduleBase = 0xFFF
+                    this.moduleBase = 0x4000
 					
 					// if this is true, ignore all code and act as if its a comment
 					let is_in_comment = false
