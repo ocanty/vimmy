@@ -41,25 +41,14 @@ VM_IMPLEMENT_OPERATION(MOV)
 
 VM_IMPLEMENT_OPERATION(GETCHAR)
 {
-	// get the raw memory address
-	uint16_t memval = 0;
-
-	if (vm->m_InstructionData.m_ContainsRegisters) { memval += (uint16_t)vm->m_Reg[vm->m_InstructionData.m_RegSrc]; }
-	if (vm->m_InstructionData.m_ContainsDisplacement) { memval += (int16_t)vm->m_InstructionData.m_Displacement; }
-
 	//printf("%u\n", memval);
-	vm_set_dst(vm,
-		vm_get_u8(vm,memval));
+	vm_set_dst(vm, vm_get_u8(vm, vm_get_src(vm)));
 }
 
 VM_IMPLEMENT_OPERATION(SETCHAR)
 {
-	// get the raw memory address
-	uint16_t memval = 0;
-
-	if (vm->m_InstructionData.m_ContainsRegisters) { memval += (uint16_t)vm->m_Reg[vm->m_InstructionData.m_RegDst]; }
-	if (vm->m_InstructionData.m_ContainsDisplacement) { memval += (int16_t)vm->m_InstructionData.m_Displacement;  }
-	vm_set_u8(vm, memval, (uint8_t)vm_get_src(vm));
+	
+	vm_set_u8(vm, vm_get_dst(vm), vm_get_src(vm)&0xFF);
 
 }
 
@@ -496,20 +485,20 @@ VM_IMPLEMENT_OPERATION(RAND)
 
 VM_IMPLEMENT_OPERATION(STRCAT)
 {
-	vm_set_dst(vm, strcat(vm->m_Mem[vm_get_dst(vm)], vm->m_Mem[vm_get_src(vm)]));
+	vm_set_dst(vm, strcat((vm->m_Mem + vm_get_dst(vm)), (vm->m_Mem + vm_get_src(vm))));
 }
 
 VM_IMPLEMENT_OPERATION(STRLEN)
 {
-	vm_set_dst(vm, strlen(vm->m_Mem[vm_get_src(vm)]));
+	vm_set_dst(vm, strlen((vm->m_Mem + vm_get_src(vm))));
 }
 
 VM_IMPLEMENT_OPERATION(STRCPY)
 {
-	vm_set_dst(vm, strcpy(vm->m_Mem[vm_get_dst(vm)], vm->m_Mem[vm_get_src(vm)]));
+	vm_set_dst(vm, strcpy((vm->m_Mem + vm_get_dst(vm)), (vm->m_Mem + vm_get_src(vm))));
 }
 
 VM_IMPLEMENT_OPERATION(STRCMP)
 {
-	vm_set_dst(vm, strcmp(vm->m_Mem[vm_get_dst(vm)], vm->m_Mem[vm_get_src(vm)]));
+	vm_set_dst(vm, strcmp((vm->m_Mem + vm_get_src(vm)), (vm->m_Mem + vm_get_src(vm))));
 }

@@ -20,4 +20,4 @@ extern vmhw_keyboard* g_vmKeyboardDvc;
 void vmhw_keyboard_init(uint16_t* io, uint8_t* dma);
 void vmhw_keyboard_think(uint16_t* io, uint8_t* dma);
 
-void EXPORT vmhw_keyboard_keypress(uint8_t scancode);
+void EXPORT vmhw_keyboard_keypress(uint16_t scancode);

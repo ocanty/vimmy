@@ -76,8 +76,8 @@ namespace Vimmy
 				"CMP": new OpSpec("CMP", 0x24, new OperandSpec(2, OperandTypeSH("rr", "rm", "mr","rc"))),
 				"IRET":  new OpSpec("IRET", 0x25, new OperandSpec(0, OperandTypeSH())),
 				"DBGHALT":  new OpSpec("DBGHALT", 0x26, new OperandSpec(0, OperandTypeSH())),
-				"SETCHAR":  new OpSpec("SETCHAR", 0x27, new OperandSpec(2, OperandTypeSH("mr", "mc"))),
-				"GETCHAR":  new OpSpec("GETCHAR", 0x28, new OperandSpec(2, OperandTypeSH("rm"))),
+				"SETCHAR":  new OpSpec("SETCHAR", 0x27, new OperandSpec(2, OperandTypeSH("rr","rc"))),
+				"GETCHAR":  new OpSpec("GETCHAR", 0x28, new OperandSpec(2, OperandTypeSH("rc","rr"))),
 				
 				"MOD":   new OpSpec("MOD", 0x29, new OperandSpec(2, OperandTypeSH("rm","mr","rr","mc","rc"))),
 				"TIMER":   new OpSpec("TIMER", 0x30, new OperandSpec(1, OperandTypeSH("r"))),
@@ -89,10 +89,10 @@ namespace Vimmy
 				"TEST":   new OpSpec("TEST", 0x35, new OperandSpec(2, OperandTypeSH("rm","mr","rr","mc","rc"))),
 				"LOOP":  new OpSpec("LOOP", 0x36, new OperandSpec(1, OperandTypeSH("r", "m", "c"))),
 				"RAND":  new OpSpec("RAND", 0x37, new OperandSpec(2, OperandTypeSH("rc","rm","rr"))),
-				"STRCAT":  new OpSpec("STRCAT", 0x38, new OperandSpec(2, OperandTypeSH("rc","rm","rr"))),
-				"STRLEN":  new OpSpec("STRLEN", 0x39, new OperandSpec(2, OperandTypeSH("rc","rm","rr"))),
-				"STRCPY":  new OpSpec("STRCPY", 0x40, new OperandSpec(2, OperandTypeSH("rc","rm","rr"))),
-				"STRCMP":  new OpSpec("STRCMP", 0x41, new OperandSpec(2, OperandTypeSH("rc","rm","rr"))),
+				"STRCAT":  new OpSpec("STRCAT", 0x38, new OperandSpec(2, OperandTypeSH("rr","cr","rc"))),
+				"STRLEN":  new OpSpec("STRLEN", 0x39, new OperandSpec(2, OperandTypeSH("rr","rc"))),
+				"STRCPY":  new OpSpec("STRCPY", 0x40, new OperandSpec(2, OperandTypeSH("rr","cr","rc"))),
+				"STRCMP":  new OpSpec("STRCMP", 0x41, new OperandSpec(2, OperandTypeSH("rr","cr","rc")))
 				
 				
 				

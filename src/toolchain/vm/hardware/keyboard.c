@@ -18,7 +18,7 @@ void vmhw_keyboard_think(uint16_t * io, uint8_t * dma)
 
 }
 
-void vmhw_keyboard_keypress(uint8_t scancode)
+void vmhw_keyboard_keypress(uint16_t scancode)
 {
 	if (g_vmKeyboardDvc->m_iobridge[VMHW_KEYBOARD_IOPORT_BEGIN] == 0x0000) // if the keyboard driver has acknowledged previous key
 	{

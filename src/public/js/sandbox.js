@@ -766,9 +766,9 @@ Vimmy.Integration.prototype.onClickAssemble = function(_this,run)
 				if(!val){ data_error = true; this.pushError("Data :: invalid number " + obj.name)}
 				
 				labels[obj.name] = 0x100 + data_ptr
-				datablock[data_ptr+1] = (val>>8)&0xFF
-				datablock[data_ptr+2] = val&0xFF
-				data_ptr = data_ptr + 3
+				datablock[data_ptr] = (val>>8)&0xFF
+				datablock[data_ptr+1] = val&0xFF
+				data_ptr = data_ptr + 2
 				
 			break
 			
@@ -822,9 +822,9 @@ Vimmy.Integration.prototype.onClickAssemble = function(_this,run)
 		}
 	}
 	
-	if(data_ptr>(0x4000-0x100))
+	if(data_ptr>(0x3000-0x100))
 	{
-		this.pushError("Data :: Too much data! Exceeding size limit of 0x" + this.numberToHexStr((0x4000-0x100)))
+		this.pushError("Data :: Too much data! Exceeding size limit of 0x" + this.numberToHexStr((0x3000-0x100)))
 		data_error = true
 	}
 	
