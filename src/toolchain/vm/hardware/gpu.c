@@ -236,10 +236,14 @@ void vmhw_gpu_set_text_terminal(vmhw_gpu* gpu, uint16_t* args)
 				uint8_t file_x = ((c * 8) % 128)        + _x;
 				uint8_t file_y = (((c * 8) - ((c * 8) % 128)) / 16) +_y;
 				//printf("%u %u", file_x,file_y)
+				uint16_t color = gpu->m_Font[128 * (file_y)+(file_x)];
+
+				if (color != VMHW_GPU_DEFAULT_TRANSPARENCY_MASK) { color = args[5]; }
+
 				vmhw_gpu_put_pixel(gpu,
 					(console_x * 8) + _x,
 					(console_y * 8) + _y,
-					gpu->m_Font[128 * (file_y)+(file_x)]);
+					color);
 			}
 		}
 
@@ -363,26 +367,20 @@ void vmhw_gpu_draw_sprite(vmhw_gpu* gpu, uint16_t* args)
 
 
 vmhw_gpu_operation_t g_vmGpuOperations[0x1000] = {
-	// Message ID									//	Description						ARG0		ARG1		ARG2		ARG3		ARG4		ARG5
+	// Message ID & Name						    //	Description						ARG0		ARG1		ARG2		ARG3		ARG4		ARG5
 	[0x001] = &vmhw_gpu_clear_framebuffer,			//	Clears the framebuffer			-			-			-			-			-			Color
 	[0x002] = &vmhw_gpu_flip_framebuffer,			//	Flip framebuffer				-			-			-			-			-			-
-													//
-													//
-	//[0x050] = &vmhw_gpu_set_drawtexture,			//	Set draw texture				Addr		-			X-size		Y-size		-			-
+
 	[0x051] = &vmhw_gpu_enable_transmask,			//	Enable transparency mask		-			-			-			-			-			-
 	[0x052] = &vmhw_gpu_disable_transmask,			//	Disable transparency mask		-			-			-			-			-			-
 	[0x053] = &vmhw_gpu_set_transmask,				//	Set transparency mask			-			-			-			-			-			Color
 
-	[0x060] = &vmhw_gpu_enable_terminal,			//	Enable terminal
-	[0x061] = &vmhw_gpu_disable_terminal,			//	Disable terminal
-	[0x062] = &vmhw_gpu_set_color_terminal,			//  Set terminal text color			-			-			-			-			-			Color
-	[0x063] = &vmhw_gpu_set_text_terminal,			//  Set text on terminal			X-coord		Y-coord		-			-			Addr-DMA	-
+	[0x063] = &vmhw_gpu_set_text_terminal,			//  Set text on terminal			X-coord		Y-coord		-			-			Addr-DMA	Color
 
 	[0x100] = &vmhw_gpu_draw_rect,					//	Draw rectangle					X-coord		Y-coord		X2-coord	Y2-coord	-			Color
 	[0x101] = &vmhw_gpu_draw_circle,				//	Draw circle						X-coord		Y-coord		-			-			Radius		Color
-	[0x102] = &vmhw_gpu_draw_line,					//	Draw line						X1-coord	Y1-coord	X2-coord	Y2-coord	Thickness	Color
+	[0x102] = &vmhw_gpu_draw_line,					//	Draw line						X1-coord	Y1-coord	X2-coord	Y2-coord	-			Color
 	[0x103] = &vmhw_gpu_draw_sprite 				//	Draw sprite					    X-coord		Y-coord	    X2-coord	Y2-coord	Texture-DMA -
-
 };
 
 
