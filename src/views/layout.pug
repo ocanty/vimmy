@@ -16,7 +16,7 @@ html
 				.container-fluid
 					// Brand and toggle get grouped for better mobile display
 					.navbar-header
-						a.navbar-brand.navbar-brand-vimmy(href='http://localhost:3000')
+						a.navbar-brand.navbar-brand-vimmy(style="cursor: pointer; " onclick="window.location = '/';")
 							img(alt="Vimmy",src="/img/vimmy-logo.png",style="max-height: 48px; margin-top:-12px")
 						button.navbar-toggle.collapsed(data-toggle="collapse",data-target="#navbar-collapsable-element")
 							span.icon-bar
@@ -88,13 +88,14 @@ html
 		block js
 			script(src="https://cdn.auth0.com/js/lock/10.9.1/lock.min.js")
 			- var authclientid = process.env.AUTH0_CLIENT_ID
+			- var authredirecturl = process.env.AUTH0_CALLBACK_URL
 			
 			script.
 				// Construct an instance of Auth0Lock with your clientId and aut0 domain name
 				var lock = new Auth0Lock('#{authclientid}', 'vimmy.eu.auth0.com',
 				{ 
 					auth: {
-						redirectUrl: 'http://localhost:3000/callback',
+						redirectUrl: '#{authredirecturl}',
 						responseType: 'code',
 						params: {
 							scope: 'openid name email picture'

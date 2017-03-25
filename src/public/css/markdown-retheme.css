@@ -41,3 +41,43 @@ code
 {
 	margin-right: 2px;
 }
+
+/* derived from GitHub Markdown CSS (MIT) */
+
+table {
+  margin: 0 auto;
+  padding: 0;
+}
+table tr {
+  border-top: 1px solid #cccccc;
+  background-color: rgba(0,0,0,0.15);
+  margin: 0;
+  padding: 0;
+}
+
+table tr:nth-child(2n) {
+  background-color: rgba(0,0,0,0.25);
+}
+
+table tr th {
+  font-weight: bold;
+  border: 1px solid #cccccc;
+  text-align: left;
+  margin: 0;
+  padding: 6px 13px;
+}
+
+table tr td {
+  border: 1px solid #cccccc;
+  text-align: left;
+  margin: 0;
+  padding: 6px 13px;
+}
+
+table tr th :first-child, table tr td :first-child {
+  margin-top: 0;
+}
+
+table tr th :last-child, table tr td :last-child {
+  margin-bottom: 0;
+}

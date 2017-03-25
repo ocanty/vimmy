@@ -22,6 +22,30 @@ Vimmy.Integration = function()
 		readOnly: window.vimmyRunMode
 	});
 	
+	// use soft tabs (spaces) vs hard tabs
+	this.Editor.addKeyMap(
+	{
+        Tab: function(cm) 
+		{
+			if (cm.somethingSelected())
+			{
+				cm.indentSelection("add");
+				return;
+			}
+
+			if (false) // disable tabs, set to true in future if you want to experiment with this
+				cm.replaceSelection("\t", "end", "+input");
+			else
+				cm.execCommand("insertSoftTab");
+		},
+		
+        "Shift-Tab": function(cm) 
+		{
+			cm.indentSelection("subtract");
+        }
+    });
+	
+	
 	// Set up event listeners to tell the user to save if they have changed code in the editor
 	_self.confirmOnPageExit = function (e) 
 	{
