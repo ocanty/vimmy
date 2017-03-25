@@ -1,6 +1,6 @@
 
 #include "operations.h"
-#include "hardware\interrupter.h"
+#include "hardware/interrupter.h"
 #include "operands.h"
 
 #include <string.h>
