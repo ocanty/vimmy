@@ -21,8 +21,8 @@ var project_schema = new mongoose.Schema(
 	updated_at: { type: Date, required: true },
 	
 	vm_version: { type:Number, required: true },
-	code: { type:String, required: true},
-	data: { type:String, required: true },
+	code: { type:String, required: true, trim: false },
+	data: { type:String, required: true, trim: false },
 	// we do this to make sorting easier later rather than having to access votes.length, i.e mongoose does not support check params of an array for its sorting methods
 	num_votes: { type:Number, default: 0 },
 	votes: 
