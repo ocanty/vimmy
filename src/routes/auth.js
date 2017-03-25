@@ -24,17 +24,19 @@ router.get('/logout', function(req, res)
 router.get('/callback', passport.authenticate('auth0', { failureRedirect: '/failed' }),
 	function(req, res)
 	{
+		// check if this user exists
 		User.findOne({ auth_id: req.user.id },
 			function(error,user)
 			{
 				if(error){ return console.error(error); }
 				
+				// if they do populate the session with read-only db values
 				if(user)
 				{
 					req.user.db = user
 					res.redirect(req.session.returnTo || '/');
 				}
-				else
+				else // if they dont add them to the database
 				{
 					var new_user = new User(
 					{ 

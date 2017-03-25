@@ -5,18 +5,17 @@ var User = require("../models/db_user")
 var Project = require("../models/db_project")
 var uuid = require("uuid")
 
-// memory initializer
+// vm memory initializer
 router.get("*/vm.js.mem", function(req,res,next)
 {
 	res.sendFile("vm.js.mem", {root: './public'});
 })
 
-// file data
+// vm file data
 router.get("*/vm.data", function(req,res,next)
 {
 	res.sendFile("vm.data", {root: './public'});
 })
-
 
 router.get('/', ensureLoggedIn, function(req, res, next)
 {
@@ -41,6 +40,8 @@ router.get('/my-projects', ensureLoggedIn, function(req, res, next)
 {
 	User.findOne({ user_id: req.user.db.user_id}).populate('projects').exec(function (err, user) 
 	{
+		// push two arrays of published and private projects to the template
+		
 		regular_projects = user.projects.filter(function(doc){
 			return doc.isPublished == false;
 		})
@@ -87,7 +88,7 @@ router.post('/sandbox/save', ensureLoggedIn, function(req, res, next)
 				var code = req.body.code || " "
 				var vm_version = 1
 				
-				
+				// set creator and create project
 				var creator = req.user.db.user_id
 				var created_at = new Date()
 				console.log("valid category")
@@ -119,7 +120,7 @@ router.post('/sandbox/save', ensureLoggedIn, function(req, res, next)
 					
 					User.findOne({user_id: req.user.db.user_id}, function(err,user)
 						{
-								// Add project to creator
+								// Add project to creators profile
 								user.projects.push(project._id)
 					
 								// Save user

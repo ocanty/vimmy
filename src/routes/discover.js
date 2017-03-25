@@ -15,6 +15,7 @@ router.get("/",function(req,res,next)
 	})
 })
 
+// send projects based off serach paramaters
 router.get('/projects', function(req, res, next)
 {
 	var category = req.query.category || "All"

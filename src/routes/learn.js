@@ -7,6 +7,8 @@ var MarkdownIt = require('markdown-it')
 var md = new MarkdownIt();
 var User = require("../models/db_user")
 
+// will crawl the lesson folder as a tree, finding each *.md and each *.desc
+// will convert these into html and store them
 function loadLessons()
 {
 	var dirTree = require('directory-tree');
@@ -74,6 +76,7 @@ router.getLessonInfo = function(lesson_string)
 	
 }
 
+// render overview with lesson tree
 router.get("/overview",ensureLoggedIn,function(req,res,next)
 {
 	lessonsTree = loadLessons()
@@ -89,6 +92,7 @@ router.get("/overview",ensureLoggedIn,function(req,res,next)
 	})
 })
 
+// if the user asks for the enxt lesson, check if there is one in the current group or else redirect them to the overview
 router.get("/:lessongroup/:lessonid/next", ensureLoggedIn, function(req,res,next)
 {
 	lessonsTree = loadLessons()
@@ -113,6 +117,7 @@ router.get("/:lessongroup/:lessonid/next", ensureLoggedIn, function(req,res,next
 	}
 })
 
+// render lesson 
 router.get("/:lessongroup/:lessonid", ensureLoggedIn, function(req,res,next)
 {
 	lessonsTree = loadLessons()
@@ -127,6 +132,7 @@ router.get("/:lessongroup/:lessonid", ensureLoggedIn, function(req,res,next)
 			// remove existing lesson if its been there before
 			// eg. 1/1
 			
+			// add the lesson to the recent lessons list of the user
 			User.findOne({user_id: req.user.db.user_id}, function(err,user)
 				{
 					if(user)

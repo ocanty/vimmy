@@ -22,6 +22,7 @@ router.get('/', function(req, res, next) {
 		var c = 0
 		User.findOne({ user_id: req.user.db.user_id}).populate('projects').exec(function (err, user) 
 		{
+			// supply recent lessons and projects for the dashboard 
 			if(user)
 			{
 				creation_info = {}
@@ -54,7 +55,7 @@ router.get('/', function(req, res, next) {
 
 		
 	}
-	else
+	else// if they arent signed in render the homepage
 	{
 		res.render("homepage", { 
 			title: (!isLoggedIn ? "Vimmy :: The Educational Virtual Machine" : "Vimmy :: Dashboard"),

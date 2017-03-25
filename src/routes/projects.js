@@ -22,6 +22,7 @@ router.get("*/vm.data", function(req,res,next)
 
 
 // returns true if user is allowed see the project
+// check if the project is public, or if the person owns the project
 function checkProjectVisAuth(req,res,project)
 {
 	var isLoggedIn = (req.isAuthenticated && req.isAuthenticated())
@@ -43,6 +44,7 @@ function checkProjectVisAuth(req,res,project)
 	}
 }
 
+// check if only the owner owns the project
 function checkOwnerOnlyAuth(req,res,project)
 {
 	var isLoggedIn = (req.isAuthenticated && req.isAuthenticated())
@@ -59,6 +61,7 @@ function checkOwnerOnlyAuth(req,res,project)
 		
 }
 
+// render project
 router.get('/:project_id', function(req, res, next)
 {
 	Project.findOne({project_id:req.params.project_id}).populate("creator").exec(function(error,project)
@@ -74,6 +77,7 @@ router.get('/:project_id', function(req, res, next)
 
 			if(!checkProjectVisAuth(req,res,project)) return
 			
+			// check if they have voted and set the var to hide the +1 button
 			var hasVoted = false
 			if(isLoggedIn)
 			{
@@ -84,6 +88,7 @@ router.get('/:project_id', function(req, res, next)
 				console.log(hasVoted)
 			}
 			
+			// do views and save
 			project.views = project.views + 1
 			project.save(function(err)
 			{
@@ -95,6 +100,7 @@ router.get('/:project_id', function(req, res, next)
 				}
 			})
 			
+			// render project
 			var isLoggedIn = (req.isAuthenticated && req.isAuthenticated())
 			res.render("project", { 
 				title: "Vimmy :: " + project.name,
@@ -108,6 +114,7 @@ router.get('/:project_id', function(req, res, next)
 	})
 });
 
+// request project code
 router.get('/:project_id/code', function(req, res, next)
 {
 	Project.findOne({project_id:req.params.project_id}).populate("creator").exec(function(error,project)
@@ -123,12 +130,13 @@ router.get('/:project_id/code', function(req, res, next)
 			var isLoggedIn = (req.isAuthenticated && req.isAuthenticated())
 			
 
-
+			// send as base64 to preserve tabs and spaces which res.send seems to love to destroy
 			res.send(new Buffer(project.code).toString("base64"));
 		}
 	})
 });
 
+// data request
 router.get('/:project_id/data', function(req, res, next)
 {
 	Project.findOne({project_id:req.params.project_id}).populate("creator").exec(function(error,project)
@@ -147,6 +155,7 @@ router.get('/:project_id/data', function(req, res, next)
 	})
 });
 
+// edit page, send editMode and saveUrl/postUrl 
 router.get('/:project_id/edit', function(req, res, next)
 {
 	Project.findOne({project_id:req.params.project_id}).populate("creator").exec(function(error,project)
@@ -174,19 +183,21 @@ router.get('/:project_id/edit', function(req, res, next)
 	})
 });
 
+// when a user wants to copy a public project and edit it
 router.post('/:project_id/fork', function(req, res, next)
 {
 	Project.findOne({project_id:req.params.project_id}).populate("creator").exec(function(error,_project)
 	{
 		if(!checkProjectVisAuth(req,res,_project)) return
 		
+		// if the user is signed in
 		if(req.user.hasOwnProperty("db"))
 		{
 			var data = _project.data
 			var code = _project.code
 			var vm_version = 1
 					
-					
+			// create duplicate with new id 
 			var creator = req.user.db.user_id
 			var created_at = new Date()
 			var project = new Project(
@@ -242,7 +253,7 @@ router.post('/:project_id/fork', function(req, res, next)
 });
 
 
-
+// saving project update data + code
 router.post('/:project_id/edit/save', function(req, res, next)
 {
 	Project.findOne({project_id:req.params.project_id}).populate("creator").exec(function(error,project)
@@ -273,6 +284,7 @@ router.post('/:project_id/edit/save', function(req, res, next)
 	})
 });
 
+// render run page
 router.get('/:project_id/run', function(req, res, next)
 {
 	Project.findOne({project_id:req.params.project_id}).populate("creator").exec(function(error,project)
@@ -316,6 +328,7 @@ router.post('/:project_id/upvote', ensureLoggedIn, function(req, res, next)
 	
 		if(project)
 		{
+			// check if they have voted or not before
 			var hasVoted = project.votes.find(function(vote)
 			{
 				return vote == req.user.db._id
@@ -367,13 +380,11 @@ router.post('/:project_id/upvote', ensureLoggedIn, function(req, res, next)
 	
 });
 
-
+// delete project
 router.post('/:project_id/delete', function(req, res, next)
 {
 	// check permissions
-	//if(!checkProjectVisAuth(req,res,project)) return
-	//if(!checkOwnerOnlyAuth(req,res,project)) return
-	
+
 	Project.findOne({project_id:req.params.project_id}).populate("creator").exec(function(err,project)
 		{
 			if(!checkProjectVisAuth(req,res,project)) return
@@ -402,6 +413,7 @@ router.post('/:project_id/publish', ensureLoggedIn, function(req, res, next)
 		}
 		else
 		{
+			// set published flag
 			project.isPublished = true
 			project.save(function(err)
 			{
@@ -431,6 +443,7 @@ router.post('/:project_id/unpublish', ensureLoggedIn, function(req, res, next)
 		}
 		else
 		{
+			// set published flag
 			project.isPublished = false
 			project.save(function(err)
 			{
@@ -452,6 +465,7 @@ router.post('/:project_id/comments/add', function(req, res, next)
 {
 	Project.findOne({project_id:req.params.project_id}).populate("creator").populate("comments").exec(function(error,project)
 	{
+		// check if they are allowed comment
 		//if(!checkProjectVisAuth(req,res,project)) return
 		//if(!checkOwnerOnlyAuth(req,res,project)) return
 		
@@ -461,6 +475,7 @@ router.post('/:project_id/comments/add', function(req, res, next)
 		}
 		else
 		{
+			// sanitize comment
 			if(req.body.data != "")
 			{
 				if(req.body.data.length < 180)
@@ -486,7 +501,7 @@ router.post('/:project_id/comments/add', function(req, res, next)
 				}
 				else
 				{
-					res.status(403).send("Comment must be less than 403 characters")
+					res.status(403).send("Comment must be less than 180 characters")
 				}
 			}
 
@@ -500,6 +515,7 @@ router.post('/:project_id/comments/:comment_id/upvote', function(req, res, next)
 	Project.findOne({project_id: req.params.project_id}).populate({path :"comments.poster"}).exec(function (err, project) {
 			if (project && isLoggedIn)
 			{
+				// comment score upvote
 				if(!checkProjectVisAuth(req,res,project)) return
 						//if(!checkOwnerOnlyAuth(req,res,project)) return
 				
@@ -517,7 +533,7 @@ router.post('/:project_id/comments/:comment_id/upvote', function(req, res, next)
 						if(err)
 						{
 							console.error(err)
-							res.status(400).send("Could not save project!");
+							res.status(400).send("Could not upvote comment!");
 							return -1;
 						}
 						res.send(project.comments[comment].score.toString());
