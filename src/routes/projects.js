@@ -109,7 +109,6 @@ router.get('/:project_id', function(req, res, next)
 
 router.get('/:project_id/code', function(req, res, next)
 {
-
 	Project.findOne({project_id:req.params.project_id}).populate("creator").exec(function(error,project)
 	{
 		if(!checkProjectVisAuth(req,res,project)) return
@@ -121,7 +120,23 @@ router.get('/:project_id/code', function(req, res, next)
 		else
 		{
 			var isLoggedIn = (req.isAuthenticated && req.isAuthenticated())
-			res.send(project.code)
+			
+			// http://stackoverflow.com/a/8571649/1924602
+			var base64Regex = /^(?:[A-Z0-9+\/]{4})*(?:[A-Z0-9+\/]{2}==|[A-Z0-9+\/]{3}=|[A-Z0-9+\/]{4})$/i;
+			var isBase64 = base64Regex.test(project.code); // base64Data is the base64 string
+
+			if (isBase64) 
+			{
+				res.send(new Buffer(project.code, 'base64').toString('ascii'))
+			} 
+			else 
+			{
+				// false if not in base64 formate
+				res.send(project.code);
+			}
+	
+			
+	
 		}
 	})
 });
@@ -179,7 +194,7 @@ router.post('/:project_id/edit/save', function(req, res, next)
 		if(!checkOwnerOnlyAuth(req,res,project)) return
 		
 		project.data = req.body.data || "{ }"
-		project.code = req.body.code.replace(/\t+/g, "\\\\\t"); || " "
+		project.code = new Buffer(req.body.code).toString('base64') || " "
 
 		project.updated_at = new Date()
 		
