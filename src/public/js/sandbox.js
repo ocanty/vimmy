@@ -96,7 +96,7 @@ Vimmy.Integration = function()
 		if(typeof window.vimmyDroppedCode !== 'undefined' && typeof window.vimmyDroppedData !== 'undefined' && !setDropped)
 		{
 			//_self.Editor.off('change');
-			_self.Editor.getDoc().setValue(window.btoa(window.vimmyDroppedCode));
+			_self.Editor.getDoc().setValue(window.atob(window.vimmyDroppedCode));
 			//_self.Editor.on('change');
 			dropSetCode = true
 			
