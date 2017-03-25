@@ -1,6 +1,7 @@
 
 var express = require("express");
 var router = express.Router();
+var uuid = require("uuid")
 ensureLoggedIn = require("connect-ensure-login").ensureLoggedIn();
 
 
@@ -172,6 +173,74 @@ router.get('/:project_id/edit', function(req, res, next)
 		}
 	})
 });
+
+router.post('/:project_id/fork', function(req, res, next)
+{
+	Project.findOne({project_id:req.params.project_id}).populate("creator").exec(function(error,_project)
+	{
+		if(!checkProjectVisAuth(req,res,_project)) return
+		
+		if(req.user.hasOwnProperty("db"))
+		{
+			var data = _project.data
+			var code = _project.code
+			var vm_version = 1
+					
+					
+			var creator = req.user.db.user_id
+			var created_at = new Date()
+			var project = new Project(
+			{
+				project_id: uuid.v4().substring(0,6),
+				name: _project.name,
+				category: _project.category,
+				isPublished: false,
+				creator: req.user.db,
+				created_at: created_at,
+				updated_at: created_at,
+				vm_version: vm_version,
+				comments: [ ],
+				code: code,
+				data: data,
+				views: 0
+			})
+					
+			// Save project
+			project.save(function(err)
+			{
+				if(err)
+				{
+					console.error(err)
+					res.status(400).send("Could not save project!");
+					return -1;
+				}
+				
+				User.findOne({user_id: req.user.db.user_id}, function(err,user)
+					{
+							// Add project to creator
+							user.projects.push(project._id)
+				
+							// Save user
+							user.save(function(err)
+							{
+								if(err)
+								{
+									console.error(err)
+									res.status(400).send("Could not save project!");
+									return -1;
+								}
+								
+								
+								// send them the project
+								res.send("/projects/" + project.project_id)
+							})
+					})
+					
+			}) 
+		}
+	})
+});
+
 
 
 router.post('/:project_id/edit/save', function(req, res, next)

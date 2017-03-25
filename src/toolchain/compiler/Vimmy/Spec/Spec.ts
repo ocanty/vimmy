@@ -73,7 +73,7 @@ namespace Vimmy
 				"JGE": new OpSpec("JGE", 0x21, new OperandSpec(1, OperandTypeSH("r", "m", "c"))),
 				"JL":  new OpSpec("JL", 0x22, new OperandSpec(1, OperandTypeSH("r", "m", "c"))),
 				"JLE": new OpSpec("JLE", 0x23, new OperandSpec(1, OperandTypeSH("r", "m", "c"))),
-				"CMP": new OpSpec("CMP", 0x24, new OperandSpec(2, OperandTypeSH("rr", "rm", "mr","rc"))),
+				"CMP": new OpSpec("CMP", 0x24, new OperandSpec(2, OperandTypeSH("rr", "rm", "mr","rc","mc"))),
 				"IRET":  new OpSpec("IRET", 0x25, new OperandSpec(0, OperandTypeSH())),
 				"DBGHALT":  new OpSpec("DBGHALT", 0x26, new OperandSpec(0, OperandTypeSH())),
 				"SETCHAR":  new OpSpec("SETCHAR", 0x27, new OperandSpec(2, OperandTypeSH("rr","rc", "cr"))),
