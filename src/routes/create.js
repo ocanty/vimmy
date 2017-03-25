@@ -84,7 +84,7 @@ router.post('/sandbox/save', ensureLoggedIn, function(req, res, next)
 			{
 				console.log("valid category")
 				var data = req.body.data || "{ }"
-				var code = new Buffer(req.body.code).toString('base64')|| " "
+				var code = req.body.code || " "
 				var vm_version = 1
 				
 				

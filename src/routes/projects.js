@@ -121,22 +121,9 @@ router.get('/:project_id/code', function(req, res, next)
 		{
 			var isLoggedIn = (req.isAuthenticated && req.isAuthenticated())
 			
-			// http://stackoverflow.com/a/8571649/1924602
-			var base64Regex = /^(?:[A-Z0-9+\/]{4})*(?:[A-Z0-9+\/]{2}==|[A-Z0-9+\/]{3}=|[A-Z0-9+\/]{4})$/i;
-			var isBase64 = base64Regex.test(project.code); // base64Data is the base64 string
 
-			if (isBase64) 
-			{
-				res.send(new Buffer(project.code, 'base64').toString('ascii'))
-			} 
-			else 
-			{
-				// false if not in base64 formate
-				res.send(project.code);
-			}
-	
-			
-	
+
+			res.send(project.code);
 		}
 	})
 });
@@ -194,7 +181,7 @@ router.post('/:project_id/edit/save', function(req, res, next)
 		if(!checkOwnerOnlyAuth(req,res,project)) return
 		
 		project.data = req.body.data || "{ }"
-		project.code = new Buffer(req.body.code).toString('base64') || " "
+		project.code = req.body.code || "{ }"
 
 		project.updated_at = new Date()
 		

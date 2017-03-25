@@ -43,7 +43,7 @@ $(document).ready(function()
 	{
 		if(typeof window.vimmyDroppedCode !== 'undefined' && typeof window.vimmyDroppedData !== 'undefined' && !setDropped)
 		{
-			_self.Editor.getDoc().setValue(window.vimmyDroppedCode.toLowerCase());
+			_self.Editor.getDoc().setValue(JSON.parse(window.vimmyDroppedCode));
 			dropSetCode = true
 
 			for(var n in window.vimmyDroppedData)

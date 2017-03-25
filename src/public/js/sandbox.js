@@ -23,7 +23,7 @@ Vimmy.Integration = function()
 	});
 	
 	// use soft tabs (spaces) vs hard tabs
-/* 	this.Editor.addKeyMap(
+ 	this.Editor.addKeyMap(
 	{
         Tab: function(cm) 
 		{
@@ -43,7 +43,7 @@ Vimmy.Integration = function()
 		{
 			cm.indentSelection("subtract");
         }
-    }); */
+    });
 	
 	
 	// Set up event listeners to tell the user to save if they have changed code in the editor
@@ -96,7 +96,7 @@ Vimmy.Integration = function()
 		if(typeof window.vimmyDroppedCode !== 'undefined' && typeof window.vimmyDroppedData !== 'undefined' && !setDropped)
 		{
 			//_self.Editor.off('change');
-			_self.Editor.getDoc().setValue(window.vimmyDroppedCode.toLowerCase());
+			_self.Editor.getDoc().setValue(JSON.parse(window.vimmyDroppedCode));
 			//_self.Editor.on('change');
 			dropSetCode = true
 			
@@ -239,14 +239,14 @@ Vimmy.Integration = function()
 			vars = { 
 					name: $("#input-name").val(),
 					category: $("#select-category").val(),
-					code: _self.Editor.getDoc().getValue(),
+					code: JSON.stringify({ code: _self.Editor.getDoc().getValue() }),
 					data: JSON.stringify(_self.buildDataTable())
 				}
 		}
 		else
 		{
 			vars = { 
-					code: _self.Editor.getDoc().getValue(),
+					code: JSON.stringify({ code: _self.Editor.getDoc().getValue() }),
 					data: JSON.stringify(_self.buildDataTable())
 				}
 		}
