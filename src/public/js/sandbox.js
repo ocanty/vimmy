@@ -96,7 +96,7 @@ Vimmy.Integration = function()
 		if(typeof window.vimmyDroppedCode !== 'undefined' && typeof window.vimmyDroppedData !== 'undefined' && !setDropped)
 		{
 			//_self.Editor.off('change');
-			_self.Editor.getDoc().setValue(JSON.parse(window.vimmyDroppedCode));
+			_self.Editor.getDoc().setValue(window.btoa(window.vimmyDroppedCode));
 			//_self.Editor.on('change');
 			dropSetCode = true
 			
@@ -239,14 +239,14 @@ Vimmy.Integration = function()
 			vars = { 
 					name: $("#input-name").val(),
 					category: $("#select-category").val(),
-					code: JSON.stringify({ code: _self.Editor.getDoc().getValue() }),
+					code: _self.Editor.getDoc().getValue(),
 					data: JSON.stringify(_self.buildDataTable())
 				}
 		}
 		else
 		{
 			vars = { 
-					code: JSON.stringify({ code: _self.Editor.getDoc().getValue() }),
+					code: _self.Editor.getDoc().getValue(),
 					data: JSON.stringify(_self.buildDataTable())
 				}
 		}

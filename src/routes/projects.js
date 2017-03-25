@@ -123,7 +123,7 @@ router.get('/:project_id/code', function(req, res, next)
 			
 
 
-			res.send(project.code);
+			res.send(new Buffer(project.code).toString("base64"));
 		}
 	})
 });
@@ -158,7 +158,7 @@ router.get('/:project_id/edit', function(req, res, next)
 		else
 		{	
 
-			//if(!checkOwnerOnlyAuth(req,res,project)) return
+			if(!checkOwnerOnlyAuth(req,res,project)) return
 	
 			var isLoggedIn = (req.isAuthenticated && req.isAuthenticated())
 			res.render("sandbox", { 
