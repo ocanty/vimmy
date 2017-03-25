@@ -160,6 +160,7 @@ gulp.task('build-toolchain-vm', function()
     }
 	
 	// build c
+
     glob("src/toolchain/vm/**/*.c", function (er, files) 
     {
         
@@ -196,11 +197,16 @@ gulp.task('build-toolchain-vm', function()
                                         gulp.src("src/toolchain/vm/vm.js.mem").pipe(gulp.dest("build/public/"))
 										
                                     }
+									else
+									{
+										console.log(err)
+									}
                                     
                                     console.log(stdout)
                                     console.log(stderr); 
                                 })
                             })
+							
                         }
                     }
                 }
