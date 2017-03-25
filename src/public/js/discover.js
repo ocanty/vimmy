@@ -1,6 +1,7 @@
 
 $(document).ready(function()
 {
+	// insert a project into the browse box
 	function insert_project(score,name,category,date,id)
 	{
 		$('#project-panel').append(

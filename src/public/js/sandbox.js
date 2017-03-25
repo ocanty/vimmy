@@ -11,7 +11,6 @@ Vimmy.Integration = function()
 	
 	console.log(Vimmy)
 	
-	// Check if code was dropped by the server
 	var _self = this
 	
 	// Setup editor
@@ -64,10 +63,10 @@ Vimmy.Integration = function()
 		return message;
 	};
 		
-		
+	// set up the listener from above
 	window.onbeforeunload = _self.confirmOnPageExit;
-	// Set default code value
 	
+	// Set default code value if we arent going to be dropped code
 	if(!window.vimmyRunMode)
 	{
 		this.Editor.getDoc().setValue(
@@ -81,6 +80,7 @@ Vimmy.Integration = function()
 	}
 	else	
 	{
+		// or else tell them we're loading it
 		this.Editor.getDoc().setValue("Loading project...")
 	}
 	
@@ -91,17 +91,21 @@ Vimmy.Integration = function()
 	});
 	
 	var setDropped = false
+	
+	// loop to wait and check for dropped code
 	var setOnDrop = function()
 	{
 		if(typeof window.vimmyDroppedCode !== 'undefined' && typeof window.vimmyDroppedData !== 'undefined' && !setDropped)
 		{
 			//_self.Editor.off('change');
+			// decode base64 code and set editor
 			_self.Editor.getDoc().setValue(window.atob(window.vimmyDroppedCode));
 			//_self.Editor.on('change');
 			dropSetCode = true
 			
 			window.onbeforeunload = null; // remove the "are we saved" for this change as this is the initial text
 			
+			// process each data var and add it
 			$("#vm-data-input").empty()
 			
 			for(var n in window.vimmyDroppedData)
@@ -117,35 +121,42 @@ Vimmy.Integration = function()
 		}
 		
 	}
+	// start checking for dropped code
 	setOnDrop()
 
 	
 	// Data
 	
 	// Data image conversion -> upload file -> base64 -> rgb888 -> rgb565
+	// To get the pixels of an image in a web browser, you MUST load it into a canvas, there is no simple API, you are forced to use this workaround
 	$(document).on("change","input", function()
 	{
 		var element = this
 		var elementjq = $(element)
+		
+		// if the user picked a file with the file browser
 		if(elementjq.attr("type") == "file")
 		{
 			var input = element
 			// http://stackoverflow.com/questions/4459379/preview-an-image-before-it-is-uploaded
 			if (input.files && input.files[0]) 
 			{
+				
 				var reader = new FileReader();
 
+				// set up the reader for when the file reads, (it will arrive as base64 format)
 				reader.onload = function (e) 
 				{
-					// we have a base64 url, to do image manipulating we need a canvas
+					// we have a base64 url, to do image manipulating we need a canvas, create one
 					var c = document.createElement("canvas")
 					var ctx = c.getContext("2d")
 					var img = new Image();
 					img.src = e.target.result
 					
+					// on load image
 					img.onload = function(e)
 					{
-						// Use canvas to get pixels
+						// Use canvas to get pixels into an ImageData
 						ctx.width = img.width
 						ctx.height = img.height
 						ctx.drawImage(img,0,0)
@@ -154,7 +165,7 @@ Vimmy.Integration = function()
 						c.remove()
 						
 						
-						// Convert pixels
+						// Convert pixels from RGB888 to RGB565
 						var compat_ptr = 0
 						var vm_compat_data = new Uint16Array(img.width*img.height)
 						
@@ -166,11 +177,12 @@ Vimmy.Integration = function()
 							var blue = data[i+2];
 							var alpha = data[i+3];
 							
-							// rgb888 to rgb565
+							// rgb888 to rgb565 formula
 							vm_compat_data[compat_ptr] = ((((red>>3)<<11) | ((green>>2)<<5) | (blue>>3)))
 							compat_ptr++;
 						}
 						
+						// convert to 8bit array
 						var testcopy = new Uint8Array(vm_compat_data.buffer)
 						var outstr = ""
 						
@@ -190,12 +202,13 @@ Vimmy.Integration = function()
 							//	odd = 0
 							//}
 							
+							// convert each char into hex and dump into a string
 							outstr += _self.numberToHexStr(testcopy[i])
 						}
 						
 
 
-					
+						// find the sprite data variable and set the text to the encoded hex string
 						var variable_inputs = elementjq.parent().parent().find(".col-variable > input")
 						// $(variable_inputs[0]).val("sprite" + img.width + "x" + img.height + "_" + Math.round(Math.random()*50).toString())
 						$(variable_inputs[1]).val(outstr)
@@ -203,17 +216,12 @@ Vimmy.Integration = function()
 					}
 				}
 				
+				// read the file triggering the onload function above
 				reader.readAsDataURL(input.files[0])
 				
 			}
 		}
 	})
-	
-/* 	_self.addDataVar("number","number_test",7)
-	_self.addDataVar("string","string_asd","hey")
-	_self.addDataVar("bytearray","bytearray_bytearray","AABB")
-	_self.addDataVar("sprite","sprite_test2","DDEE")
-	_self.addDataVar("constant","constant_ayy","2312") */
 	
 	// beautiful implementation
 	// http://stackoverflow.com/a/8084248/1924602
@@ -225,14 +233,15 @@ Vimmy.Integration = function()
 	$("#btn-add-string").click(		function(){ _self.addDataVar("string","string_"+randStr(),"Hello world!") })
 	$("#btn-add-bytearray").click(	function(){ _self.addDataVar("bytearray","bytearray_"+randStr(),"AABBCCDDEEFF0011223344") })
 	
-	// When a user hits assemble
+	// When a user hits assemble and run, assemble and run
 	$("#btn-assemble-run").click(function(){ _self.onClickAssemble(_self,true) })
-	
+	// When a user hits assemble just assemble
 	$("#btn-assemble").click(function(){ _self.onClickAssemble(_self,false) })
 	
 	// Saving and publishing
 	$("#btn-save").click(function()
 	{
+		// setup post vars
 		var vars  = { }
 		if(!window.vimmyPostUrl)
 		{
@@ -252,7 +261,10 @@ Vimmy.Integration = function()
 		}
 		
 		console.log(vars)
+		// stop the page from getting annoyed if we refresh, we're saving anyway
 		window.onbeforeunload = null;
+		
+		// send the data and return error if it happens
 		$.ajax({
 			type: "POST",
 			url: window.vimmyPostUrl || "/create/sandbox/save",
@@ -283,6 +295,7 @@ Vimmy.Integration = function()
 	$("#btn-vm-reset").click(function()
     {
 		_self.vm_reset(_self.vm_ptr)
+		// reseting vm clears memory, do a dasm to clear the dasm box too
 		_self.doDisassembly()
     })
 	
@@ -298,11 +311,14 @@ Vimmy.Integration = function()
 		_self.vm_set_status(_self.vm_ptr,1)
     })
 	
+	// jQuery Keyboard input 
 	// Keyboard, arrows utf-8 values (utf-16)
-	$.keyboard.keyaction.uparrow = function(base)		{ if(_self.vm_get_status(_self.vm_ptr) > 0){ _self.vmhw_keyboard_keypress(0x2191); } };
-	$.keyboard.keyaction.downarrow = function(base)	{ if(_self.vm_get_status(_self.vm_ptr) > 0){ _self.vmhw_keyboard_keypress(0x2190); } }; // 	0x2190
+	
+	// push keys to vm if it is running
+	$.keyboard.keyaction.uparrow = function(base)	{ if(_self.vm_get_status(_self.vm_ptr) > 0){ _self.vmhw_keyboard_keypress(0x2191); } };
+	$.keyboard.keyaction.downarrow = function(base)	{ if(_self.vm_get_status(_self.vm_ptr) > 0){ _self.vmhw_keyboard_keypress(0x2190); } };
 	$.keyboard.keyaction.leftarrow = function(base)	{ if(_self.vm_get_status(_self.vm_ptr) > 0){ _self.vmhw_keyboard_keypress(0x2193); } };
-	$.keyboard.keyaction.rightarrow = function(base)	{ if(_self.vm_get_status(_self.vm_ptr) > 0){ _self.vmhw_keyboard_keypress(0x2192); } };
+	$.keyboard.keyaction.rightarrow = function(base){ if(_self.vm_get_status(_self.vm_ptr) > 0){ _self.vmhw_keyboard_keypress(0x2192); } };
 	
 	$('#vm-keyboard').keyboard(
 	{
@@ -316,7 +332,7 @@ Vimmy.Integration = function()
 		// *** choose layout ***
 		layout       : 'custom',
 		 display: {
-			'leftarrow'   : '\u2190', // Diamond
+			'leftarrow'   : '\u2190', 
 			'rightarrow'  : '\u2192',
 			'uparrow' : '\u2191',
 			'downarrow' : '\u2193'
@@ -498,7 +514,20 @@ Vimmy.Integration = function()
 		initialized   : function(e, keyboard, el) {},
 		beforeVisible : function(e, keyboard, el) {},
 		visible       : function(e, keyboard, el) {},
-		beforeInsert  : function(e, keyboard, el, textToAdd) { if(_self.vm_get_status(_self.vm_ptr) > 0){  console.log(textToAdd,textToAdd.charCodeAt(0)); _self.vmhw_keyboard_keypress(textToAdd.charCodeAt(0));  } return textToAdd; },
+		
+		//////////////////// PUSH KEYS TO VM if it is running
+		beforeInsert  : function(e, keyboard, el, textToAdd)
+		{ 
+			if(_self.vm_get_status(_self.vm_ptr) > 0)
+			{  
+				console.log(textToAdd,textToAdd.charCodeAt(0)); 
+				_self.vmhw_keyboard_keypress(textToAdd.charCodeAt(0));
+			} 
+			return textToAdd;
+		},
+		//////////////////// PUSH KEYS TO VM if it is running
+		
+		
 		change        : function(e, keyboard, el) {},
 		beforeClose   : function(e, keyboard, el, accepted) {},
 		accepted      : function(e, keyboard, el) {},
@@ -514,6 +543,7 @@ Vimmy.Integration = function()
 
 		// build key callback (individual keys)
 		buildKey : function( keyboard, data ) {
+			
 		/*
 		data = {
 		  // READ ONLY
@@ -535,7 +565,7 @@ Vimmy.Integration = function()
 		  $key     : [object]
 		}
 		*/
-		return data;
+			return data;
 		},
 
 		// this callback is called just before the "beforeClose" to check the value
@@ -545,8 +575,9 @@ Vimmy.Integration = function()
 		// ( like this "keyboard.$preview.val('');" ), if desired
 		// The validate function is called after each input, the "isClosing" value
 		// will be false; when the accept button is clicked, "isClosing" is true
-		validate : function(keyboard, value, isClosing) {
-		return true;
+		validate : function(keyboard, value, isClosing)
+		{
+			return true;
 		}
 
 		}
@@ -558,6 +589,7 @@ Vimmy.Integration = function()
 	var c = document.getElementById("vm-screen");
 	this.Canvas = c.getContext("2d");
 	
+	// throw up the splash if we want (may change in future, as of now it's just a black square)
 	var vimmy_splash = new Image();
 	vimmy_splash.src="/img/vimmy-logo.png"
 	vimmy_splash.onload = function()
@@ -570,7 +602,7 @@ Vimmy.Integration = function()
 	}
 	
 	//////////////////////////////////////////////////
-	// Build memory table
+	// Build memory table preview
 	//////////////////////////////////////////////////
 	var tbody = $("#vm-mem-view-primary")
     var startaddr = 0x0
@@ -594,7 +626,7 @@ Vimmy.Integration = function()
     }
 	
 	// Set memMap preview location to the default rom load point because the user is lazy
-	_self.memMapAddr = 0xFFF
+	_self.memMapAddr = 0x4000
 	
 	// When the user edits the memory map address, this updates the variable that is read by the debug loop
 	$("#vm-mem-view-addr-primary").on("change", function() 
@@ -606,7 +638,7 @@ Vimmy.Integration = function()
 	
 	
 	//////////////////////////////////////////////////
-	// Setup VM
+	// Setup VM - emscripten integration
 	//////////////////////////////////////////////////
 	this.vm_init        = Module.cwrap('vm_init','number')
 	this.vm_reset       = Module.cwrap('vm_reset','null',['number'])
@@ -644,10 +676,10 @@ Vimmy.Integration = function()
 	this.vm_scr_ptr = this.vmhw_gpu_get_screen_ptr()
 	console.log("vm scr ptr:",this.vm_scr_ptr);
 	
-	// Debugging
+	// Begin debugging
 	this.debugCycle()
 	
-	// see psot cycle hook below, for vsync-like simulation
+	// see post cycle hook below, for vsync-like simulation, we no longer use setTimeout for drawing
 	//this.gpuCycle()
 	
 }
@@ -655,9 +687,9 @@ Vimmy.Integration = function()
 Vimmy.Integration.prototype.dataUid = 0
 Vimmy.Integration.prototype.addDataVar = function(type,_name,_val)
 {
-	// var change
+	// preserve this 
 	var _self = this
-	// data-toggle="tooltip" title="ASD")
+
 	var name = _name
 	var val = _val
 	
@@ -681,7 +713,7 @@ Vimmy.Integration.prototype.addDataVar = function(type,_name,_val)
 	this.dataUid = this.dataUid + 1
 }
 
-// Builds a table from the data elements
+// Builds a table from the data elements, for uploading a project
 Vimmy.Integration.prototype.buildDataTable = function()
 {
 	var table = { }
@@ -697,6 +729,7 @@ Vimmy.Integration.prototype.buildDataTable = function()
 	return table
 }
 
+// Converts a number to a hex string, supporting twos complement
 Vimmy.Integration.prototype.numberToHexStr = function(number)
 {
 	if(number < 0xF)
@@ -707,18 +740,7 @@ Vimmy.Integration.prototype.numberToHexStr = function(number)
     return number.toString(16).toUpperCase()
 }
 
-Vimmy.Integration.prototype.hexStringToArray = function(string)
-{
-	f
-}
-
-Vimmy.Integration.prototype.arrayToString = function(string)
-{
-	var ret = new Uint8Array(0xFFFF)
-}
-
-
-
+// Clear compiler messages
 Vimmy.Integration.prototype.clearMessages = function()
 {
     $("#compiler-messages").children(".msg").each(function(){ this.remove() })
@@ -726,6 +748,7 @@ Vimmy.Integration.prototype.clearMessages = function()
 	this.pushInfo(":: vimmyVM Assembler :: waiting for input ::")
 }
 
+// push compiler error
 Vimmy.Integration.prototype.pushError = function(str)
 {
 	// http://stackoverflow.com/questions/10503606/scroll-to-bottom-of-div-on-page-load-jquery
@@ -734,6 +757,7 @@ Vimmy.Integration.prototype.pushError = function(str)
 	$("#compiler-messages").animate({ scrollTop: $('#compiler-messages').prop("scrollHeight")}, 1);
 }
 
+// push compiler info
 Vimmy.Integration.prototype.pushInfo = function(str)
 {
     $("#compiler-messages").append("<div class=\"msg msg-info\">" + str + "</div>")
@@ -744,7 +768,7 @@ Vimmy.Integration.prototype.pushInfo = function(str)
 Vimmy.Integration.prototype.loadROM = function(rom,load_addr)
 {
 	console.log("loading rom ")
-	// todo optimize, currently does a 1by1 copy
+	// todo optimize, currently does a 1by1 copy, we should probably use TypedArray.set
 	var t = 0
 	for(var n in rom)
 	{
@@ -756,6 +780,7 @@ Vimmy.Integration.prototype.loadROM = function(rom,load_addr)
 	//console.log(Module.HEAPU8)
 }
 
+// when the user hits assemble
 Vimmy.Integration.prototype.onClickAssemble = function(_this,run)
 {
 	this.clearMessages()
@@ -764,7 +789,7 @@ Vimmy.Integration.prototype.onClickAssemble = function(_this,run)
 	
 	// Build data block
 	// The data block is stored in the ROM at loc 0, (loaded in at loc 0x0100)
-	// it fills up until 0xFFFF where code begins
+	// it fills up until 0x3000 where user runtime data + code begins
 	var data_ptr = 0 // the end address of the current data stored in datablock
 	var datalabels = { }
 	var datablock = new Uint8Array(0x4000-0x0100); // added to rom at 0x0100
@@ -846,6 +871,7 @@ Vimmy.Integration.prototype.onClickAssemble = function(_this,run)
 		}
 	}
 	
+	// check if they exceeded size and tell them to get lost
 	if(data_ptr>(0x3000-0x100))
 	{
 		this.pushError("Data :: Too much data! Exceeding size limit of 0x" + this.numberToHexStr((0x3000-0x100)))
@@ -855,17 +881,20 @@ Vimmy.Integration.prototype.onClickAssemble = function(_this,run)
 	console.log(labels)
 	
 	
-	if(data_error) // data bad
+	if(data_error) // data bad, stop compilation
 	{
 		this.pushError("Data error");
 	}
 	else
 	{
+		// get compiler and tokenizer from TypeScript code
 		var compiler = compiler || new Vimmy.Assembler.Compiler
 		var tokenizer = tokenizer || new Vimmy.Assembler.Tokenizer
 		
+		// do a compilation and pass our data labels
 		var compileResult = compiler.compile(tokenizer.tokenize(this.Editor.getDoc().getValue().toLowerCase()),true,labels);
 		
+		// get all the messages and push them 
 		for(var n in compileResult.compileMessages)
 		{
 			var msg = compileResult.compileMessages[n].message
@@ -892,12 +921,13 @@ Vimmy.Integration.prototype.onClickAssemble = function(_this,run)
 			
 			// load our rom at data entry, 
 			this.loadROM(rom_with_data,0x0100)
+			// set debug labels, we might use these later if addresses appear on the stack we can check the values and peek the labels
 			this.debugLabels = compileResult.labels
 			
 			// disassemble the rom 
 			this.doDisassembly()
 			
-			// set the vm to run in continous step mode
+			// set the vm to run in continous step mode, consider starting vm paused in the future (??)
 			this.vm_set_status(this.vm_ptr,2)
 			
 			// start the vm cycle
@@ -911,6 +941,7 @@ Vimmy.Integration.prototype.onClickAssemble = function(_this,run)
 		}
 		else
 		{
+			// pause the vm if there was a compile error if it wa srunning already
 			this.vm_set_status(this.vm_ptr,0)
 		}
 	}
@@ -926,6 +957,7 @@ Vimmy.Integration.prototype.doDisassembly = function()
 	this.vm_get_dasm_string(this.vm_ptr,dasm)
 	var dasmstr = Module.Pointer_stringify(dasm)
 	
+	// process disassembly returned by C code, split new lines into table
 	if(dasmstr)
 	{
 		var dasmarr = dasmstr.split("\n")
@@ -942,6 +974,7 @@ Vimmy.Integration.prototype.doDisassembly = function()
 	
 }
 
+// we're no longer using the browser timing for drawing
 // window.requestAnimFrame = (function(){
   // return  window.requestAnimationFrame       || 
           // window.webkitRequestAnimationFrame || 
@@ -953,13 +986,17 @@ Vimmy.Integration.prototype.doDisassembly = function()
           // };
 // })();
 
-var fadeframes = [ ]
+//future implementation for a CRT like effect?
+//blend each frame to give like a fade effect
+//var fadeframes = [ ]
 
+// called to cycle the gpu, draws 1 frame
 Vimmy.Integration.prototype.gpuCycle = function()
 {
 	var _self = this
 	//requestAnimFrame(function(){ _self.gpuCycle() })
 	
+	// get the screen buffer, we need to convert this to RGB888 and draw it
 	this.gpuCycleBuffer = this.gpuCycleBuffer || new Uint8ClampedArray(256*256*4)
 	// RGB565 -> RGB888
 	var x = 0
@@ -978,11 +1015,15 @@ Vimmy.Integration.prototype.gpuCycle = function()
 		
 	}
 	
+	// convert ot imagedata
 	this.gpuCycleImage = new ImageData(this.gpuCycleBuffer,256,256)
+	
+	// draw
 	this.Canvas.putImageData(this.gpuCycleImage,0,0)
 
 }
 
+// hack to convert signed numbers from emscripten into unsigned
 Vimmy.Integration.prototype.signedToUnsigned = function(num)
 {
 	return (new Uint16Array([num]))[0]
@@ -994,6 +1035,7 @@ Vimmy.Integration.prototype.debugCycle = function()
 	var _self = this
 	setTimeout(function(){ _self.debugCycle() },10)
 
+	// if vm exists
 	if(_self.vm_ptr)
 	{
 		// Control button glyphs depending on if VM is running or not
@@ -1008,7 +1050,7 @@ Vimmy.Integration.prototype.debugCycle = function()
 		
 		// Build mem table off current memory view
 		var lastaddr = this.memMapAddr
-		// Don't update as regulalary as other stuff -> lags firefox
+		// Don't update as regulalary as other stuff -> lags firefox HEAVILY
  		this.memMapLastUpdate = (this.memMapLastUpdate+1) || 1
 		
 		if(this.memMapLastUpdate > 100)
@@ -1037,6 +1079,7 @@ Vimmy.Integration.prototype.debugCycle = function()
 			})
 			
 			// Update stack preview
+			// walk the stack and draw its values
 			//<span class="stack-var" id="svar-1">0x0000 (__hello)</span>
 			$("#stack-box-primary").empty()
 			$("#stack-box-primary").append("<div class=\"stack-var\">Stack</div>")
@@ -1044,7 +1087,7 @@ Vimmy.Integration.prototype.debugCycle = function()
 			var bottomstack_signed = _self.vm_get_SP(_self.vm_ptr);
 			var bottomstack_unsigned = _self.signedToUnsigned(bottomstack_signed)//regval_signed>>>0 // js quirk
 			//console.log(bottomstack_unsigned)
-			// dont show stackoverflows or we will lag the browser to shit
+			// dont show stackoverflows or we will lag the browser badly
 			for(var bottomstack = 0xFFFE; bottomstack > Math.max(bottomstack_unsigned,0xFFFE-0x200); bottomstack -= 2)
 			{
 				// 28bit -> 16bit
@@ -1062,7 +1105,7 @@ Vimmy.Integration.prototype.debugCycle = function()
 		}
 		
 			
-		// Update register preview values
+		// Update register preview values, previewing signed unsigned and hex values
 		$(".register-box").each(function(){
 			var reg = $(this).children(".register-id")
 			var val_signed = $(this).children(".value:nth(0)") // text 
@@ -1078,7 +1121,7 @@ Vimmy.Integration.prototype.debugCycle = function()
 			
 		})
 		
-		// Show current instruction on dasm
+		// Show current instruction on dasm, highlighting it red
 		$('#vm-dasm-primary th').each(function(){ $(this).css('background-color','rgba(0,0,0,0)') })
 		$('#vm-dasm-primary th').filter(function() 
 		{
@@ -1093,9 +1136,10 @@ Vimmy.Integration.prototype.debugCycle = function()
 // Called when the Emscripten enviroment is ready
 Vimmy.onEmscriptenRuntimeInitialized = function()
 {
+	// make our defined class from above
 	Vimmy._integration = new Vimmy.Integration();
 	
-	// Error handling
+	// Error handling, generic error handler incase emscripten crashes with abort() for some reason
 	window.onerror = function abortZeroCatch(errorMsg, url, lineNumber) {
 		if(errorMsg.search("abort(0)"))
 		{
@@ -1103,15 +1147,19 @@ Vimmy.onEmscriptenRuntimeInitialized = function()
 		}
 	}
 	
+	// add the panic handler that the vm will call if it knows it will crash
 	var panic_handler = Runtime.addFunction(function(s) {
 	   Vimmy._integration.pushError(Pointer_stringify(s))
 	   Module.ccall("abort","null");
     });
 	
+	
+	// we do a post cycle hook that is called every time the VM finishes a cycle, we will use this to tell the GPU to draw as we are sure a drawing operation has finished.
+	// cycle counter
 	var counter = 0
 	// estimated cycles are 100*60 cycles a second,
 	// verify in vm.c for future reference
-	// we do this because asking the VM user to do vsync themselves with inconsistent requestAnimFrame FPS is a pain in the ass
+	// we do this because asking the VM user to do vsync themselves with inconsistent requestAnimFrame FPS is a pain
 	// so we just use the post cycle hook to draw the screen 60 times a second, using the cycle times we are already aware about
 	// note if cycle times in vm.c ever change, you must update this or you will have the display running at a different target FPS
 	var post_cycle_hook = Runtime.addFunction(function(s) {
@@ -1124,8 +1172,11 @@ Vimmy.onEmscriptenRuntimeInitialized = function()
 		}
     });
 	
+	// if we successfully added these emscripten run time functions
 	if(panic_handler && post_cycle_hook)
 	{
+		// register them with the vm
+		
 		Module.ccall('vm_register_panic_handler', // name of C function
 			'null', // return type
 			['number','number'], // argument types
@@ -1140,7 +1191,7 @@ Vimmy.onEmscriptenRuntimeInitialized = function()
 	}
 }
 	
-
+// chain call everything above when emscripten is fully initialized
 var Module = { onRuntimeInitialized: function() {
 	Vimmy.onEmscriptenRuntimeInitialized();
 } };

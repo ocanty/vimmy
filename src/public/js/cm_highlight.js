@@ -1,3 +1,5 @@
+/* CodeMirror syntax highlignting for vimmy ASM based on x86 "gas" highlighter */
+
 CodeMirror.defineMode("gas", function(_config, parserConfig) {
 	'use strict';
 

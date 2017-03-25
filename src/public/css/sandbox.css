@@ -1,12 +1,13 @@
 
+/* Applied on sandbox */
+
 /*
-	CodeMirro Theme
+	CodeMirror Theme
     Name:       Base16 Default Dark
-    Author:     Chris Kempson (http://chriskempson.com)
+    Author:     Modified by ocanty -> Chris Kempson (http://chriskempson.com)
 
     CodeMirror template by Jan T. Sott (https://github.com/idleberg/base16-codemirror)
     Original Base16 color scheme by Chris Kempson (https://github.com/chriskempson/base16)
-	Modified by ocanty
 
 */
 
@@ -46,6 +47,7 @@
 	min-height: 512px;
 }
 
+/* registers */
 .col-variable
 {
 	vertical-align: middle;
@@ -215,6 +217,7 @@
 	z-index: 100;
 }
 
+/* disasembly */
 .vm-dasm
 {
     margin: 0 auto;
@@ -252,6 +255,7 @@
 	vertical-align: middle;
 }
 
+/* memory view */
 .vm-mem-view
 {
     margin: 0 auto;
@@ -312,6 +316,7 @@
 	margin-left: 2px;
 }
 
+/* stack */
 .stack-box
 {
 	position: relative;

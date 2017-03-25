@@ -1,5 +1,5 @@
 
-// stolen from sandbox.js
+// adds a data variable to the data box 
 var addDataVar = function(type,_name,_val)
 {
 	var name = _name
@@ -37,15 +37,18 @@ $(document).ready(function()
 	
 	var _self = this
 	
-	// Get code dropped by the server
+	// Get code dropped by the server, in a loop
 	var setDropped = false
 	var setOnDrop = function()
 	{
 		if(typeof window.vimmyDroppedCode !== 'undefined' && typeof window.vimmyDroppedData !== 'undefined' && !setDropped)
 		{
+			// decode base64 code and set the editor
 			_self.Editor.getDoc().setValue(window.atob(window.vimmyDroppedCode));
+			// we got the code stop looping
 			dropSetCode = true
-
+			
+			// process all the data and add each one
 			for(var n in window.vimmyDroppedData)
 			{
 				var datavar = window.vimmyDroppedData[n]
@@ -59,10 +62,12 @@ $(document).ready(function()
 		}
 		
 	}
-	setOnDrop()
+	setOnDrop() // start checking for dropped code
 	
+	// when the user hits post comment
 	$("#post-comment").click(function()
 	{
+		// send comment or return error
 		$.ajax({
 			type: "POST",
 			url: window.location + "/comments/add",
@@ -85,6 +90,7 @@ $(document).ready(function()
 
 	})
 	
+	// send upvote or return error
 	$("#btn-plusone").click(function()
 	{
 
@@ -114,6 +120,7 @@ $(document).ready(function()
 	
 	var update_comments = function(amount)
 	{
+		// request comments based off sort param and amount
 		$.ajax({
 			type: "GET",
 			url: window.location + "/comments?sort=" + sort + "&amount=" + amount,
@@ -125,6 +132,7 @@ $(document).ready(function()
 						var comments = outdata.comments
 						$("#comment-row").empty()
 						
+						// push each comment that was requested
 						for(var n in comments)
 						{
 							var comment = comments[n]
@@ -134,7 +142,7 @@ $(document).ready(function()
 								"<span> &bull; <a href='/users/" + comment.poster.user_id + "'>" + comment.poster.display_name + "</a> &bull; " + moment(comment.posted_at).format('DD/MM/YYYY') + "</span>" + "<p>" + comment.comment + "</p>"
 							)
 							
-	
+							// comment upvoting 
 							$("#" + comment.comment_id).click(function()
 							{
 								
@@ -151,11 +159,13 @@ $(document).ready(function()
 							})
 						}
 						
+						// add the show more button
 						$("#comment-row").append(
 						"<div class='col-sm-12' style='text-align: center'>" +
 							"<button id='show-more' style='border: none; margin: 0 auto; margin-bottom: 2px; padding: 4px; border-bottom: 2px groove rgba(0,0,0,0.15); display:inline-block; width: 100%; background-color: rgba(0,0,0,0.20);'> Show More </a>"
 						)
 						
+						// if that is clicked request the comments again + 10 in amount
 						$("#show-more").click(function()
 						{
 							console.log("showed more")
@@ -172,9 +182,10 @@ $(document).ready(function()
 				}
 		});
 	}
+	// draw 10 comments on page load
 	update_comments(10)
 	
-	
+	// update the sort type if the user changes it and request the new comments
 	$( "#sort-type" ).change(function() {
 		sort = $("#sort-type").val()
 		amount = 10

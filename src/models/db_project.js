@@ -1,6 +1,7 @@
 
 var mongoose = require("mongoose")
 
+// Comment Scheme
 var comment_schema = new mongoose.Schema({
 	comment_id: {type:String, required: true},
 	score: { type: Number, default: 0 },
@@ -9,6 +10,7 @@ var comment_schema = new mongoose.Schema({
 	poster:  { type: mongoose.Schema.Types.ObjectId, required: true, ref: "DB_User" }
 });
 
+// Project Scheme
 var project_schema = new mongoose.Schema(
 {
 	project_id: {type:String, unique: true, index: { unique: true } },
@@ -23,6 +25,7 @@ var project_schema = new mongoose.Schema(
 	vm_version: { type:Number, required: true },
 	code: { type:String, required: true },
 	data: { type:String, required: true },
+	
 	// we do this to make sorting easier later rather than having to access votes.length, i.e mongoose does not support check params of an array for its sorting methods
 	num_votes: { type:Number, default: 0 },
 	votes: 
