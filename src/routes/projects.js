@@ -179,7 +179,7 @@ router.post('/:project_id/edit/save', function(req, res, next)
 		if(!checkOwnerOnlyAuth(req,res,project)) return
 		
 		project.data = req.body.data || "{ }"
-		project.code = req.body.code || " "
+		project.code = req.body.code.replace(/\t+/g, "\\\\\t"); || " "
 
 		project.updated_at = new Date()
 		

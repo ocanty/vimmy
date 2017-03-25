@@ -39,9 +39,10 @@ Building:
     AUTH0_CALLBACK_URL=<callback url>
 	PORT=<listen port>
     SESSION_SECRET=<secret>
+	GOOGLE_TRACKING_ID=<analytics id>
     
     cd build
-    node ./bin/www
+    node app.js
     
 Future Plans:
 ----

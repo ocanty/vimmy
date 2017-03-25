@@ -23,7 +23,7 @@ Vimmy.Integration = function()
 	});
 	
 	// use soft tabs (spaces) vs hard tabs
-	this.Editor.addKeyMap(
+/* 	this.Editor.addKeyMap(
 	{
         Tab: function(cm) 
 		{
@@ -43,7 +43,7 @@ Vimmy.Integration = function()
 		{
 			cm.indentSelection("subtract");
         }
-    });
+    }); */
 	
 	
 	// Set up event listeners to tell the user to save if they have changed code in the editor
