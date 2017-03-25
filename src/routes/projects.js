@@ -148,7 +148,7 @@ router.get('/:project_id/data', function(req, res, next)
 
 router.get('/:project_id/edit', function(req, res, next)
 {
-	Project.findOne({project_id:req.params.project_id}).exec(function(error,project)
+	Project.findOne({project_id:req.params.project_id}).populate("creator").exec(function(error,project)
 	{
 		
 		if(error || !project)
