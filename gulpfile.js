@@ -169,8 +169,8 @@ gulp.task('build-toolchain-vm', function()
         for(var f in files)
         {
 			// compile objects
-            console.log("emcc -O3 " + files[f] + " -o src/toolchain/vm/" + f + ".bc")
-            exec("emcc -O3 " + files[f] + " -o src/toolchain/vm/" + f + ".bc", function (err, stdout, stderr) 
+            console.log("emcc -v -O3 " + files[f] + " -o src/toolchain/vm/" + f + ".bc")
+            exec("emcc -v -O3 " + files[f] + " -o src/toolchain/vm/" + f + ".bc", function (err, stdout, stderr) 
                 { 
                     console.log(stdout); 
                     console.log(stderr); 
@@ -186,8 +186,8 @@ gulp.task('build-toolchain-vm', function()
                             glob("./src/toolchain/vm/*.bc", function (er, efiles)
                             {
 								
-                                console.log("emcc -O3 " + efiles.join(" ") + "-o src/toolchain/vm/vm.js -s ASSERTIONS=2  -s RESERVED_FUNCTION_POINTERS=2 --preload-file ./src/toolchain/vm/data")
-                                exec("emcc -O3 " + efiles.join(" ") + " -o src/toolchain/vm/vm.js -s ASSERTIONS=2 -s RESERVED_FUNCTION_POINTERS=2 --preload-file ./src/toolchain/vm/data", function (err, stdout, stderr) 
+                                console.log("emcc -v -O3 " + efiles.join(" ") + "-o src/toolchain/vm/vm.js -s ASSERTIONS=2  -s RESERVED_FUNCTION_POINTERS=2 --preload-file ./src/toolchain/vm/data")
+                                exec("emcc -v -O3 " + efiles.join(" ") + " -o src/toolchain/vm/vm.js -s ASSERTIONS=2 -s RESERVED_FUNCTION_POINTERS=2 --preload-file ./src/toolchain/vm/data", function (err, stdout, stderr) 
                                 { 
                                     if(!err)
                                     {
