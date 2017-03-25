@@ -19,7 +19,7 @@ Significant Areas:
 
 **src/models/** Database Models/Schemas
 
-**src/views/** Templates for pages
+**src/views/** Views for pages
 
 Building:
 ----
