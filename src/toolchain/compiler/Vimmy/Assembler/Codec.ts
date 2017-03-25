@@ -44,7 +44,8 @@ namespace Vimmy
 
             let immediate_included = false
             let immediate = 0
-
+	
+			// setup types 
             for (var k in operands)
             {
                 let operand = operands[k]

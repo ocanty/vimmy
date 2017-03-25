@@ -4,6 +4,11 @@
 #include "build.h"
 #include "hardware\interrupter.h"
 
+
+ // deprecated, non-emscripten build not supported at the moment
+ // deprecated, non-emscripten build not supported at the moment
+ // deprecated, non-emscripten build not supported at the moment
+
 int EXPORT main(int argc, char** argv)
 {
 	vm_state* vm = vm_init();

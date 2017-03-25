@@ -1,6 +1,7 @@
 
 #include "memory.h"
 
+// register getter/setters
 VM_REG_GS(A);
 VM_REG_GS(B);
 VM_REG_GS(C);

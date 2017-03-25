@@ -17,6 +17,8 @@
 // excellent flag resource:
 // http://teaching.idallen.com/dat2343/10f/notes/040_overflow.txt
 
+// amazing include hack below
+
 vm_ophandler_t vm_OpHandlers[0xFF + 1] =
 {
 	#include "OpSpec.h"
