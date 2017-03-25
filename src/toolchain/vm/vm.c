@@ -14,9 +14,9 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "hardware\gpu.h"
-#include "hardware\interrupter.h"
-#include "hardware\keyboard.h"
+#include "hardware/gpu.h"
+#include "hardware/interrupter.h"
+#include "hardware/keyboard.h"
 
 void vm_default_panic_handler(char* s)
 {
