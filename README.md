@@ -37,6 +37,7 @@ Building:
     AUTH0_DOMAIN=<domain>
     AUTH0_CLIENT_SECRET=<secret>
     AUTH0_CALLBACK_URL=<callback url>
+	PORT=<listen port>
     SESSION_SECRET=<secret>
     
     cd build
