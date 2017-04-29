@@ -54,5 +54,9 @@ Future Plans:
 * Remove hidden instructions, add LEA
 * Document how the instructions/flag modifications work
 * Optimize compiler/disassembler to be more intuitive
+* Fix the awful assertions in the C code
+* Fix some of the functions that should not be static
+* Remove previously commented code that is now irrelevant
+
 
     
