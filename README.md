@@ -50,6 +50,9 @@ Future Plans:
 * Fix express-session SessionStore
 * Make hardware devices modular (i.e not global C pointers as they are no, will also allow for more devices)
 * Modular hardware add/remove in sandbox
-* Code clean-up
+* Code clean-up required
+* Remove hidden instructions, add LEA
+* Document how the instructions/flag modifications work
+* Optimize compiler/disassembler to be more intuitive
 
     
