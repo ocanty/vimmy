@@ -148,8 +148,11 @@ namespace Vimmy
 
             /* ---- Label Support ---- */
 		
-			// label compilation is done to determine the positions of sections when labels are referred to before they are found by the compiler
-			private isLabelCompile: boolean = false
+	    // label compilation is done to determine the positions of sections 
+	    // when labels are referred to before they are found by the compiler
+            // this is done by running a compile with all blank labels, to find their locations
+            // we then redo the compile and add their values
+	    private isLabelCompile: boolean = false
             private labels: { [labelName: string]: number; } = {}
 
             /**
@@ -174,7 +177,7 @@ namespace Vimmy
              */
             private getLabel(labelName: string): number
             {	
-				if(this.isLabelCompile){ return 0x0000 }
+	        if(this.isLabelCompile){ return 0x0000 }
 			
                 if (this.labels.hasOwnProperty(labelName))
                 {
@@ -188,7 +191,7 @@ namespace Vimmy
                 }
             }
 
-			private compileTime: Date
+	    private compileTime: Date
             /**
              * Compiles vASM and returns a CompileResult structure
              * @param tokens A token-stream structure
@@ -201,15 +204,14 @@ namespace Vimmy
                     this.tokens = tokens
                     this.compileMessages = [ ]
 					
-					this.isLabelCompile = isLabelCompile
-					if(this.isLabelCompile)
-					{
-						this.compileTime = new Date();
-						this.romSize = 0
-						this.labels = additionalLabels || { }
-					}
-                    
-					
+                    this.isLabelCompile = isLabelCompile
+                    if(this.isLabelCompile)
+                    {
+                         this.compileTime = new Date();
+                         this.romSize = 0
+                         this.labels = additionalLabels || { }
+                    }
+                    			
                     this.tokenPtr = 0
                     this.error = false
                     this.pushInfo("Beginning compilation...")
@@ -217,71 +219,71 @@ namespace Vimmy
                     this.romPtr = 4 // Preserve space for jmp <code> at start of rom
                     this.moduleBase = 0x4000
 					
-					// if this is true, ignore all code and act as if its a comment
-					let is_in_comment = false
-					let lasttoken = ""
+                    // if this is true, ignore all code and act as if its a comment
+                    let is_in_comment = false
+                    let lasttoken = ""
                     for (this.tokenPtr = this.tokenPtr; this.tokenPtr < this.tokens.getNumTokens(); this.tokenPtr++)
                     {
                         let skip_token = false
-						console.log(this.tokens.getType(this.tokenPtr))
-						
-						// allow repeated new lines
-						if(lasttoken == "TERMINATE" && this.tokens.getType(this.tokenPtr) == "TERMINATE")
-						{
-							console.log("repeat")
-							lasttoken = this.tokens.getType(this.tokenPtr)
-							this.tokenPtr++
-							continue;
-						}
-						
-						if(is_in_comment && this.tokens.getType(this.tokenPtr) == "TERMINATE")
-						{
-							is_in_comment = false
-							console.log("out of comment")
-							this.tokenPtr++
-						}
-					
-						if(this.tokens.getType(this.tokenPtr) == "COLON")
-						{
-							console.log("got comment")
-							is_in_comment = true
-						}
+			console.log(this.tokens.getType(this.tokenPtr))
 
-						if(!is_in_comment &&  this.tokens.getType(this.tokenPtr) !="TERMINATE")
-						{
-							// Catch section labels, "main:"
-							if (this.tokens.getType(this.tokenPtr) == "LABEL")
-							{
-								var id = this.tokens.getID(this.tokenPtr)
+			// allow repeated new lines
+			if(lasttoken == "TERMINATE" && this.tokens.getType(this.tokenPtr) == "TERMINATE")
+			{
+				console.log("repeat")
+				lasttoken = this.tokens.getType(this.tokenPtr)
+				this.tokenPtr++
+				continue;
+			}
 
-								if (id.charAt(id.length - 1) == ":") // check if its actually a section label, ending with :
-								{
-									// Remove COLON
-									var no_semi = id.substring(0, id.length - 1)
+			if(is_in_comment && this.tokens.getType(this.tokenPtr) == "TERMINATE")
+			{
+				is_in_comment = false
+				console.log("out of comment")
+				this.tokenPtr++
+			}
 
-									// Push to labels, + module base
-									this.addLabel(no_semi, this.moduleBase +this.romPtr)
-									this.pushInfo("Entered section " + no_semi + " near line " + (this.tokens.getLine(this.tokenPtr)))
-									skip_token = true // Dont compile this token as we already processed it
-								}
-							}
+			if(this.tokens.getType(this.tokenPtr) == "COLON")
+			{
+				console.log("got comment")
+				is_in_comment = true
+			}
 
-							if (!skip_token)
-							{
-								let encodedInstruction = this.compileInstruction()
-								//console.log(encodedInstruction)
-								//Vimmy.Utilities.printHex(encodedInstruction)
-								// this.pushInfo(Vimmy.Utilities.asHex(encodedInstruction))
+			if(!is_in_comment &&  this.tokens.getType(this.tokenPtr) !="TERMINATE")
+			{
+				// Catch section labels, "main:"
+				if (this.tokens.getType(this.tokenPtr) == "LABEL")
+				{
+					var id = this.tokens.getID(this.tokenPtr)
 
-								for (var k in encodedInstruction)
-								{
-									var encode = encodedInstruction[k]
+					if (id.charAt(id.length - 1) == ":") // check if its actually a section label, ending with :
+					{
+						// Remove COLON
+						var no_semi = id.substring(0, id.length - 1)
 
-									this.rom[this.romPtr] = encode
-									this.romPtr+=1
-								}
-							}
-						}
+						// Push to labels, + module base
+						this.addLabel(no_semi, this.moduleBase +this.romPtr)
+						this.pushInfo("Entered section " + no_semi + " near line " + (this.tokens.getLine(this.tokenPtr)))
+						skip_token = true // Dont compile this token as we already processed it
+					}
+				}
+
+				if (!skip_token)
+				{
+					let encodedInstruction = this.compileInstruction()
+					//console.log(encodedInstruction)
+					//Vimmy.Utilities.printHex(encodedInstruction)
+					// this.pushInfo(Vimmy.Utilities.asHex(encodedInstruction))
+
+					for (var k in encodedInstruction)
+					{
+						var encode = encodedInstruction[k]
+
+						this.rom[this.romPtr] = encode
+						this.romPtr+=1
+					}
+				}
+			}
 
 						
                     }
@@ -298,35 +300,35 @@ namespace Vimmy
                 catch (err)
                 {
                     this.error = true
-
+x
                    this.pushMessage(new CompileMessage(CompileMessageType.Error, err));
                 }
 				
-				if(this.isLabelCompile)
-				{
-					this.isLabelCompile = false
-					this.romSize = this.romPtr
-					return this.compile(tokens,this.isLabelCompile)
-				}
-				else
-				{
-					if(!this.error)
-					{
-						this.pushInfo("Compilation successful...\n(" + ((new Date().getTime()-this.compileTime.getTime())/1000) + "s)")
-						
-					}
-					else
-					{
-						// cant use haltError as it throws exception
-						this.pushMessage(new CompileMessage(CompileMessageType.Error, "Compilation failed!"));
-					}
-					
-					return new CompileResult(
-						this.error,
-						this.compileMessages,
-						new Vimmy.ROM(this.moduleBase,this.rom)
-					)
-				}
+		if(this.isLabelCompile)
+		{
+			this.isLabelCompile = false
+			this.romSize = this.romPtr
+			return this.compile(tokens,this.isLabelCompile)
+		}
+		else
+		{
+			if(!this.error)
+			{
+				this.pushInfo("Compilation successful...\n(" + ((new Date().getTime()-this.compileTime.getTime())/1000) + "s)")
+				
+			}
+			else
+			{
+				// cant use haltError as it throws exception
+				this.pushMessage(new CompileMessage(CompileMessageType.Error, "Compilation failed!"));
+			}
+			
+			return new CompileResult(
+				this.error,
+				this.compileMessages,
+				new Vimmy.ROM(this.moduleBase,this.rom)
+			)
+		}
             }
 
             /**
@@ -510,27 +512,26 @@ namespace Vimmy
                                     ret.setDisplacement(-parseInt(number, 10))
                                     return ret
 								
-								case "LABELPLUSNUMBER":
-									ret = new OperandMemory(OperandMemoryType.Constant)
+				case "LABELPLUSNUMBER":
+				    ret = new OperandMemory(OperandMemoryType.Constant)
                                     ret.setDisplacement(this.getLabel(firstID) + parseInt(number, 10))
-									return ret
-
-
+				    return ret
+					    
                                 case "LABELMINUSNUMBER":
-									ret = new OperandMemory(OperandMemoryType.Constant)
+				    ret = new OperandMemory(OperandMemoryType.Constant)
                                     ret.setDisplacement(this.getLabel(firstID) - parseInt(number, 10))
-									return ret
+				    return ret
 								
-								case "NUMBERPLUSNUMBER":
-									ret = new OperandMemory(OperandMemoryType.Constant)
+				case "NUMBERPLUSNUMBER":
+				    ret = new OperandMemory(OperandMemoryType.Constant)
                                     ret.setDisplacement(parseInt(firstID,10) + parseInt(number, 10))
-									return ret
+			            return ret
 
 
                                 case "NUMBERMINUSNUMBER":
-									ret = new OperandMemory(OperandMemoryType.Constant)
+				    ret = new OperandMemory(OperandMemoryType.Constant)
                                     ret.setDisplacement(parseInt(firstID,10) - parseInt(number, 10))
-									return ret
+			            return ret
                             }
                         }
                         else
