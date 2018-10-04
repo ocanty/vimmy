@@ -69,7 +69,7 @@ namespace Vimmy
                         // Label is terminated by punctuation, eg: " " , [ ], or newlines 
                         if (Tokenizer.isPunctuation(character))
                         {
-                            insideLabelSequence = false // turn it off
+                            insideLabelSequence = false // we left the label sequence
 
                             // Now we process what we collected before we got here
 
@@ -182,11 +182,12 @@ namespace Vimmy
                     {
                         var token = output[line][i]
 
-						// lexer dumps info like INSTRUCTION_PUSH, LABEL_add_function:, etc..
-						// split the _ and push the seperate info to a type and id table, make sure to only split from the first _ (!!)
+			// lexer dumps info like INSTRUCTION_PUSH, LABEL_add_function:, etc..
+			// split the _ and push the seperate info to a type and id table, make sure to only split from the first _ (!!)
 						
                         var token_deduce = token.split("_");
-						// console.log(token_deduce)
+			    
+			// console.log(token_deduce)
                         var type = token_deduce[0];
                         var id = token.substring(token_deduce[0].length+1,token.length)
 
@@ -197,6 +198,7 @@ namespace Vimmy
                         arr_ln.push(line)
                     }
                 }
+		    
                 console.log(new TokenStream(arr_type, arr_id, arr_ln));
                 return new TokenStream(arr_type, arr_id, arr_ln);
             }
