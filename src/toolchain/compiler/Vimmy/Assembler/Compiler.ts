@@ -225,67 +225,65 @@ namespace Vimmy
                     for (this.tokenPtr = this.tokenPtr; this.tokenPtr < this.tokens.getNumTokens(); this.tokenPtr++)
                     {
                         let skip_token = false
-			console.log(this.tokens.getType(this.tokenPtr))
+                        console.log(this.tokens.getType(this.tokenPtr))
 
-			// allow repeated new lines
-			if(lasttoken == "TERMINATE" && this.tokens.getType(this.tokenPtr) == "TERMINATE")
-			{
-				console.log("repeat")
-				lasttoken = this.tokens.getType(this.tokenPtr)
-				this.tokenPtr++
-				continue;
-			}
+                        // allow repeated new lines
+                        if(lasttoken == "TERMINATE" && this.tokens.getType(this.tokenPtr) == "TERMINATE")
+                        {
+                            console.log("repeat")
+                            lasttoken = this.tokens.getType(this.tokenPtr)
+                            this.tokenPtr++
+                            continue;
+                        }
 
-			if(is_in_comment && this.tokens.getType(this.tokenPtr) == "TERMINATE")
-			{
-				is_in_comment = false
-				console.log("out of comment")
-				this.tokenPtr++
-			}
+                        if(is_in_comment && this.tokens.getType(this.tokenPtr) == "TERMINATE")
+                        {
+                            is_in_comment = false
+                            console.log("out of comment")
+                            this.tokenPtr++
+                        }
 
-			if(this.tokens.getType(this.tokenPtr) == "COLON")
-			{
-				console.log("got comment")
-				is_in_comment = true
-			}
+                        if(this.tokens.getType(this.tokenPtr) == "COLON")
+                        {
+                            console.log("got comment")
+                            is_in_comment = true
+                        }
 
-			if(!is_in_comment &&  this.tokens.getType(this.tokenPtr) !="TERMINATE")
-			{
-				// Catch section labels, "main:"
-				if (this.tokens.getType(this.tokenPtr) == "LABEL")
-				{
-					var id = this.tokens.getID(this.tokenPtr)
+                        if(!is_in_comment &&  this.tokens.getType(this.tokenPtr) !="TERMINATE")
+                        {
+                            // Catch section labels, "main:"
+                            if (this.tokens.getType(this.tokenPtr) == "LABEL")
+                            {
+                                var id = this.tokens.getID(this.tokenPtr)
 
-					if (id.charAt(id.length - 1) == ":") // check if its actually a section label, ending with :
-					{
-						// Remove COLON
-						var no_semi = id.substring(0, id.length - 1)
+                                if (id.charAt(id.length - 1) == ":") // check if its actually a section label, ending with :
+                                {
+                                    // Remove COLON
+                                    var no_semi = id.substring(0, id.length - 1)
 
-						// Push to labels, + module base
-						this.addLabel(no_semi, this.moduleBase +this.romPtr)
-						this.pushInfo("Entered section " + no_semi + " near line " + (this.tokens.getLine(this.tokenPtr)))
-						skip_token = true // Dont compile this token as we already processed it
-					}
-				}
+                                    // Push to labels, + module base
+                                    this.addLabel(no_semi, this.moduleBase +this.romPtr)
+                                    this.pushInfo("Entered section " + no_semi + " near line " + (this.tokens.getLine(this.tokenPtr)))
+                                    skip_token = true // Dont compile this token as we already processed it
+                                }
+                            }
 
-				if (!skip_token)
-				{
-					let encodedInstruction = this.compileInstruction()
-					//console.log(encodedInstruction)
-					//Vimmy.Utilities.printHex(encodedInstruction)
-					// this.pushInfo(Vimmy.Utilities.asHex(encodedInstruction))
+                            if (!skip_token)
+                            {
+                                let encodedInstruction = this.compileInstruction()
+                                //console.log(encodedInstruction)
+                                //Vimmy.Utilities.printHex(encodedInstruction)
+                                // this.pushInfo(Vimmy.Utilities.asHex(encodedInstruction))
 
-					for (var k in encodedInstruction)
-					{
-						var encode = encodedInstruction[k]
+                                for (var k in encodedInstruction)
+                                {
+                                    var encode = encodedInstruction[k]
 
-						this.rom[this.romPtr] = encode
-						this.romPtr+=1
-					}
-				}
-			}
-
-						
+                                    this.rom[this.romPtr] = encode
+                                    this.romPtr+=1
+                                }
+                            }
+                        }
                     }
 					
                     // put in trampoline to user code to skip their data
@@ -300,35 +298,34 @@ namespace Vimmy
                 catch (err)
                 {
                     this.error = true
-x
-                   this.pushMessage(new CompileMessage(CompileMessageType.Error, err));
+                    this.pushMessage(new CompileMessage(CompileMessageType.Error, err));
                 }
 				
-		if(this.isLabelCompile)
-		{
-			this.isLabelCompile = false
-			this.romSize = this.romPtr
-			return this.compile(tokens,this.isLabelCompile)
-		}
-		else
-		{
-			if(!this.error)
-			{
-				this.pushInfo("Compilation successful...\n(" + ((new Date().getTime()-this.compileTime.getTime())/1000) + "s)")
-				
-			}
-			else
-			{
-				// cant use haltError as it throws exception
-				this.pushMessage(new CompileMessage(CompileMessageType.Error, "Compilation failed!"));
-			}
-			
-			return new CompileResult(
-				this.error,
-				this.compileMessages,
-				new Vimmy.ROM(this.moduleBase,this.rom)
-			)
-		}
+                if(this.isLabelCompile)
+                {
+                    this.isLabelCompile = false
+                    this.romSize = this.romPtr
+                    return this.compile(tokens,this.isLabelCompile)
+                }
+                else
+                {
+                    if(!this.error)
+                    {
+                        this.pushInfo("Compilation successful...\n(" + ((new Date().getTime()-this.compileTime.getTime())/1000) + "s)")
+                        
+                    }
+                    else
+                    {
+                        // cant use haltError as it throws exception
+                        this.pushMessage(new CompileMessage(CompileMessageType.Error, "Compilation failed!"));
+                    }
+                    
+                    return new CompileResult(
+                        this.error,
+                        this.compileMessages,
+                        new Vimmy.ROM(this.moduleBase,this.rom)
+                    )
+                }
             }
 
             /**
@@ -512,26 +509,26 @@ x
                                     ret.setDisplacement(-parseInt(number, 10))
                                     return ret
 								
-				case "LABELPLUSNUMBER":
-				    ret = new OperandMemory(OperandMemoryType.Constant)
+                                case "LABELPLUSNUMBER":
+                                    ret = new OperandMemory(OperandMemoryType.Constant)
                                     ret.setDisplacement(this.getLabel(firstID) + parseInt(number, 10))
-				    return ret
-					    
+                                    return ret
+                                        
                                 case "LABELMINUSNUMBER":
-				    ret = new OperandMemory(OperandMemoryType.Constant)
+                                    ret = new OperandMemory(OperandMemoryType.Constant)
                                     ret.setDisplacement(this.getLabel(firstID) - parseInt(number, 10))
-				    return ret
-								
-				case "NUMBERPLUSNUMBER":
-				    ret = new OperandMemory(OperandMemoryType.Constant)
+                                    return ret
+                                                
+                                case "NUMBERPLUSNUMBER":
+                                    ret = new OperandMemory(OperandMemoryType.Constant)
                                     ret.setDisplacement(parseInt(firstID,10) + parseInt(number, 10))
-			            return ret
+                                    return ret
 
 
                                 case "NUMBERMINUSNUMBER":
-				    ret = new OperandMemory(OperandMemoryType.Constant)
+                                    ret = new OperandMemory(OperandMemoryType.Constant)
                                     ret.setDisplacement(parseInt(firstID,10) - parseInt(number, 10))
-			            return ret
+                                    return ret
                             }
                         }
                         else
