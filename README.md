@@ -4,6 +4,8 @@
 Vimmy: The Educational Virtual Machine
 ====
 
+_Note: this was written before I had a formal computer science education_
+
 Significant Areas:
 ----
 
