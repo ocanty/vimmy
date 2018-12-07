@@ -1,10 +1,19 @@
 
 <img src="https://raw.githubusercontent.com/ocanty/vimmy/master/src/public/img/vimmy-logo.png" width="160" height="80" />
 
-Vimmy: The Educational Virtual Machine
+The Educational Virtual Machine
 ====
 
-_Note: this was written before I had a formal computer science education_
+###### _Please note: This was written before I had a formal computer science education._
+
+Screenshots:
+----
+![](https://i.imgur.com/BhfWOjy.png)
+![](https://i.imgur.com/92CER48.png)
+![](https://i.imgur.com/7NGZEde.png)
+![](https://i.imgur.com/WX6kzz0.png)
+![](https://i.imgur.com/HMBWMUf.png)
+![](https://i.imgur.com/rrsdZrr.png)
 
 Significant Areas:
 ----
