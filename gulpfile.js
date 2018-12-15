@@ -11,7 +11,7 @@ var typescript = require('gulp-typescript');
 var typedoc = require("gulp-typedoc");
 
 
-gulp.task('build-express', function()
+gulp.task('build-express', function(done)
 {
     console.log("Piping express into /build")
     gulp.src(['src/bin/**/*']).pipe(gulp.dest('build/bin'));
@@ -20,7 +20,9 @@ gulp.task('build-express', function()
 	gulp.src(['src/public/**/*']).pipe(gulp.dest('build/public'));
 	gulp.src(['src/routes/**/*']).pipe(gulp.dest('build/routes'));
 	gulp.src(['src/views/**/*']).pipe(gulp.dest('build/views'));
-	gulp.src('src/app.js').pipe(gulp.dest('build/'))
+    gulp.src('src/app.js').pipe(gulp.dest('build/'))
+    
+    done();
 });
 
 gulp.task('build-toolchain-compiler-documentation', function()
@@ -52,7 +54,7 @@ gulp.task('build-toolchain-compiler-documentation', function()
     );
 });
 
-gulp.task('build-toolchain-compiler', function()
+gulp.task('build-toolchain-compiler', function(done)
 {
     console.log("Compiling toolchain compiler -> public/js/toolchain/compiler.js")
 
@@ -70,10 +72,12 @@ gulp.task('build-toolchain-compiler', function()
         )
     )
     .pipe(gulp.dest('build/public/js/toolchain/'));
+
+    done();
 })
 
 // Copies the operation and register definitions to C equivalents from the compiler
-gulp.task('build-toolchain-vmspec', function()
+gulp.task('build-toolchain-vmspec', function(done)
 {
     console.log("Generating opcode and register specification for the C VM...")
     fs.readFile('./src/toolchain/compiler/Vimmy/Spec/Spec.ts',function(err,data)
@@ -144,13 +148,15 @@ gulp.task('build-toolchain-vmspec', function()
                 fs.writeFileSync("./src/toolchain/vm/OpSpec.h",
                     "#pragma once \n\n// WARNING: This is an automatically generated file by gulp that contains the vimmy specification from Spec.ts (the official Vimmy assembler) \n\n" + cppFriendlyOpSpec
                 )
+
+                done();
             }
         }
     })
 });   
 
 
-gulp.task('build-toolchain-vm', function()
+gulp.task('build-toolchain-vm', function(done)
 { 
     console.log("Compiling toolchain virtual machine -> public/js/toolchain/vm.js")
     var reportOptions = {
@@ -204,6 +210,8 @@ gulp.task('build-toolchain-vm', function()
                                     
                                     console.log(stdout)
                                     console.log(stderr); 
+
+                                    done();
                                 })
                             })
 							
@@ -217,24 +225,20 @@ gulp.task('build-toolchain-vm', function()
 })
 
 
-gulp.task('build', function()
-{
-    runSequence('build-express','build-toolchain-compiler','build-toolchain-vmspec','build-toolchain-vm','watch')
-})
-
-gulp.task('run', function()
+gulp.task('run', function(done)
 {
     exec("cd build && node ./bin/www", function (err, stdout, stderr)
 	{
 		if(err) console.log(err)
 		console.log(stdout)
-		console.log(stderr)
+        console.log(stderr)
+        
+        done();
 	})
 })
 
 gulp.task('watch', function()
 {
-	
 	gulp.watch(['src/lessons/**/*'],['build-express'])
 	gulp.watch(['src/models/**/*'],['build-express']) 
 	gulp.watch(['src/public/**/*'],['build-express']) 
@@ -244,3 +248,15 @@ gulp.task('watch', function()
     gulp.watch(['src/toolchain/compiler/**/*.ts'], ['build-toolchain-compiler','build-toolchain-vmspec']);
     gulp.watch(['src/toolchain/vm/**/*.h','src/toolchain/vm/**/*.c'], ['build-toolchain-vm']);
 })
+
+
+gulp.task('build', gulp.series(
+    'build-express',
+    'build-toolchain-compiler',
+    'build-toolchain-vmspec',
+    'build-toolchain-vm',
+
+    function (done) {
+        done();
+    }
+));
