@@ -1,68 +1,71 @@
-var express = require('express');
-var router = express.Router();
-var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn();
+let express = require('express')
+let router = express.Router()
 
-var User = require("../models/db_user")
-var learn = require("./learn")
+let User = require('../models/db_user')
 
-/* GET home page. */
+// we import learn to get lesson info/the lesson tree
+let learn = require('./learn') 
+
+// GET / -> serve the home page
 router.get('/', function(req, res, next) {
-	
-	var isLoggedIn = (req.isAuthenticated && req.isAuthenticated())
-	// console.log(req.user)
-	// console.log(req.isAuthenticated())
-	
 
-	
-	// supply lesson + creation info for the title bar
-	if(isLoggedIn)
-	{
-		var lesson_info = undefined
-		var creation_info = undefined
-		var c = 0
-		User.findOne({ user_id: req.user.db.user_id}).populate('projects').exec(function (err, user) 
-		{
-			// supply recent lessons and projects for the dashboard 
-			if(user)
-			{
-				creation_info = {}
-				lesson_info = { }
-				var regular_projects = user.projects.filter(function(doc){
-					return doc.isPublished == false;
-				})
-				
-				for(var n in user.recent_lessons)
-				{
-					if(typeof user.recent_lessons[n] == "string" && n != "_path")
-					{
-						lesson_info[n] = learn.getLessonInfo(user.recent_lessons[n]) || undefined
-						c = n
-					}
-				}
-				
-				console.log(lesson_info)
-				res.render("dashboard", { 
-					title: (!isLoggedIn ? "Vimmy :: The Educational Virtual Machine" : "Vimmy :: Dashboard"),
-					loggedIn: isLoggedIn, 
-					user: (!isLoggedIn ? { } : req.user.db),
-					lesson_info: lesson_info,
-					lesson_info_largest_n: c,
-					creation_info: regular_projects
-				});
-			}
+  // isAuthenticated is added by passport,
+  // first check if it exists and then call it to get authentication status
+  let isLoggedIn = (req.isAuthenticated && req.isAuthenticated())
 
-		}); // <==
+  // supply lesson + creation info for the title bar
+  if(isLoggedIn)
+  {
+    // Request the user info using their populated userid
+    User.findOne({ user_id: req.user.db.user_id })
+      .populate('projects') // join in their projects
+      .exec(function (err, user) {
+        
+        // if a valid user
+        // supply recent lessons and projects to the dashboard render
+        if(user) {  
+          let lesson_info = { }
 
-		
-	}
-	else// if they arent signed in render the homepage
-	{
-		res.render("homepage", { 
-			title: (!isLoggedIn ? "Vimmy :: The Educational Virtual Machine" : "Vimmy :: Dashboard"),
-			loggedIn: isLoggedIn, 
-			user: (!isLoggedIn ? { } : req.user.db)
-		});
-	}
-});
+          // only show the projects they havent published in the home dashboard
+          var regular_projects = user.projects.filter(function(doc){
+            return doc.isPublished == false
+          })
+          
+          let count = 0
 
-module.exports = router;
+          // for each lesson they have recently touched
+          for(let key in user.recent_lessons)
+          {
+            // fix up into the template format
+            if(typeof user.recent_lessons[key] == 'string' && key != '_path')
+            {
+              lesson_info[key] = learn.getLessonInfo(user.recent_lessons[key]) || undefined
+              count = key
+            } 
+          }
+
+          // console.log(lesson_info)
+          res.render('dashboard', { 
+            title: 'Vimmy - Dashboard',
+            loggedIn: true, 
+            user: req.user.db,
+            lesson_info: lesson_info,
+            lesson_info_largest_n: count,
+            creation_info: regular_projects
+          })
+        }
+      }) 
+  }
+  else // if they arent signed in render the homepage, which encourages them to sign up
+  {
+    res.render('homepage', { 
+      title: 'Vimmy - Home',
+      loggedIn: false, 
+      user: { }
+    })
+  }    
+
+  next()
+})
+
+module.exports = router
