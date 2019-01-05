@@ -7,6 +7,8 @@ let passport = require('passport')
 
 let User = require('../models/db_user.js')
 
+// This router is used in app.js as /auth/<these routes>
+
 // GET /login -> send the login template
 router.get('/login', function(req, res)
 {
@@ -51,7 +53,7 @@ router.get('/callback',
         else // if they dont add them to the database (they're a new user)
         {
           let new_user = new User({ 
-            auth_id: req.user.id,
+            auth_id: req.user.id, // their auth0 id (auth0 populates req.user)
             user_id: uuid.v4().substring(0,6),
             display_name: req.user.nickname,
             account_created: new Date(),
@@ -60,6 +62,7 @@ router.get('/callback',
             score: 0
           })
           
+          // save and populate read-only values
           new_user.save(function(err,new_user) {
             if(err){ return console.error(err) }
             req.user.db = new_user
