@@ -1,129 +1,129 @@
 extends layout.pug
 
 block append js
-	script(src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js")
-	script(src="/js/discover.js")
-	
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js")
+    script(src="/js/discover.js")
+    
 block append css
-	link(rel='stylesheet', href='/css/dashboard.css')
-	link(rel='stylesheet', href='/css/discover.css')
+    link(rel='stylesheet', href='/css/dashboard.css')
+    link(rel='stylesheet', href='/css/discover.css')
 
 
 block append content
-	.row.row-full
-		.col-sm-12(style="margin-top: 16px")
-			.panel.panel-vimmy.panel-dashboard.bg-discover-minor
-				h3 Discover
-				.panel-body.bg-discover
-					.container(style="width: 100%;")
-						.col-sm-3(style="min-height: 256px")
-							.panel-body.panel-body-vignette.bg-discover(style="min-height: 256px")
-								select.btn-sandbox#sort-type(style="margin-bottom: 16px; box-sizing: border-box; width: 100%; border-radius: 4px; background-color: rgba(255,255,255,1); color: black")
-									option(value="score") Most Score
-									option(value="recent") Most Recent
-									option(value="views") Most Views
-							
-								span.category All
-								span.category General
-								span.category Games
-								span.category Educational
-						.col-sm-9
-							.panel-body.panel-body-vignette.bg-discover#project-panel(style="min-height: 256px; max-height: 256px; overflow-y: scroll")
-								.row(style="padding:0; margin:0; margin-bottom: 2px;")
-									.col-sm-1
-										button.btn.btn-sandbox.text-striking.vote-count 0
-									.col-sm-7(style="margin-bottom: 16px;")
-										a(href="/projects/")
-											h3(style="padding:0; padding-top: 2px; margin: 0;") asdasd &bull; asdasd &bull; 08/08/2017
-									.col-sm-4(style="text-align: right")
-										button.btn.btn-sandbox.bg-discover-minor(onclick="window.location='/projects/") View
-								.row(style="padding:0; margin:0;")
-									.col-sm-1
-										button.btn.btn-sandbox.text-striking.vote-count 0
-									.col-sm-7(style="margin-bottom: 16px;")
-										a(href="/projects/")
-											h3(style="padding:0; padding-top: 2px; margin: 0;") asdasd &bull; asdasd &bull; 08/08/2017
-									.col-sm-4(style="text-align: right")
-										button.btn.btn-sandbox.bg-discover-minor(onclick="window.location='/projects/") View
-								.row(style="padding:0; margin:0; margin-bottom: 2px;")
-									.col-sm-1
-										button.btn.btn-sandbox.text-striking.vote-count 0
-									.col-sm-7(style="margin-bottom: 16px;")
-										a(href="/projects/")
-											h3(style="padding:0; padding-top: 2px; margin: 0;") asdasd &bull; asdasd &bull; 08/08/2017
-									.col-sm-4(style="text-align: right")
-										button.btn.btn-sandbox.bg-discover-minor(onclick="window.location='/projects/") View
-								.row(style="padding:0; margin:0;")
-									.col-sm-1
-										button.btn.btn-sandbox.text-striking.vote-count 0
-									.col-sm-7(style="margin-bottom: 16px;")
-										a(href="/projects/")
-											h3(style="padding:0; padding-top: 2px; margin: 0;") asdasd &bull; asdasd &bull; 08/08/2017
-									.col-sm-4(style="text-align: right")
-										button.btn.btn-sandbox.bg-discover-minor(onclick="window.location='/projects/") View
-								.row(style="padding:0; margin:0; margin-bottom: 2px;")
-									.col-sm-1
-										button.btn.btn-sandbox.text-striking.vote-count 0
-									.col-sm-7(style="margin-bottom: 16px;")
-										a(href="/projects/")
-											h3(style="padding:0; padding-top: 2px; margin: 0;") asdasd &bull; asdasd &bull; 08/08/2017
-									.col-sm-4(style="text-align: right")
-										button.btn.btn-sandbox.bg-discover-minor(onclick="window.location='/projects/") View
-								.row(style="padding:0; margin:0;")
-									.col-sm-1
-										button.btn.btn-sandbox.text-striking.vote-count 0
-									.col-sm-7(style="margin-bottom: 16px;")
-										a(href="/projects/")
-											h3(style="padding:0; padding-top: 2px; margin: 0;") asdasd &bull; asdasd &bull; 08/08/2017
-									.col-sm-4(style="text-align: right")
-										button.btn.btn-sandbox.bg-discover-minor(onclick="window.location='/projects/") View
-								.row(style="padding:0; margin:0; margin-bottom: 2px;")
-									.col-sm-1
-										button.btn.btn-sandbox.text-striking.vote-count 0
-									.col-sm-7(style="margin-bottom: 16px;")
-										a(href="/projects/")
-											h3(style="padding:0; padding-top: 2px; margin: 0;") asdasd &bull; asdasd &bull; 08/08/2017
-									.col-sm-4(style="text-align: right")
-										button.btn.btn-sandbox.bg-discover-minor(onclick="window.location='/projects/") View
-								.row(style="padding:0; margin:0;")
-									.col-sm-1
-										button.btn.btn-sandbox.text-striking.vote-count 0
-									.col-sm-7(style="margin-bottom: 16px;")
-										a(href="/projects/")
-											h3(style="padding:0; padding-top: 2px; margin: 0;") asdasd &bull; asdasd &bull; 08/08/2017
-									.col-sm-4(style="text-align: right")
-										button.btn.btn-sandbox.bg-discover-minor(onclick="window.location='/projects/") View
-								.row(style="padding:0; margin:0; margin-bottom: 2px;")
-									.col-sm-1
-										button.btn.btn-sandbox.text-striking.vote-count 0
-									.col-sm-7(style="margin-bottom: 16px;")
-										a(href="/projects/")
-											h3(style="padding:0; padding-top: 2px; margin: 0;") asdasd &bull; asdasd &bull; 08/08/2017
-									.col-sm-4(style="text-align: right")
-										button.btn.btn-sandbox.bg-discover-minor(onclick="window.location='/projects/") View
-								.row(style="padding:0; margin:0;")
-									.col-sm-1
-										button.btn.btn-sandbox.text-striking.vote-count 0
-									.col-sm-7(style="margin-bottom: 16px;")
-										a(href="/projects/")
-											h3(style="padding:0; padding-top: 2px; margin: 0;") asdasd &bull; asdasd &bull; 08/08/2017
-									.col-sm-4(style="text-align: right")
-										button.btn.btn-sandbox.bg-discover-minor(onclick="window.location='/projects/") View
-								.row(style="padding:0; margin:0; margin-bottom: 2px;")
-									.col-sm-1
-										button.btn.btn-sandbox.text-striking.vote-count 0
-									.col-sm-7(style="margin-bottom: 16px;")
-										a(href="/projects/")
-											h3(style="padding:0; padding-top: 2px; margin: 0;") asdasd &bull; asdasd &bull; 08/08/2017
-									.col-sm-4(style="text-align: right")
-										button.btn.btn-sandbox.bg-discover-minor(onclick="window.location='/projects/") View
-								.row(style="padding:0; margin:0;")
-									.col-sm-1
-										button.btn.btn-sandbox.text-striking.vote-count 0
-									.col-sm-7(style="margin-bottom: 16px;")
-										a(href="/projects/")
-											h3(style="padding:0; padding-top: 2px; margin: 0;") asdasd &bull; asdasd &bull; 08/08/2017
-									.col-sm-4(style="text-align: right")
-										button.btn.btn-sandbox.bg-discover-minor(onclick="window.location='/projects/") View
-	
-	
+    .row.row-full
+        .col-sm-12(style="margin-top: 16px")
+            .panel.panel-vimmy.panel-dashboard.bg-discover-minor
+                h3 Discover
+                .panel-body.bg-discover
+                    .container(style="width: 100%;")
+                        .col-sm-3(style="min-height: 256px")
+                            .panel-body.panel-body-vignette.bg-discover(style="min-height: 256px")
+                                select.btn-sandbox#sort-type(style="margin-bottom: 16px; box-sizing: border-box; width: 100%; border-radius: 4px; background-color: rgba(255,255,255,1); color: black")
+                                    option(value="score") Most Score
+                                    option(value="recent") Most Recent
+                                    option(value="views") Most Views
+                            
+                                span.category All
+                                span.category General
+                                span.category Games
+                                span.category Educational
+                        .col-sm-9
+                            .panel-body.panel-body-vignette.bg-discover#project-panel(style="min-height: 256px; max-height: 256px; overflow-y: scroll")
+                                .row(style="padding:0; margin:0; margin-bottom: 2px;")
+                                    .col-sm-1
+                                        button.btn.btn-sandbox.text-striking.vote-count 0
+                                    .col-sm-7(style="margin-bottom: 16px;")
+                                        a(href="/projects/")
+                                            h3(style="padding:0; padding-top: 2px; margin: 0;") asdasd &bull; asdasd &bull; 08/08/2017
+                                    .col-sm-4(style="text-align: right")
+                                        button.btn.btn-sandbox.bg-discover-minor(onclick="window.location='/projects/") View
+                                .row(style="padding:0; margin:0;")
+                                    .col-sm-1
+                                        button.btn.btn-sandbox.text-striking.vote-count 0
+                                    .col-sm-7(style="margin-bottom: 16px;")
+                                        a(href="/projects/")
+                                            h3(style="padding:0; padding-top: 2px; margin: 0;") asdasd &bull; asdasd &bull; 08/08/2017
+                                    .col-sm-4(style="text-align: right")
+                                        button.btn.btn-sandbox.bg-discover-minor(onclick="window.location='/projects/") View
+                                .row(style="padding:0; margin:0; margin-bottom: 2px;")
+                                    .col-sm-1
+                                        button.btn.btn-sandbox.text-striking.vote-count 0
+                                    .col-sm-7(style="margin-bottom: 16px;")
+                                        a(href="/projects/")
+                                            h3(style="padding:0; padding-top: 2px; margin: 0;") asdasd &bull; asdasd &bull; 08/08/2017
+                                    .col-sm-4(style="text-align: right")
+                                        button.btn.btn-sandbox.bg-discover-minor(onclick="window.location='/projects/") View
+                                .row(style="padding:0; margin:0;")
+                                    .col-sm-1
+                                        button.btn.btn-sandbox.text-striking.vote-count 0
+                                    .col-sm-7(style="margin-bottom: 16px;")
+                                        a(href="/projects/")
+                                            h3(style="padding:0; padding-top: 2px; margin: 0;") asdasd &bull; asdasd &bull; 08/08/2017
+                                    .col-sm-4(style="text-align: right")
+                                        button.btn.btn-sandbox.bg-discover-minor(onclick="window.location='/projects/") View
+                                .row(style="padding:0; margin:0; margin-bottom: 2px;")
+                                    .col-sm-1
+                                        button.btn.btn-sandbox.text-striking.vote-count 0
+                                    .col-sm-7(style="margin-bottom: 16px;")
+                                        a(href="/projects/")
+                                            h3(style="padding:0; padding-top: 2px; margin: 0;") asdasd &bull; asdasd &bull; 08/08/2017
+                                    .col-sm-4(style="text-align: right")
+                                        button.btn.btn-sandbox.bg-discover-minor(onclick="window.location='/projects/") View
+                                .row(style="padding:0; margin:0;")
+                                    .col-sm-1
+                                        button.btn.btn-sandbox.text-striking.vote-count 0
+                                    .col-sm-7(style="margin-bottom: 16px;")
+                                        a(href="/projects/")
+                                            h3(style="padding:0; padding-top: 2px; margin: 0;") asdasd &bull; asdasd &bull; 08/08/2017
+                                    .col-sm-4(style="text-align: right")
+                                        button.btn.btn-sandbox.bg-discover-minor(onclick="window.location='/projects/") View
+                                .row(style="padding:0; margin:0; margin-bottom: 2px;")
+                                    .col-sm-1
+                                        button.btn.btn-sandbox.text-striking.vote-count 0
+                                    .col-sm-7(style="margin-bottom: 16px;")
+                                        a(href="/projects/")
+                                            h3(style="padding:0; padding-top: 2px; margin: 0;") asdasd &bull; asdasd &bull; 08/08/2017
+                                    .col-sm-4(style="text-align: right")
+                                        button.btn.btn-sandbox.bg-discover-minor(onclick="window.location='/projects/") View
+                                .row(style="padding:0; margin:0;")
+                                    .col-sm-1
+                                        button.btn.btn-sandbox.text-striking.vote-count 0
+                                    .col-sm-7(style="margin-bottom: 16px;")
+                                        a(href="/projects/")
+                                            h3(style="padding:0; padding-top: 2px; margin: 0;") asdasd &bull; asdasd &bull; 08/08/2017
+                                    .col-sm-4(style="text-align: right")
+                                        button.btn.btn-sandbox.bg-discover-minor(onclick="window.location='/projects/") View
+                                .row(style="padding:0; margin:0; margin-bottom: 2px;")
+                                    .col-sm-1
+                                        button.btn.btn-sandbox.text-striking.vote-count 0
+                                    .col-sm-7(style="margin-bottom: 16px;")
+                                        a(href="/projects/")
+                                            h3(style="padding:0; padding-top: 2px; margin: 0;") asdasd &bull; asdasd &bull; 08/08/2017
+                                    .col-sm-4(style="text-align: right")
+                                        button.btn.btn-sandbox.bg-discover-minor(onclick="window.location='/projects/") View
+                                .row(style="padding:0; margin:0;")
+                                    .col-sm-1
+                                        button.btn.btn-sandbox.text-striking.vote-count 0
+                                    .col-sm-7(style="margin-bottom: 16px;")
+                                        a(href="/projects/")
+                                            h3(style="padding:0; padding-top: 2px; margin: 0;") asdasd &bull; asdasd &bull; 08/08/2017
+                                    .col-sm-4(style="text-align: right")
+                                        button.btn.btn-sandbox.bg-discover-minor(onclick="window.location='/projects/") View
+                                .row(style="padding:0; margin:0; margin-bottom: 2px;")
+                                    .col-sm-1
+                                        button.btn.btn-sandbox.text-striking.vote-count 0
+                                    .col-sm-7(style="margin-bottom: 16px;")
+                                        a(href="/projects/")
+                                            h3(style="padding:0; padding-top: 2px; margin: 0;") asdasd &bull; asdasd &bull; 08/08/2017
+                                    .col-sm-4(style="text-align: right")
+                                        button.btn.btn-sandbox.bg-discover-minor(onclick="window.location='/projects/") View
+                                .row(style="padding:0; margin:0;")
+                                    .col-sm-1
+                                        button.btn.btn-sandbox.text-striking.vote-count 0
+                                    .col-sm-7(style="margin-bottom: 16px;")
+                                        a(href="/projects/")
+                                            h3(style="padding:0; padding-top: 2px; margin: 0;") asdasd &bull; asdasd &bull; 08/08/2017
+                                    .col-sm-4(style="text-align: right")
+                                        button.btn.btn-sandbox.bg-discover-minor(onclick="window.location='/projects/") View
+    
+    

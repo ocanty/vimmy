@@ -1,39 +1,39 @@
 extends layout.pug
 
 block append css
-	link(rel='stylesheet', href='/css/user.css')
-	link(rel='stylesheet', href='/css/sandbox.css')
-	link(rel='stylesheet', href='/css/discover.css')
-	
+    link(rel='stylesheet', href='/css/user.css')
+    link(rel='stylesheet', href='/css/sandbox.css')
+    link(rel='stylesheet', href='/css/discover.css')
+    
 block append content
-	.row(style="margin-top: 16px;")
-		.col-sm-12(style="padding: 0; margin: 0;")
-			.container-fluid(style="padding: 0; margin: 0;")
-				.col-sm-12(style="")
-					.panel.panel-vimmy
-						.panel-body
-							a(href="#",style="max-width: 96px;max-height: 96px;margin: 0 auto;border-radius: 50%").thumbnail
-								img(src=render_user.avatar,style="border-radius: 50%")
-							p(style="padding-top: 8px; margin: 0") #{ render_user.display_name }
-							p.text-striking(style="font-size:12px;") +#{render_user.score} score<br>Member since #{ moment(render_user.account_created).format("DD/MM/YYYY") }
-					
-	.row.row-full
-		.col-sm-12
-			.panel.panel-vimmy.panel-dashboard.bg-discover-minor
-				h3 Published Projects
-				.panel-body.bg-discover
-					.panel-body.panel-body-vignette.bg-discover
-						- var n = 0
-						each project in render_user.projects
-							if project.isPublished
-								.col-sm-8(style="text-align: left; margin-bottom: 16px;")
-									a(href="/projects/" + project.project_id)
-										h3(style="text-align: left; padding: 0; margin: 0;") #{project.name} &bull; #{project.category} &bull; #{ moment(project.created_at).format("DD/MM/YYYY") }
-								.col-sm-4(style="text-align: right")
-									button.btn.btn-sandbox.bg-discover-minor(onclick="window.location='/projects/" + project.project_id + "'") View
-								
-								- n++
-								
-						- if (n == 0) {
-							p(style="min-height: 64px") This user has not published any projects yet
-						- }
+    .row(style="margin-top: 16px;")
+        .col-sm-12(style="padding: 0; margin: 0;")
+            .container-fluid(style="padding: 0; margin: 0;")
+                .col-sm-12(style="")
+                    .panel.panel-vimmy
+                        .panel-body
+                            a(href="#",style="max-width: 96px;max-height: 96px;margin: 0 auto;border-radius: 50%").thumbnail
+                                img(src=render_user.avatar,style="border-radius: 50%")
+                            p(style="padding-top: 8px; margin: 0") #{ render_user.display_name }
+                            p.text-striking(style="font-size:12px;") +#{render_user.score} score<br>Member since #{ moment(render_user.account_created).format("DD/MM/YYYY") }
+                    
+    .row.row-full
+        .col-sm-12
+            .panel.panel-vimmy.panel-dashboard.bg-discover-minor
+                h3 Published Projects
+                .panel-body.bg-discover
+                    .panel-body.panel-body-vignette.bg-discover
+                        - var n = 0
+                        each project in render_user.projects
+                            if project.isPublished
+                                .col-sm-8(style="text-align: left; margin-bottom: 16px;")
+                                    a(href="/projects/" + project.project_id)
+                                        h3(style="text-align: left; padding: 0; margin: 0;") #{project.name} &bull; #{project.category} &bull; #{ moment(project.created_at).format("DD/MM/YYYY") }
+                                .col-sm-4(style="text-align: right")
+                                    button.btn.btn-sandbox.bg-discover-minor(onclick="window.location='/projects/" + project.project_id + "'") View
+                                
+                                - n++
+                                
+                        - if (n == 0) {
+                            p(style="min-height: 64px") This user has not published any projects yet
+                        - }

@@ -2,56 +2,56 @@ extends layout.pug
 
 
 block append css
-	link(rel='stylesheet', href='/css/homepage.css')
+    link(rel='stylesheet', href='/css/homepage.css')
 
 block append content
-	.row.row-full(style="padding-top: 32px; padding-bottom: 32px; background-image: url('/img/binary.jpg'); background-position: center center; background-repeat: no-repeat")
-		.col-sm-12(style="text-shadow: 1px 1px rgba(0,0,0,0.75); text-align: center; padding-bottom: 24px")
-			///img(src="/img/binary.jpg").tagimage
-			h1 The Educational Virtual Machine
-			p.content(style="padding-bottom: 1.5vh")
-				| Vimmy is an online interactive learning platform that allows you to learn and develop your skills in a low-level assembly language.
-				| <br>Applying these skills in your own work can allow you to improve your debugging skills or simply help you think about problems more logically
-				| <br>
-			button.btn.btn-vimmy(onclick="lock.show()",style="width: 50%") Sign Up
-				
-	.row.row-full.row-feature-box
-		.col-sm-4.feature-box
-			h2 Learn
-			span.glyphicon.glyphicon-info-sign.feature-image
-			p Develop your skills in a virtual assembly language. Apply them in practice later in the real world
-		.col-sm-4.feature-box(style="opacity: 0.75;")
-			h2 Create
-			span.glyphicon.glyphicon-flash.feature-image
-			p Create your own projects, using the virtual hardware of the machine, allowing you to even create games and visual programs
-		.col-sm-4.feature-box
-			h2 Discover
-			span.glyphicon.glyphicon-search.feature-image
-			p Publish your own projects for all to see and learn even more from seeing what others have accomplished
-	.row.row-full.question-row
-		.col-sm-7
-			h2(style="text-align: left") What is a Virtual Machine?
-			p(style="text-align: left;") A virtual machine is an emulation of a computer system, allowing you from the outside to manipulate or program it as you desire. It is an excellent education tool for learning how computers work internally which may help you when creating your own programs in the future
-		.col-sm-4
-			.img(style="background-image: url(/img/vm-preview.png); background-position: left center;")
-	.row.row-full.question-row(style="background-color: rgba(0,0,0,0.25)")
-		.col-sm-4
-			.img(style="background-image: url(/img/isa-preview.png)")
-		.col-sm-7
-			h2(style="text-align: left;") How does it work?
-			p(style="text-align: left;") The Vimmy Virtual Machine (<b>vimmyVM</b>) executes an "instruction set", this tells the processor what to do. Using this instruction set you can write your own basic programs, interface with hardware (such as the virtual GPU or keyboard),
-		.col-sm-1
-	.row.row-full.question-row
-		.col-sm-7
-			h2(style="text-align: left") What will I learn?
-			p(style="text-align: left;") Vimmy provides a full suite of lessons to help you become aquainted with the virtual machine and to kickstart you with writing your own programs. The vimmyVM instruction set is loosely based around the 8086 instruction set so you will also gain knowledge that you can apply in the real world
-		.col-sm-4
-			.img(style="background-image: url(/img/lesson-preview.png); background-position: top left;")
-		.col-sm-1
-	.row.row-full.bg-transparent(style=" border-bottom: 1px groove rgba(0,0,0,0.25); max-height: 320px; background-position: top center; background-repeat: no-repeat; padding-top: 32px; padding-bottom: 32px; background-image: url(/img/sandbox-preview.png)")
-		.col-sm-12
-			h1(style="margin-bottom: 8px;") The Sandbox
-		.col-sm-12
-			p The sandbox is where you will do most of your creative work with the virtual machine, anyone can try it out before signing up!
-		.col-sm-12(style="margin: 0 auto; text-align: center; padding-top: 16px; padding-bottom:0px;")
-			button.btn.btn-vimmy.bg-learn(onclick="window.location='/create/sandbox'",style="width: 50%") Take me there
+    .row.row-full(style="padding-top: 32px; padding-bottom: 32px; background-image: url('/img/binary.jpg'); background-position: center center; background-repeat: no-repeat")
+        .col-sm-12(style="text-shadow: 1px 1px rgba(0,0,0,0.75); text-align: center; padding-bottom: 24px")
+            ///img(src="/img/binary.jpg").tagimage
+            h1 The Educational Virtual Machine
+            p.content(style="padding-bottom: 1.5vh")
+                | Vimmy is an online interactive learning platform that allows you to learn and develop your skills in a low-level assembly language.
+                | <br>Applying these skills in your own work can allow you to improve your debugging skills or simply help you think about problems more logically
+                | <br>
+            button.btn.btn-vimmy(onclick="lock.show()",style="width: 50%") Sign Up
+                
+    .row.row-full.row-feature-box
+        .col-sm-4.feature-box
+            h2 Learn
+            span.glyphicon.glyphicon-info-sign.feature-image
+            p Develop your skills in a virtual assembly language. Apply them in practice later in the real world
+        .col-sm-4.feature-box(style="opacity: 0.75;")
+            h2 Create
+            span.glyphicon.glyphicon-flash.feature-image
+            p Create your own projects, using the virtual hardware of the machine, allowing you to even create games and visual programs
+        .col-sm-4.feature-box
+            h2 Discover
+            span.glyphicon.glyphicon-search.feature-image
+            p Publish your own projects for all to see and learn even more from seeing what others have accomplished
+    .row.row-full.question-row
+        .col-sm-7
+            h2(style="text-align: left") What is a Virtual Machine?
+            p(style="text-align: left;") A virtual machine is an emulation of a computer system, allowing you from the outside to manipulate or program it as you desire. It is an excellent education tool for learning how computers work internally which may help you when creating your own programs in the future
+        .col-sm-4
+            .img(style="background-image: url(/img/vm-preview.png); background-position: left center;")
+    .row.row-full.question-row(style="background-color: rgba(0,0,0,0.25)")
+        .col-sm-4
+            .img(style="background-image: url(/img/isa-preview.png)")
+        .col-sm-7
+            h2(style="text-align: left;") How does it work?
+            p(style="text-align: left;") The Vimmy Virtual Machine (<b>vimmyVM</b>) executes an "instruction set", this tells the processor what to do. Using this instruction set you can write your own basic programs, interface with hardware (such as the virtual GPU or keyboard),
+        .col-sm-1
+    .row.row-full.question-row
+        .col-sm-7
+            h2(style="text-align: left") What will I learn?
+            p(style="text-align: left;") Vimmy provides a full suite of lessons to help you become aquainted with the virtual machine and to kickstart you with writing your own programs. The vimmyVM instruction set is loosely based around the 8086 instruction set so you will also gain knowledge that you can apply in the real world
+        .col-sm-4
+            .img(style="background-image: url(/img/lesson-preview.png); background-position: top left;")
+        .col-sm-1
+    .row.row-full.bg-transparent(style=" border-bottom: 1px groove rgba(0,0,0,0.25); max-height: 320px; background-position: top center; background-repeat: no-repeat; padding-top: 32px; padding-bottom: 32px; background-image: url(/img/sandbox-preview.png)")
+        .col-sm-12
+            h1(style="margin-bottom: 8px;") The Sandbox
+        .col-sm-12
+            p The sandbox is where you will do most of your creative work with the virtual machine, anyone can try it out before signing up!
+        .col-sm-12(style="margin: 0 auto; text-align: center; padding-top: 16px; padding-bottom:0px;")
+            button.btn.btn-vimmy.bg-learn(onclick="window.location='/create/sandbox'",style="width: 50%") Take me there

@@ -2,78 +2,71 @@ extends layout.pug
 
 
 block append css
-	link(rel='stylesheet', href='/css/dashboard.css')
-	link(rel='stylesheet', href='/css/sandbox.css')
+    link(rel='stylesheet', href='/css/dashboard.css')
+    link(rel='stylesheet', href='/css/sandbox.css')
 
 block append content
-	.row(style="margin-top: 16px")
-		.col-sm-4
-			.panel.panel-vimmy
-				.panel-body
-					a(href="#",style="max-width: 96px;max-height: 96px;margin: 0 auto;border-radius: 50%").thumbnail
-						img(src=user.avatar,style="border-radius: 50%")
-					p(style="padding-top: 8px; margin: 0") #{ user.display_name }
-					p.text-striking(style="font-size:12px;") +#{user.score} score<br>Member since #{ moment(user.account_created).format("DD/MM/YYYY") }
-				///ul.list-group
-				///	li.list-group-item
-				///		h3.panel-title Actions
-				///	li.list-group-item
-				///		a(href="#") Change display name
-				///	li.list-group-item
-				///		a(onclick="lock.show()") Change password
-		.col-sm-8
-			.panel.panel-vimmy
-				.panel-body(style="min-height: 188px")
-					h2 Welcome back!
-					p This is the Vimmy dashboard<br>Here you are given an overview of all the tools and features available to you.<br>Get started by selecting something below.
-		///.col-sm-8
-			///.panel.panel-vimmy
-				///.panel-body
-					///p This is the Vimmy dashboard<br>Here you are given an overview of all the tools and features available to you.<br>Get started by selecting something below.
-					
-	.row.row-full
-		.col-sm-12
-			.panel.panel-vimmy.panel-dashboard.bg-learn-minor
-				h3 Learn
-				.panel-body.bg-learn
-					.panel-body.panel-body-vignette.bg-learn
-						if Object.keys(lesson_info).length === 0
-							p(style="min-height: 96px") You have not tried any lessons yet, 
-								a(href="/learn/overview",style="color: white") <u>click here to view see the lesson overview</u>
-						else
-							.panel-widecol(style="vertical-align: middle; width: 100%;")
-								p(style="background-color: rgba(0,0,0,0.25);") Recent Lessons
-									- for (var i = lesson_info_largest_n; i > 0; --i) {
-									- var the_title = "Unknown Lesson"
-									- var the_link = "/"
-									- if(lesson_info[i]){ the_link = lesson_info[i].link; the_title =  lesson_info[i].title }
-										<u>
-											a(href=the_link style="color: white")
-												p(style="padding: 8px; text-align: left; background-color: rgba(0,0,0,0.10)")=the_title
-										</u>
-									- }
-										
-		
-	.row.row-full
-		.col-sm-12
-			.panel.panel-vimmy.panel-dashboard.bg-create-minor
-				h3 Create
-				.panel-body.bg-create
-					.panel-body.panel-body-vignette.bg-create
-						if creation_info.length == 0
-							p(style="min-height: 96px") You have not created any projects yet, to start creating projects 
-								a(href="/create/sandbox",style="color: white") <u>check out the sandbox</u>
-						else
-							each project in creation_info
-								.col-sm-8(style="margin-bottom: 16px;")
-									a(href="/projects/" + project.project_id)
-										h3(style="padding: 0; margin: 0;") #{project.name} &bull; #{project.category} &bull; #{ moment(project.updated_at).format("DD/MM/YYYY") }
-								.col-sm-4(style="text-align: right")
-									button.btn.btn-sandbox.bg-create-minor(onclick="window.location='/projects/" + project.project_id + "'") View
-		///.row.row-full
-		///.col-sm-12
-			///.panel.panel-vimmy.panel-dashboard.bg-discover-minor
-			///	h3 Discover
-				///.panel-body.bg-discover
-					///.panel-body.panel-body-vignette.bg-discover
-						///p(style="min-height: 96px") You have not completed any lessons yet, try one?
+    .row(style="margin-top: 16px")
+        .col-sm-4
+            .panel.panel-vimmy
+                .panel-body
+                    a(href="#",style="max-width: 96px;max-height: 96px;margin: 0 auto;border-radius: 50%").thumbnail
+                        img(src=user.avatar,style="border-radius: 50%")
+                    p(style="padding-top: 8px; margin: 0") #{ user.display_name }
+                    p.text-striking(style="font-size:12px;") +#{user.score} score<br>Member since #{ moment(user.account_created).format("DD/MM/YYYY") }
+                ///ul.list-group
+                ///	li.list-group-item
+                ///		h3.panel-title Actions
+                ///	li.list-group-item
+                ///		a(href="#") Change display name
+                ///	li.list-group-item
+                ///		a(onclick="lock.show()") Change password
+        .col-sm-8
+            .panel.panel-vimmy
+                .panel-body(style="min-height: 188px")
+                    h2 Welcome back!
+                    p This is the Vimmy dashboard<br>Here you are given an overview of all the tools and features available to you.<br>Get started by selecting something below.
+        ///.col-sm-8
+            ///.panel.panel-vimmy
+                ///.panel-body
+                    ///p This is the Vimmy dashboard<br>Here you are given an overview of all the tools and features available to you.<br>Get started by selecting something below.
+                    
+    .row.row-full
+        .col-sm-12
+            .panel.panel-vimmy.panel-dashboard.bg-learn-minor
+                h3 Learn
+                .panel-body.bg-learn
+                    .panel-body.panel-body-vignette.bg-learn
+                        if Object.keys(lesson_info).length === 0
+                            p(style="min-height: 96px") You have not tried any lessons yet, 
+                                a(href="/learn/overview",style="color: white") <u>click here to view see the lesson overview</u>
+                        else
+                            .panel-widecol(style="vertical-align: middle; width: 100%;")
+                                p(style="background-color: rgba(0,0,0,0.25);") Recent Lessons
+                                    - for (var i = lesson_info_largest_n; i > 0; --i) {
+                                    - var the_title = "Unknown Lesson"
+                                    - var the_link = "/"
+                                    - if(lesson_info[i]){ the_link = lesson_info[i].link; the_title =  lesson_info[i].title }
+                                        <u>
+                                            a(href=the_link style="color: white")
+                                                p(style="padding: 8px; text-align: left; background-color: rgba(0,0,0,0.10)")=the_title
+                                        </u>
+                                    - }
+                                        
+        
+    .row.row-full
+        .col-sm-12
+            .panel.panel-vimmy.panel-dashboard.bg-create-minor
+                h3 Create
+                .panel-body.bg-create
+                    .panel-body.panel-body-vignette.bg-create
+                        if creation_info.length == 0
+                            p(style="min-height: 96px") You have not created any projects yet, to start creating projects 
+                                a(href="/create/sandbox",style="color: white") <u>check out the sandbox</u>
+                        else
+                            each project in creation_info
+                                .col-sm-8(style="margin-bottom: 16px;")
+                                    a(href="/projects/" + project.project_id)
+                                        h3(style="padding: 0; margin: 0;") #{project.name} &bull; #{project.category} &bull; #{ moment(project.updated_at).format("DD/MM/YYYY") }
+                                .col-sm-4(style="text-align: right")
+                                    button.btn.btn-sandbox.bg-create-minor(onclick="window.location='/projects/" + project.project_id + "'") View

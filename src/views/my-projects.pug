@@ -2,58 +2,58 @@ extends layout.pug
 
 
 block append js
-	script.
-		function postRefresh(url)
-		{
-			$.ajax({
-				type: "POST",
-				url: url,
-				success: function(data)
-					{
-						location.reload()
-					}
-			});
-		}
+    script.
+        function postRefresh(url)
+        {
+            $.ajax({
+                type: "POST",
+                url: url,
+                success: function(data)
+                    {
+                        location.reload()
+                    }
+            });
+        }
 
 block append css
-	link(rel='stylesheet', href='/css/dashboard.css')
-	link(rel='stylesheet', href='/css/sandbox.css')
+    link(rel='stylesheet', href='/css/dashboard.css')
+    link(rel='stylesheet', href='/css/sandbox.css')
 
 block append content
-	.row(style="margin-top: 16px")
-		
-	.row.row-full
-		.col-sm-12
-			.panel.panel-vimmy.panel-dashboard.bg-create-minor
-				h3 My Projects
-				.panel-body.bg-create
-					.panel-body.panel-body-vignette.bg-create.container(style="width: 100%")
-						if regular_projects.length == 0
-							p(style="min-height: 96px") You have not created any projects yet, to start creating projects 
-								a(href="/create/sandbox",style="color: white") <u>check out the sandbox</u>
-						each project in regular_projects
-							.col-sm-8(style="margin-bottom: 16px;")
-								a(href="/projects/" + project.project_id)
-									h3(style="padding: 0; margin: 0;") #{project.name} &bull; #{project.category} &bull; #{ moment(project.updated_at).format("DD/MM/YYYY") }
-							.col-sm-4(style="text-align: right")
-								button.btn.btn-sandbox.bg-create-minor(onclick="window.location='/projects/" + project.project_id + "'") View
-								button.btn.btn-sandbox.bg-create-minor(onclick="window.location='/projects/" + project.project_id + "/edit'") Edit
-								button.btn.btn-sandbox.bg-create-minor(onclick="postRefresh('/projects/" + project.project_id + "/delete')") Delete
-								button.btn.btn-sandbox.bg-create-minor(onclick="postRefresh('/projects/" + project.project_id + "/publish')") Publish
-	.row.row-full
-		.col-sm-12
-			.panel.panel-vimmy.panel-dashboard.bg-discover-minor
-				h3 Published Projects
-				.panel-body.bg-discover
-					.panel-body.panel-body-vignette.bg-discover
-						if published_projects.length == 0
-							p(style="min-height: 96px") You have not published any projects yet, published projects are visible to anyone in the discover tab.<br>To publish a project simply select any project you have already created and select publish 
-						each project in published_projects
-							.col-sm-8(style="margin-bottom: 16px;")
-								a(href="/projects/" + project.project_id)
-									h3(style="padding: 0; margin: 0;") #{project.name} &bull; #{project.category} &bull; #{ moment(project.created_at).format("DD/MM/YYYY") }
-							.col-sm-4(style="text-align: right")
-								button.btn.btn-sandbox.bg-discover-minor(onclick="window.location='/projects/" + project.project_id + "'") View
-								button.btn.btn-sandbox.bg-discover-minor(onclick="window.location='/projects/" + project.project_id + "/edit'") Edit
-								bbutton.btn.btn-sandbox.bg-discover-minor(onclick="postRefresh('/projects/" + project.project_id + "/delete')") Delete
-								button.btn.btn-sandbox.bg-discover-minor(onclick="postRefresh('/projects/" + project.project_id + "/unpublish')") Unpublish
+    .row(style="margin-top: 16px")
+        
+    .row.row-full
+        .col-sm-12
+            .panel.panel-vimmy.panel-dashboard.bg-create-minor
+                h3 My Projects
+                .panel-body.bg-create
+                    .panel-body.panel-body-vignette.bg-create.container(style="width: 100%")
+                        if regular_projects.length == 0
+                            p(style="min-height: 96px") You have not created any projects yet, to start creating projects 
+                                a(href="/create/sandbox",style="color: white") <u>check out the sandbox</u>
+                        each project in regular_projects
+                            .col-sm-8(style="margin-bottom: 16px;")
+                                a(href="/projects/" + project.project_id)
+                                    h3(style="padding: 0; margin: 0;") #{project.name} &bull; #{project.category} &bull; #{ moment(project.updated_at).format("DD/MM/YYYY") }
+                            .col-sm-4(style="text-align: right")
+                                button.btn.btn-sandbox.bg-create-minor(onclick="window.location='/projects/" + project.project_id + "'") View
+                                button.btn.btn-sandbox.bg-create-minor(onclick="window.location='/projects/" + project.project_id + "/edit'") Edit
+                                button.btn.btn-sandbox.bg-create-minor(onclick="postRefresh('/projects/" + project.project_id + "/delete')") Delete
+                                button.btn.btn-sandbox.bg-create-minor(onclick="postRefresh('/projects/" + project.project_id + "/publish')") Publish
+    .row.row-full
+        .col-sm-12
+            .panel.panel-vimmy.panel-dashboard.bg-discover-minor
+                h3 Published Projects
+                .panel-body.bg-discover
+                    .panel-body.panel-body-vignette.bg-discover
+                        if published_projects.length == 0
+                            p(style="min-height: 96px") You have not published any projects yet, published projects are visible to anyone in the discover tab.<br>To publish a project simply select any project you have already created and select publish 
+                        each project in published_projects
+                            .col-sm-8(style="margin-bottom: 16px;")
+                                a(href="/projects/" + project.project_id)
+                                    h3(style="padding: 0; margin: 0;") #{project.name} &bull; #{project.category} &bull; #{ moment(project.created_at).format("DD/MM/YYYY") }
+                            .col-sm-4(style="text-align: right")
+                                button.btn.btn-sandbox.bg-discover-minor(onclick="window.location='/projects/" + project.project_id + "'") View
+                                button.btn.btn-sandbox.bg-discover-minor(onclick="window.location='/projects/" + project.project_id + "/edit'") Edit
+                                bbutton.btn.btn-sandbox.bg-discover-minor(onclick="postRefresh('/projects/" + project.project_id + "/delete')") Delete
+                                button.btn.btn-sandbox.bg-discover-minor(onclick="postRefresh('/projects/" + project.project_id + "/unpublish')") Unpublish

@@ -1,39 +1,39 @@
 extends layout.pug
 
 block append css
-	link(rel='stylesheet', href='/css/learn.css')
-	link(rel='stylesheet', href='/css/markdown-retheme.css')
-	link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/codemirror.css')
-	link(rel='stylesheet', href='/css/sandbox.css')
+    link(rel='stylesheet', href='/css/learn.css')
+    link(rel='stylesheet', href='/css/markdown-retheme.css')
+    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/codemirror.css')
+    link(rel='stylesheet', href='/css/sandbox.css')
 
 block append js
-	script(src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/codemirror.js")
-	script(src="/js/toolchain/compiler.js")
-	script(src="/js/cm_highlight.js")
-	
-	script.
-		$(document).ready(function(){
-			$('pre code').each(function() {
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/codemirror.js")
+    script(src="/js/toolchain/compiler.js")
+    script(src="/js/cm_highlight.js")
+    
+    script.
+        $(document).ready(function(){
+            $('pre code').each(function() {
 
-			var $this = $(this),
-				$code = $this.html();
+            var $this = $(this),
+                $code = $this.html();
 
-			$this.empty();
+            $this.empty();
 
-			var myCodeMirror = CodeMirror(this, {
-				value: $code,
-				mode: "gas",
-				theme: "base16-dark",
-				lineNumbers: !$this.is('.inline'),
-				readOnly: true
-			});
+            var myCodeMirror = CodeMirror(this, {
+                value: $code,
+                mode: "gas",
+                theme: "base16-dark",
+                lineNumbers: !$this.is('.inline'),
+                readOnly: true
+            });
 
-			});
-		})
-		
+            });
+        })
+        
 block append content
-	.container.bg-transparent(style="width: 100%; padding-bottom: 16px")!=markdown
-		.row(style="text-align: right; margin-top: 16px")
-			.col-sm-10
-			.col-sm-2
-				button.btn.btn-vimmy.btn-lesson(onclick="window.location=window.location+'/next'") Next Lesson
+    .container.bg-transparent(style="width: 100%; padding-bottom: 16px")!=markdown
+        .row(style="text-align: right; margin-top: 16px")
+            .col-sm-10
+            .col-sm-2
+                button.btn.btn-vimmy.btn-lesson(onclick="window.location=window.location+'/next'") Next Lesson
