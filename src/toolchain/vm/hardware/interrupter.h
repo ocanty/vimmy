@@ -11,8 +11,8 @@
 // vm_state
 typedef struct vmhw_interrupter
 {
-	uint8_t m_InterruptQueue[0xFF];
-	uint8_t m_InterruptQueuePtr;
+    uint8_t m_InterruptQueue[0xFF];
+    uint8_t m_InterruptQueuePtr;
 } vmhw_interrupter;
 
 extern vmhw_interrupter* g_vmInterrupterDvc;

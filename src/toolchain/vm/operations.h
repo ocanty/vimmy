@@ -6,10 +6,11 @@
 #include <stdio.h>
 
 #define VM_DEFINE_OPERATION_H_INDIRECT(mnemonic) void vm_op_##mnemonic(vm_state* vm);
+
 // Defines an operation that must be implemented
 #define VM_DEFINE_OPERATION_H(mnemonic,x) VM_DEFINE_OPERATION_H_INDIRECT(mnemonic)
 
-extern vm_ophandler_t vm_OpHandlers[0xFF + 1];
+extern vm_ophandler_t vm_OpHandlers[256];
 
 VM_DEFINE_OPERATION_H(PUSH, 1)
 VM_DEFINE_OPERATION_H(POP, 2)

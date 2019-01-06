@@ -7,12 +7,11 @@
 #define VMHW_KEYBOARD_IR_HANDLER 0x32
 #define VMHW_KEYBOARD_IOPORT_BEGIN 0x01
 
-
 // vm_state
 typedef struct vmhw_keyboard
 {
-	uint16_t* m_iobridge;
-	uint8_t* m_dma;
+    uint16_t* m_iobridge;
+    uint8_t* m_dma;
 } vmhw_keyboard;
 
 extern vmhw_keyboard* g_vmKeyboardDvc;

@@ -29,9 +29,9 @@ typedef uint8_t bool;
 #endif
 
 #ifdef EMSCRIPTEN
-	#define EXPORT EMSCRIPTEN_KEEPALIVE
+    #define EXPORT EMSCRIPTEN_KEEPALIVE
 #else
-	#define EXPORT
-	#define EM_ASM
-	#define EM_ASM_(...)
+    #define EXPORT
+    #define EM_ASM
+    #define EM_ASM_(...)
 #endif

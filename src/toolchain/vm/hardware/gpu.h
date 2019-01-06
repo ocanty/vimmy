@@ -11,18 +11,18 @@
 // vm_state
 typedef struct vmhw_gpu
 {
-	uint8_t* vm_dma;
+    uint8_t* vm_dma;
 
-	uint16_t* m_Screen;
-	uint16_t* m_Framebuffer; // all operations write to this, on fb flip m_Screen = m_Framebuffer, and vice versa
-	uint16_t* m_Font;
+    uint16_t* m_Screen;
+    uint16_t* m_Framebuffer; // all operations write to this, on fb flip m_Screen = m_Framebuffer, and vice versa
+    uint16_t* m_Font;
 
-	uint8_t* m_Terminal;
-	uint16_t m_TerminalColor; // color used by the future terminal insertions
-	BOOL m_TerminalEnabled;
+    uint8_t* m_Terminal;
+    uint16_t m_TerminalColor; // color used by the future terminal insertions
+    BOOL m_TerminalEnabled;
 
-	BOOL m_TransparencyMaskEnabled;
-	uint16_t m_TransparencyMask; // the vm will not do a draw operation with this color
+    BOOL m_TransparencyMaskEnabled;
+    uint16_t m_TransparencyMask; // the vm will not do a draw operation with this color
 } vmhw_gpu;
 
 //extern vmhw_gpu* g_vmGpuDvc;
