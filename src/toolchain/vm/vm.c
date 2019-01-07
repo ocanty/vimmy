@@ -438,7 +438,7 @@ void EXPORT vm_get_dasm_string(vm_state* vm, char* dasm)
         {
             const char* opcode_name = vm_OpHandlers[opcode].m_OpName;
 
-            uint8_t operand_type = vm_get_u8(vm, vm_get_PC(vm) + 1);
+            uint8_t operand_type = vm_get_u8(vm, PC + 1);
 
             // Operand discrimination
             uint8_t op_dst = operand_type >> 4;
@@ -475,7 +475,7 @@ void EXPORT vm_get_dasm_string(vm_state* vm, char* dasm)
             uint16_t pos_nextelement;
 
             // Set each pos to default no-offset start value (directly after operand types)
-            pos_registers = pos_displacement = pos_immediate = pos_nextelement = vm_get_PC(vm) + 2;
+            pos_registers = pos_displacement = pos_immediate = pos_nextelement = PC + 2;
 
             if (contains_registers == TRUE)
             {
