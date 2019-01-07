@@ -11,13 +11,13 @@
 // vm_instruction_data
 typedef struct vm_instruction_data
 {
-    BOOL m_ContainsRegisters;	 // True if the current instruction contains registers
-    BOOL m_ContainsImmediate;	 // True if the current instruction contains an immediate value
+    BOOL m_ContainsRegisters;    // True if the current instruction contains registers
+    BOOL m_ContainsImmediate;    // True if the current instruction contains an immediate value
     BOOL m_ContainsDisplacement; // True if the current instruction contains a displacement
-    uint8_t m_RegDst;			 // The register number of the destination reg
-    uint8_t m_RegSrc;			 // The register number of the source reg
-    uint16_t m_Displacement;	 // Displacement value
-    uint16_t m_Immediate;		 // Immediate value
+    uint8_t m_RegDst;            // The register number of the destination reg
+    uint8_t m_RegSrc;            // The register number of the source reg
+    uint16_t m_Displacement;     // Displacement value
+    uint16_t m_Immediate;        // Immediate value
     uint16_t m_NextInstruction;  // The address of the next instruction
 } vm_instruction_data;
 

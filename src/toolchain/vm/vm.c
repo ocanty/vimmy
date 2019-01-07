@@ -57,7 +57,7 @@ vm_state* EXPORT vm_init()
     // Reset
     vm_reset(vm);
 
-    return vm;  
+    return vm;
 }
 
 void vm_register_hardware(vm_state* vm, uint8_t hwid, vm_hardwarefunc_t thinkfunc)
@@ -96,7 +96,7 @@ static bool vm_should_cycle(vm_state* vm)
     case Paused:
         return FALSE;
         break;
-        
+
     case StepOne:
         // Return to run 1 instruction and leave the vm paused
         vm->m_Status = Paused;
@@ -150,7 +150,7 @@ static void vm_cycle_actual(vm_state* vm)
     if (vm_should_cycle(vm) == TRUE)
     {
         vm->m_Timer++;
-    
+
         // save pc before instruction
         static uint16_t saved_pc = 0;
         saved_pc = vm_get_PC(vm);
@@ -159,23 +159,23 @@ static void vm_cycle_actual(vm_state* vm)
          * Instruction layout explained
          * Instructions are variable sizes
          * 0xABCD 0xEFGH 0xIJ
-         * 
+         *
          * 0xAB   -> specifies operation (AB is the opcode)
-         * 
+         *
          * 0xCD   -> specifies operand types (see operands.c)
          *           where C is the type of destination
          *           and D is type of src
-         * 
+         *
          * 0xEF   -> if a register is in the instruction,
          *           E will be the dest register
          *           F will be the source register
          *           If the immediate value uses a register offset, (either in src or dst)
          *           that register will be in their respective slot
-         * 
+         *
          * 0xGHIJ -> Constant value / immediate value
-         *           OR 
-         *           Two's complement signed value for reg-offset i.e. [a+0x100], 
-         * 
+         *           OR
+         *           Two's complement signed value for reg-offset i.e. [a+0x100],
+         *
          * Example encoding:
          * 03  12  10  00  01   ::::::::::    mov a, 1
          * ^   ^   ^        ^---> constant value
@@ -195,20 +195,20 @@ static void vm_cycle_actual(vm_state* vm)
         // True if either operand type may contain a register
         // (a src or dst type)
         BOOL contains_registers =
-            (op_dst == REGISTER						|| 
-             op_dst == MEMORY_REGISTER					|| 
+            (op_dst == REGISTER                      ||
+             op_dst == MEMORY_REGISTER               ||
              op_dst == MEMORY_REGISTER_DISPLACEMENT)
             ||
-            (op_src == REGISTER || 
-             op_src == MEMORY_REGISTER || 
+            (op_src == REGISTER ||
+             op_src == MEMORY_REGISTER ||
              op_src == MEMORY_REGISTER_DISPLACEMENT);
 
         // True if either operand type may contain a displacement value
         BOOL contains_displacement =
-            ((op_dst) == MEMORY_REGISTER_DISPLACEMENT  	|| 
+            ((op_dst) == MEMORY_REGISTER_DISPLACEMENT ||
              (op_dst) == MEMORY_CONSTANT)
             ||
-            ((op_src) == MEMORY_REGISTER_DISPLACEMENT 	|| 
+            ((op_src) == MEMORY_REGISTER_DISPLACEMENT ||
              (op_src) == MEMORY_CONSTANT);
 
         // Returns true if either operand type may contain an immediate value
@@ -303,19 +303,19 @@ static void vm_cycle_actual(vm_state* vm)
         // PORT -> VALUE
         // 0x0  -> 0xABCD
         //
-        // A =	0 - no interrupt
-        //		1 - interrupt set by interrupter, waiting for cpu acknowledge
-        //		2 - interrupt waiting for cpu to process
-        //		3 - interrupt processed by cpu, waiting for interrupter to reset to 0
-        // B =  0 - unused/reserved
+        // A =    0 - no interrupt
+        //        1 - interrupt set by interrupter, waiting for cpu acknowledge
+        //        2 - interrupt waiting for cpu to process
+        //        3 - interrupt processed by cpu, waiting for interrupter to reset to 0
+        // B =    0 - unused/reserved
         // C,D = 0x00-0xff - interupt handler
 
         // if an interrupt has been set by the interrupter
         if ((vm->m_IOPorts[VMHW_INTERRUPTER_IOPORT_BEGIN] & 0xF000) >> 12 == 0x1)
         {
-            // printf("PC @ 0x%02x nextinstr 0x%02x ... Recieved interrupt, handler @ %u\n", 
-            //   vm_get_PC(vm), 
-            //    vm->m_InstructionData.m_NextInstruction, 
+            // printf("PC @ 0x%02x nextinstr 0x%02x ... Recieved interrupt, handler @ %u\n",
+            //   vm_get_PC(vm),
+            //    vm->m_InstructionData.m_NextInstruction,
             //    vm->m_IOPorts[VMHW_INTERRUPTER_IOPORT_BEGIN] & 0x00FF
             // );
 
@@ -351,7 +351,7 @@ static void vm_cycle_actual(vm_state* vm)
 
 }
 
-// Cycles 100 
+// Cycles 100
 static void vm_cycle_multi(vm_state* vm)
 {
     for (uint32_t i = 0; i < 100; i++)
@@ -366,14 +366,14 @@ void EXPORT vm_cycle(vm_state* vm)
         // void emscripten_set_main_loop(em_callback_func func, int fps, int simulate_infinite_loop);
         emscripten_set_main_loop_arg((void(*)(void*))vm_cycle_multi, (void*)vm, 60, 1);
     #else
-        while (1) 
+        while (1)
         {
             vm_cycle_multi(vm);
 
 #ifdef _WIN32
             Sleep(1000/1);
 #else
-            usleep((1000 / 1) * 1000); 
+            usleep((1000 / 1) * 1000);
 #endif
         }
     #endif
@@ -447,20 +447,20 @@ void EXPORT vm_get_dasm_string(vm_state* vm, char* dasm)
             // True if either operand type may contain a register
             // (a src or dst type)
             BOOL contains_registers =
-                (op_dst == REGISTER						    || 
-                op_dst == MEMORY_REGISTER				    || 
+                (op_dst == REGISTER                     ||
+                op_dst == MEMORY_REGISTER               ||
                 op_dst == MEMORY_REGISTER_DISPLACEMENT)
                 ||
-                (op_src == REGISTER                         || 
-                op_src == MEMORY_REGISTER                   || 
+                (op_src == REGISTER                     ||
+                op_src == MEMORY_REGISTER               ||
                 op_src == MEMORY_REGISTER_DISPLACEMENT);
 
             // True if either operand type may contain a displacement value
             BOOL contains_displacement =
-                ((op_dst) == MEMORY_REGISTER_DISPLACEMENT  	|| 
+                ((op_dst) == MEMORY_REGISTER_DISPLACEMENT ||
                 (op_dst) == MEMORY_CONSTANT)
                 ||
-                ((op_src) == MEMORY_REGISTER_DISPLACEMENT 	|| 
+                ((op_src) == MEMORY_REGISTER_DISPLACEMENT ||
                 (op_src) == MEMORY_CONSTANT);
 
             // Returns true if either operand type may contain an immediate value
@@ -519,7 +519,7 @@ void EXPORT vm_get_dasm_string(vm_state* vm, char* dasm)
             sprintf(dasm, "%s0x%02X\n%s %s", dasm, PC, opcode_name, mask);
             memset(mask, 0, 0xFF);
 
-            
+
             vm_get_type_mask(vm, mask, op_src, TRUE, v_RegDst, v_RegSrc, v_Displacement, v_Immediate);
 
             if (strlen(mask) > 0)

@@ -8,15 +8,15 @@ typedef uint16_t(*vm_get_func_t)(struct vm_state*);
 typedef void(*vm_set_func_t)(struct vm_state*, uint16_t);
 
 // Operand type
-// This 
+// This
 enum OperandTypeEncoded
 {
     NONE = 0x0,
-    REGISTER = 0x1, 					//  r, Register notation: a,b,c, ...
-    CONSTANT = 0x2, 					//  c, Any parseInt(...,10) literal except negatives: 1, 0x1, ...
-    MEMORY_REGISTER = 0x3, 				//  [reg]
+    REGISTER = 0x1,                     //  r, Register notation: a,b,c, ...
+    CONSTANT = 0x2,                     //  c, Any parseInt(...,10) literal except negatives: 1, 0x1, ...
+    MEMORY_REGISTER = 0x3,              //  [reg]
     MEMORY_REGISTER_DISPLACEMENT = 0x4, //  [reg+offset] [reg-offset]
-    MEMORY_CONSTANT = 0x5  				//  [number]
+    MEMORY_CONSTANT = 0x5               //  [number]
 };
 
 // These functions are set depending on the current instruction

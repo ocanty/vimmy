@@ -15,12 +15,12 @@ void vmhw_interrupter_init(uint16_t * io, uint8_t * dma)
 // PORT -> VALUE
 // 0x0  -> 0xABCD
 //
-// A =	0 - no interrupt
-//		1 - interrupt set by interrupter, waiting for cpu acknowledge
-//		2 - interrupt waiting for cpu to process
-//		3 - interrupt processed by cpu, waiting for interrupter to reset to 0
-// B =  0 - unused/reserved
-// C,D = 0x00-0xff - interupt handler
+// A =    0 - no interrupt
+//        1 - interrupt set by interrupter, waiting for cpu acknowledge
+//        2 - interrupt waiting for cpu to process
+//        3 - interrupt processed by cpu, waiting for interrupter to reset to 0
+// B =    0 - unused/reserved
+// C,D =  0x00-0xff - interupt handler
 void vmhw_interrupter_think(uint16_t * io, uint8_t * dma)
 {
     switch ((io[VMHW_INTERRUPTER_IOPORT_BEGIN] & 0xF000) >> 12)

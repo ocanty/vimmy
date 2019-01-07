@@ -77,7 +77,7 @@ void vmhw_gpu_init(uint16_t* io,uint8_t* dma)
         {
             if (count == 4)
             {
-                // rgb888 to rgb565 
+                // rgb888 to rgb565
                 int g = image[i - 3];
                 int b = image[i - 2];
                 int r = image[i - 1];
@@ -112,29 +112,29 @@ void vmhw_gpu_think(uint16_t* io,uint8_t* dma)
         // printf("Dispatched gpu msg %u\n", *msg);
         // clear all gpu io ports, telling CPU message is processed
         memset((io+VMHW_GPU_IOPORT_BEGIN), 0x0000, sizeof(uint16_t) * 7);
-    }    
+    }
 }
 
 /*
     GPUv1 Messaging Protocol
 
     The GPU also supports a 16*16 console, draws over all shapes by default.
-    
+
     Each GPU coordinate is a 16-bit value. 0xXXXX 0xYYYY (in future for large res)
     All GPU colors are in the RGB565 format.
     http://www.rinkydinkelectronics.com/calc_rgb565.php
 
-    I/O port offset			Format		Example		Description
-    0x9	0					0xAXYZ		0x0000		When A = 0, gpu is ready for new message, when A is set to 1, the GPU will process the current message.
-                                                    When the GPU is finished processing a message, it will clear all GPU ports, including this one
-                                                    XYZ = Message id (0x000-0xFFF)
+    I/O port Example       Description
+    0x9      0xAXYZ        0x0000       When A = 0, gpu is ready for new message, when A is set to 1, the GPU will process the current message.
+                                        When the GPU is finished processing a message, it will clear all GPU ports, including this one
+                                        XYZ = Message id (0x000-0xFFF)
 
-    0xA	1					0xABCD		-			Message Argument 1 (value specified by message type)
-    0xB	2					0xABCD		-			Message Argument 2 (value specified by message type)
-    0xC	3					0xABCD		-			Message Argument 3 (value specified by message type)
-    0xD	4					0xABCD		-			Message Argument 4 (value specified by message type)
-    0xE	5					0xABCD		-			Message Argument 5 (value specified by message type)
-    0xF	6					0xABCD		-			Message Argument 6 (value specified by message type)
+    0xA      0xABCD        -            Message Argument 1 (value specified by message type)
+    0xB      0xABCD        -            Message Argument 2 (value specified by message type)
+    0xC      0xABCD        -            Message Argument 3 (value specified by message type)
+    0xD      0xABCD        -            Message Argument 4 (value specified by message type)
+    0xE      0xABCD        -            Message Argument 5 (value specified by message type)
+    0xF      0xABCD        -            Message Argument 6 (value specified by message type)
 
     GPU Messages at end of file. Any DMA arg takes a memory address to raw data
 */
@@ -220,7 +220,7 @@ void vmhw_gpu_set_text_terminal(vmhw_gpu* gpu, uint16_t* args)
     {
         uint8_t c = *i;
         //printf("%u\n", c);
- 
+
         if (console_x > 31)
         {
             console_x = 0;
@@ -310,7 +310,7 @@ void vmhw_gpu_draw_line(vmhw_gpu* gpu, uint16_t* args)
 void vmhw_gpu_draw_sprite(vmhw_gpu* gpu, uint16_t* args)
 {
     // gpu->m_Font[128 * (file_y)+(file_x)]
-    // 
+    //
     uint16_t font_offset = 0;
 
     for (uint16_t y = args[1]; y < args[3]; y++)
@@ -329,20 +329,20 @@ void vmhw_gpu_draw_sprite(vmhw_gpu* gpu, uint16_t* args)
 }
 
 vmhw_gpu_operation_t g_vmGpuOperations[0x1000] = {
-    // Message ID & Name						    //	Description						ARG0		ARG1		ARG2		ARG3		ARG4		ARG5
-    [0x001] = &vmhw_gpu_clear_framebuffer,			//	Clears the framebuffer			-			-			-			-			-			Color
-    [0x002] = &vmhw_gpu_flip_framebuffer,			//	Flip framebuffer				-			-			-			-			-			-
+    // Message ID & Name                    //    Description                 ARG0        ARG1        ARG2        ARG3        ARG4        ARG5
+    [0x001] = &vmhw_gpu_clear_framebuffer,  //    Clears the framebuffer      -           -           -           -           -           Color
+    [0x002] = &vmhw_gpu_flip_framebuffer,   //    Flip framebuffer            -           -           -           -           -           -
 
-    [0x051] = &vmhw_gpu_enable_transmask,			//	Enable transparency mask		-			-			-			-			-			-
-    [0x052] = &vmhw_gpu_disable_transmask,			//	Disable transparency mask		-			-			-			-			-			-
-    [0x053] = &vmhw_gpu_set_transmask,				//	Set transparency mask			-			-			-			-			-			Color
+    [0x051] = &vmhw_gpu_enable_transmask,   //    Enable transparency mask    -           -           -           -           -           -
+    [0x052] = &vmhw_gpu_disable_transmask,  //    Disable transparency mask   -           -           -           -           -           -
+    [0x053] = &vmhw_gpu_set_transmask,      //    Set transparency mask       -           -           -           -           -           Color
 
-    [0x063] = &vmhw_gpu_set_text_terminal,			//  Set text on terminal			X-coord		Y-coord		-			-			Addr-DMA	Color
+    [0x063] = &vmhw_gpu_set_text_terminal,  //    Set text on terminal        X-coord     Y-coord     -           -           Addr-DMA    Color
 
-    [0x100] = &vmhw_gpu_draw_rect,					//	Draw rectangle					X-coord		Y-coord		X2-coord	Y2-coord	-			Color
-    [0x101] = &vmhw_gpu_draw_circle,				//	Draw circle						X-coord		Y-coord		-			-			Radius		Color
-    [0x102] = &vmhw_gpu_draw_line,					//	Draw line						X1-coord	Y1-coord	X2-coord	Y2-coord	-			Color
-    [0x103] = &vmhw_gpu_draw_sprite 				//	Draw sprite					    X-coord		Y-coord	    X2-coord	Y2-coord	Texture-DMA -
+    [0x100] = &vmhw_gpu_draw_rect,          //    Draw rectangle              X-coord     Y-coord     X2-coord    Y2-coord    -            Color
+    [0x101] = &vmhw_gpu_draw_circle,        //    Draw circle                 X-coord     Y-coord     -           -           Radius       Color
+    [0x102] = &vmhw_gpu_draw_line,          //    Draw line                   X1-coord    Y1-coord    X2-coord    Y2-coord    -            Color
+    [0x103] = &vmhw_gpu_draw_sprite         //    Draw sprite                 X-coord     Y-coord     X2-coord    Y2-coord    Texture-DMA  -
 };
 
 #ifdef EMSCRIPTEN

@@ -110,23 +110,23 @@ gulp.task('build-toolchain-vmspec', function (done) {
 gulp.task('build-toolchain-vm', function (done) {
   console.log('Compiling toolchain virtual machine -> public/js/toolchain/vm.js')
   let reportOptions = {
-    err: true,    // default = true, false means don't write err 
-    stderr: true, // default = true, false means don't write stderr 
-    stdout: true  // default = true, false means don't write stdout 
+    err: true,    // default = true, false means don't write err
+    stderr: true, // default = true, false means don't write stderr
+    stdout: true  // default = true, false means don't write stdout
   }
 
   glob("src/toolchain/vm/**/*.c", function (er, files) {
     // compile each file into an object
-    let compile_cmd = `emcc   
-      -v                      
-      -O3                     
-      -s WASM=1               
-      -s TOTAL_MEMORY=128MB 
-      -s ASSERTIONS=2         
-      -s RESERVED_FUNCTION_POINTERS=2 
+    let compile_cmd = `emcc
+      -v
+      -O3
+      -s WASM=1
+      -s TOTAL_MEMORY=128MB
+      -s ASSERTIONS=2
+      -s RESERVED_FUNCTION_POINTERS=2
       --preload-file ./src/toolchain/vm/data
       -s "EXTRA_EXPORTED_RUNTIME_METHODS=['ccall', 'cwrap', 'addFunction','Pointer_stringify']"
-      ${files.join(' ')} 
+      ${files.join(' ')}
       -o src/toolchain/vm/vm.js
     `.replace(/(\r\n\t|\n|\r\t)/gm, '')
 
@@ -139,7 +139,7 @@ gulp.task('build-toolchain-vm', function (done) {
         console.log(err)
         return
       }
-      
+
       // pipe output and memory preinit to relevant directories
       gulp.src('src/toolchain/vm/vm.js').pipe(gulp.dest('build/public/js/toolchain/'))
       gulp.src('src/toolchain/vm/vm.data').pipe(gulp.dest('build/public/'))
