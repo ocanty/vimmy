@@ -17,7 +17,7 @@ function loadLessons() {
   let dirTree = require('directory-tree')
 
   // get a directory tree of the lessons folder
-  let lessonfiles = dirTree('./lessons/',['.md'])
+  let lessonfiles = dirTree('./lessons/',{extensions:/\.md/})
   
   // our return tree
   let lessontable = {
@@ -88,14 +88,14 @@ router.getLessonInfo = function(lesson_string) {
 }
 
 // GET /overview - Render overview of all lessons and lesson groups
-router.get('/overview',ensureLoggedIn,function(req, res, next)
+router.get('/overview',ensureLoggedIn,function(req, res)
 {
   lessonsTree = loadLessons()
 
   let isLoggedIn = (req.isAuthenticated && req.isAuthenticated())
 
   res.render('learnoverview', {
-    title: 'Vimmy :: Lesson Overview',
+    title: 'Vimmy -  Lesson Overview',
     loggedIn: isLoggedIn,
     user: (isLoggedIn ? req.user.db : { }),
     lessonsTree: lessonsTree
@@ -105,7 +105,7 @@ router.get('/overview',ensureLoggedIn,function(req, res, next)
 // GET /<lesson_group>/<lesson_id>/next -> Returns the next lesson in the group or returns to overview
 // if the user asks for the next lesson, check if there is one in the current group or else redirect them to the overview
 // TODO: fix existence of var checking, lesson sanity checking
-router.get('/:lesson_group/:lesson_id/next', ensureLoggedIn, function(req, res, next)
+router.get('/:lesson_group/:lesson_id/next', ensureLoggedIn, function(req, res)
 {
   let lessonsTree = lessonsTree || loadLessons()
   let lesson_group = lessonsTree[req.params.lesson_group-1]
@@ -134,7 +134,7 @@ router.get('/:lesson_group/:lesson_id/next', ensureLoggedIn, function(req, res, 
 
 // GET /<lesson_group>/<lesson_id> -> Renders lesson in group at id
 // TODO: lesson sanity checking
-router.get('/:lesson_group/:lesson_id', ensureLoggedIn, function(req, res, next)
+router.get('/:lesson_group/:lesson_id', ensureLoggedIn, function(req, res)
 {
   let lessonsTree = lessonsTree || loadLessons()
 

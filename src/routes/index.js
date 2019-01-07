@@ -7,8 +7,7 @@ let User = require('../models/db_user')
 let learn = require('./learn') 
 
 // GET / -> serve the home page
-router.get('/', function(req, res, next) {
-
+router.get('/', function(req, res) {
   // isAuthenticated is added by passport,
   // first check if it exists and then call it to get authentication status
   let isLoggedIn = (req.isAuthenticated && req.isAuthenticated())
@@ -64,8 +63,6 @@ router.get('/', function(req, res, next) {
       user: { }
     })
   }    
-
-  next()
 })
 
 module.exports = router

@@ -18,7 +18,7 @@ router.get('*/vm.js.mem', function(req, res) {
 })
 
 router.get('*/vm.js', function(req, res) {
-  res.sendFile('vm.data', {root: './public'})
+  res.sendFile('vm.js', {root: './public'})
 })
 
 /*
@@ -56,8 +56,7 @@ function checkViewPermission(req,res,project) {
 
   Returns false and sends a 403 if the user is not the owner
 */
-function checkOwnerViewPermission(req,res,project)
-{
+function checkOwnerViewPermission(req,res,project) {
   let isLoggedIn = (req.isAuthenticated && req.isAuthenticated())
 
   // Are they the owner?
@@ -72,7 +71,7 @@ function checkOwnerViewPermission(req,res,project)
 }
 
 // Verifies if project/database request happened successfully
-void checkValidProject(res,err,project) {
+function checkValidProject(res,err,project) {
   if(!project) {
     res.status(404).send('404 Not Found')
     return false

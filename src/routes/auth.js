@@ -32,7 +32,8 @@ router.get('/logout', function(req, res) {
 */
 router.get('/callback', 
   passport.authenticate('auth0', { 
-    failureRedirect: '/failed' 
+    failureRedirect: '/failed',
+    scope: 'openid email profile'
   }),
 
   function(req, res) {

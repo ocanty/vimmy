@@ -22,9 +22,9 @@ Vimmy.Integration = function()
 	});
 	
 	// use soft tabs (spaces) vs hard tabs
- 	this.Editor.addKeyMap(
+	 this.Editor.addKeyMap(
 	{
-        Tab: function(cm) 
+		Tab: function(cm) 
 		{
 			if (cm.somethingSelected())
 			{
@@ -38,11 +38,11 @@ Vimmy.Integration = function()
 				cm.execCommand("insertSoftTab");
 		},
 		
-        "Shift-Tab": function(cm) 
+		"Shift-Tab": function(cm) 
 		{
 			cm.indentSelection("subtract");
-        }
-    });
+		}
+	});
 	
 	
 	// Set up event listeners to tell the user to save if they have changed code in the editor
@@ -293,23 +293,23 @@ Vimmy.Integration = function()
 	
 	// VM Control Buttons
 	$("#btn-vm-reset").click(function()
-    {
+	{
 		_self.vm_reset(_self.vm_ptr)
 		// reseting vm clears memory, do a dasm to clear the dasm box too
 		_self.doDisassembly()
-    })
+	})
 	
 	$("#btn-vm-play").click(function()
-    {
+	{
 		// pause if playing, play if paused
 		if(_self.vm_get_status(_self.vm_ptr) > 0) _self.vm_set_status(_self.vm_ptr,0)
 		else _self.vm_set_status(_self.vm_ptr,2)
-    })
+	})
 	
 	$("#btn-vm-stepone").click(function()
-    {
+	{
 		_self.vm_set_status(_self.vm_ptr,1)
-    })
+	})
 	
 	// jQuery Keyboard input 
 	// Keyboard, arrows utf-8 values (utf-16)
@@ -605,25 +605,25 @@ Vimmy.Integration = function()
 	// Build memory table preview
 	//////////////////////////////////////////////////
 	var tbody = $("#vm-mem-view-primary")
-    var startaddr = 0x0
-    for(var i = 0; i < 14; i++)
-    {   
+	var startaddr = 0x0
+	for(var i = 0; i < 14; i++)
+	{   
 		// build table
-        tbody.append("<tr>" +
-            "<th valign=\"middle\">" + "0x" + this.numberToHexStr(startaddr) + "<br/></th>   " +
-            "<td valign=\"middle\">??</td>       " +
-            "<td valign=\"middle\">??</td>       " +
-            "<td valign=\"middle\">??</td>       " +
-            "<td valign=\"middle\">??</td>       " +
-            "<td valign=\"middle\">??</td>       " +
-            "<td valign=\"middle\">??</td>       " +
-            "<td valign=\"middle\">??</td>       " +
-            "<td valign=\"middle\">??</td>       " +
-            "<td valign=\"middle\">??</td>       " +
-        + "</tr>")
-        
-        startaddr += 0x10
-    }
+		tbody.append("<tr>" +
+			"<th valign=\"middle\">" + "0x" + this.numberToHexStr(startaddr) + "<br/></th>   " +
+			"<td valign=\"middle\">??</td>       " +
+			"<td valign=\"middle\">??</td>       " +
+			"<td valign=\"middle\">??</td>       " +
+			"<td valign=\"middle\">??</td>       " +
+			"<td valign=\"middle\">??</td>       " +
+			"<td valign=\"middle\">??</td>       " +
+			"<td valign=\"middle\">??</td>       " +
+			"<td valign=\"middle\">??</td>       " +
+			"<td valign=\"middle\">??</td>       " +
+		+ "</tr>")
+		
+		startaddr += 0x10
+	}
 	
 	// Set memMap preview location to the default rom load point because the user is lazy
 	_self.memMapAddr = 0x4000
@@ -631,10 +631,10 @@ Vimmy.Integration = function()
 	// When the user edits the memory map address, this updates the variable that is read by the debug loop
 	$("#vm-mem-view-addr-primary").on("change", function() 
 	{
-        var addr = parseInt($("#vm-mem-view-addr-primary").val())
-        
-        if(addr != NaN){ _self.memMapAddr = addr }
-    });
+		var addr = parseInt($("#vm-mem-view-addr-primary").val())
+		
+		if(addr != NaN){ _self.memMapAddr = addr }
+	});
 	
 	
 	//////////////////////////////////////////////////
@@ -733,17 +733,17 @@ Vimmy.Integration.prototype.buildDataTable = function()
 Vimmy.Integration.prototype.numberToHexStr = function(number)
 {
 	if(number < 0xF)
-    {
-        return "0" + number.toString(16).toUpperCase()
-    }
-    
-    return number.toString(16).toUpperCase()
+	{
+		return "0" + number.toString(16).toUpperCase()
+	}
+	
+	return number.toString(16).toUpperCase()
 }
 
 // Clear compiler messages
 Vimmy.Integration.prototype.clearMessages = function()
 {
-    $("#compiler-messages").children(".msg").each(function(){ this.remove() })
+	$("#compiler-messages").children(".msg").each(function(){ this.remove() })
 	// push header
 	this.pushInfo(":: vimmyVM Assembler :: waiting for input ::")
 }
@@ -752,7 +752,7 @@ Vimmy.Integration.prototype.clearMessages = function()
 Vimmy.Integration.prototype.pushError = function(str)
 {
 	// http://stackoverflow.com/questions/10503606/scroll-to-bottom-of-div-on-page-load-jquery
-    $("#compiler-messages").append("<div class=\"msg msg-error\">" + str + "</div>")
+	$("#compiler-messages").append("<div class=\"msg msg-error\">" + str + "</div>")
 	// scroll to bottom
 	$("#compiler-messages").animate({ scrollTop: $('#compiler-messages').prop("scrollHeight")}, 1);
 }
@@ -760,7 +760,7 @@ Vimmy.Integration.prototype.pushError = function(str)
 // push compiler info
 Vimmy.Integration.prototype.pushInfo = function(str)
 {
-    $("#compiler-messages").append("<div class=\"msg msg-info\">" + str + "</div>")
+	$("#compiler-messages").append("<div class=\"msg msg-info\">" + str + "</div>")
 	$("#compiler-messages").animate({ scrollTop: $('#compiler-messages').prop("scrollHeight")}, 1);
 }
 
@@ -784,7 +784,7 @@ Vimmy.Integration.prototype.loadROM = function(rom,load_addr)
 Vimmy.Integration.prototype.onClickAssemble = function(_this,run)
 {
 	this.clearMessages()
-    console.log(this)
+	console.log(this)
 	this.pushInfo("Verifying data before assembling...");
 	
 	// Build data block
@@ -977,18 +977,14 @@ Vimmy.Integration.prototype.doDisassembly = function()
 // we're no longer using the browser timing for drawing
 // window.requestAnimFrame = (function(){
   // return  window.requestAnimationFrame       || 
-          // window.webkitRequestAnimationFrame || 
-          // window.mozRequestAnimationFrame    || 
-          // window.oRequestAnimationFrame      || 
-          // window.msRequestAnimationFrame     || 
-          // function( callback ){
-            // window.setTimeout(callback, 1000 / 60);
-          // };
+		  // window.webkitRequestAnimationFrame || 
+		  // window.mozRequestAnimationFrame    || 
+		  // window.oRequestAnimationFrame      || 
+		  // window.msRequestAnimationFrame     || 
+		  // function( callback ){
+			// window.setTimeout(callback, 1000 / 60);
+		  // };
 // })();
-
-//future implementation for a CRT like effect?
-//blend each frame to give like a fade effect
-//var fadeframes = [ ]
 
 // called to cycle the gpu, draws 1 frame
 Vimmy.Integration.prototype.gpuCycle = function()
@@ -1002,7 +998,7 @@ Vimmy.Integration.prototype.gpuCycle = function()
 	var x = 0
 	var color = 0
 	var i = 0
- 	while(i < (256*256)*2)
+	 while(i < (256*256)*2)
 	{
 		color = (Module.HEAPU8[this.vm_scr_ptr+i] << 8) | (Module.HEAPU8[this.vm_scr_ptr+i+1]);
 		
@@ -1051,7 +1047,7 @@ Vimmy.Integration.prototype.debugCycle = function()
 		// Build mem table off current memory view
 		var lastaddr = this.memMapAddr
 		// Don't update as regulalary as other stuff -> lags firefox HEAVILY
- 		this.memMapLastUpdate = (this.memMapLastUpdate+1) || 1
+		 this.memMapLastUpdate = (this.memMapLastUpdate+1) || 1
 		
 		if(this.memMapLastUpdate > 100)
 		{
@@ -1148,10 +1144,10 @@ Vimmy.onEmscriptenRuntimeInitialized = function()
 	}
 	
 	// add the panic handler that the vm will call if it knows it will crash
-	var panic_handler = Runtime.addFunction(function(s) {
+	var panic_handler = addFunction(function(s) {
 	   Vimmy._integration.pushError(Pointer_stringify(s))
 	   Module.ccall("abort","null");
-    });
+	});
 	
 	
 	// we do a post cycle hook that is called every time the VM finishes a cycle, we will use this to tell the GPU to draw as we are sure a drawing operation has finished.
@@ -1162,7 +1158,7 @@ Vimmy.onEmscriptenRuntimeInitialized = function()
 	// we do this because asking the VM user to do vsync themselves with inconsistent requestAnimFrame FPS is a pain
 	// so we just use the post cycle hook to draw the screen 60 times a second, using the cycle times we are already aware about
 	// note if cycle times in vm.c ever change, you must update this or you will have the display running at a different target FPS
-	var post_cycle_hook = Runtime.addFunction(function(s) {
+	var post_cycle_hook = addFunction(function(s) {
 		counter = counter + 1
 		// counter % 60000 = 1fps
 		// counter % 1000 = 60fps
@@ -1170,7 +1166,7 @@ Vimmy.onEmscriptenRuntimeInitialized = function()
 		{
 			Vimmy._integration.gpuCycle();
 		}
-    });
+	});
 	
 	// if we successfully added these emscripten run time functions
 	if(panic_handler && post_cycle_hook)
