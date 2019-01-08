@@ -59,13 +59,57 @@ Future Plans:
 ----
 
 * Fix express-session SessionStore (i.e use postgres session-store)
-* Make hardware devices modular (i.e not global C pointers as they are now, will also allow for more devices)
 * Modular hardware add/remove in sandbox
-* Code clean-up
 * Remove hidden instructions, add LEA
 * Document how the instructions/flag modifications work
 * Optimize compiler/disassembler
 * Fix assertions
+
+Additional Documentation:
+----
+
+**Instruction format primer**
+
+This was intentionally made incredibly simple and easily read (rather than using bitfields) to help users understand the encoded instruction
+
+	/**
+	 * Instruction layout explained
+	 * Instructions are variable sizes
+	 * 0xABCD 0xEFGH 0xIJ
+	 *
+	 * 0xAB   -> specifies operation (AB is the opcode)
+	 *
+	 * 0xCD   -> specifies operand types (see operands.c)
+	 *           where C is the type of destination
+	 *           and D is type of src
+	 *
+	 * 0xEF   -> if a register is in the instruction,
+	 *           E will be the dest register
+	 *           F will be the source register
+	 *           If the immediate value uses a register offset, (either in src or dst)
+	 *           that register will be in their respective slot
+	 *
+	 * 0xGHIJ -> Constant value / immediate value
+	 *           OR
+	 *           Two's complement signed value for reg-offset i.e. [a+0x100],
+	 *
+	 * Example encoding:
+	 * 03  12  10  00  01   ::::::::::    mov a, 1
+	 * ^   ^   ^        ^---> constant value
+	 * |   |   |---> register 1 (reg), 0 (not used)
+	 * |   |---> operand types, 1 (reg), 2 (immediate value)
+	 * |---> opcode
+	 *
+	 * enum OperandTypeEncoded
+	 * {
+	 *     NONE = 0x0,
+	 *     REGISTER = 0x1,                     //  r, Register notation: a,b,c, ...
+	 *     CONSTANT = 0x2,                     //  c, Any parseInt(...,10) literal except negatives: 1, 0x1, ...
+	 *     MEMORY_REGISTER = 0x3,              //  [reg]
+	 *     MEMORY_REGISTER_DISPLACEMENT = 0x4, //  [reg+offset] [reg-offset]
+	 *     MEMORY_CONSTANT = 0x5               //  [number]
+	 * };
+	 **/
 
 
     
