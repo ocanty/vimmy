@@ -4,7 +4,7 @@
 The Educational Virtual Machine
 ====
 
-###### _Please note: This was written before I had a formal computer science education._
+###### _Note: Project built before I had a formal CS education, may contain some questionable design decisions_
 
 Screenshots:
 ----
@@ -14,6 +14,12 @@ Screenshots:
 ![](https://i.imgur.com/WX6kzz0.png)
 ![](https://i.imgur.com/HMBWMUf.png)
 ![](https://i.imgur.com/rrsdZrr.png)
+
+Won these awards:
+* CoderDojo CoolestProjects.org 2017 - Best Website
+* eir Junior Spiders 2017 - Grand Prize
+* eir Junior Spiders 2017 - Best Concept
+* eir Junior Spiders 2017 - Creative Web Coding
 
 Significant Areas:
 ----
@@ -65,7 +71,7 @@ Future Plans:
 * Optimize compiler/disassembler
 * Fix assertions
 
-Additional Documentation:
+ISA Documentation:
 ----
 
 **Instruction format primer**
