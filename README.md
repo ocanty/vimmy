@@ -4,8 +4,6 @@
 The Educational Virtual Machine
 ====
 
-###### _Note: Project built before I had a formal CS education, may contain some questionable design decisions_
-
 Screenshots:
 ----
 ![](https://i.imgur.com/BhfWOjy.png)
